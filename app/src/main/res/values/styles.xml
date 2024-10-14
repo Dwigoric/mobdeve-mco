@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- This XML file defines specific styling patterns for text views, buttons, etc -->
+
+    <!-- How to use in xml -->
+    <!-- Add this attribute to TextView style="@style/HeaderTextStyle" -->
+
+    <!-- Font styles-->
+
+    <!-- Header 1-->
+    <style name="Header1">
+        <item name="android:fontFamily">@font/sans-serif</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Header 2-->
+    <style name="Header2">
+        <item name="android:fontFamily">@font/sans-serif</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Header 3-->
+    <style name="Header3">
+        <item name="android:fontFamily">@font/sans-serif</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Body-->
+    <style name="Body">
+        <item name="android:fontFamily">@font/sans-serif</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="BodyBold">
+        <item name="android:fontFamily">@font/sans-serif</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="BodyItalic">
+        <item name="android:fontFamily">@font/sans-serif</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+
+</resources>

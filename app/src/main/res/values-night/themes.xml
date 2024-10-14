@@ -1,7 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.MOBDEVEMCO" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.Shellfie" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+        <!-- Primary and surface colors -->
+        <item name="colorPrimary">@color/darkbg</item>
+        <item name="colorOnPrimary">@color/light</item>
+        <item name="android:colorBackground">@color/darkbg</item>
+        <item name="colorOnBackground">@color/light</item>
+
+        <!-- Accent and error colors -->
+        <item name="colorAccent">@color/brand</item>
+        <item name="colorSurface">@color/dark</item>
+        <item name="colorOnSurface">@color/lightbg</item>
+        <item name="colorError">@color/red</item>
+        <item name="colorOnError">@color/white</item>
+
+        <!-- Secondary text color -->
+        <item name="android:textColorSecondary">@color/lightgray</item>
+
     </style>
 </resources>

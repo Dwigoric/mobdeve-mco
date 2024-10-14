@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <!-- This XML file defines our color palette -->
+
+    <color name="dark">#021117</color>
+    <color name="darkbg">#010634</color>
+    <color name="brand">#0166FF</color>
+    <color name="darkgray">#727272</color>
+    <color name="lightgray">#CACACA</color>
+    <color name="lightbg">#F8F8F8</color>
+    <color name="light">#FBFDFE</color>
+
+    <color name="red">#B00020</color>
+    <color name="white">#FFFFFF</color>
+
+
 </resources>

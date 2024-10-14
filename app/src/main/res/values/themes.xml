@@ -1,9 +1,30 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- This XML applies app-wide settings by using colors and styles defined in colors.xml and styles.xml. -->
+    <!-- This ensures consistency across the entire app, such as defining global background colors, button appearances, or text properties. -->
+
+
     <!-- Base application theme. -->
-    <style name="Base.Theme.MOBDEVEMCO" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.Shellfie" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <!-- Primary and surface colors -->
+        <item name="colorPrimary">@color/lightbg</item>
+        <item name="colorOnPrimary">@color/dark</item>
+        <item name="android:colorBackground">@color/lightbg</item>
+        <item name="colorOnBackground">@color/dark</item>
+
+        <!-- Accent and error colors -->
+        <item name="colorAccent">@color/brand</item>
+        <item name="colorSurface">@color/light</item>
+        <item name="colorOnSurface">@color/darkbg</item>
+        <item name="colorError">@color/red</item>
+        <item name="colorOnError">@color/white</item>
+
+        <!-- Secondary text color -->
+        <item name="android:textColorSecondary">@color/darkgray</item>
+
     </style>
 
-    <style name="Theme.MOBDEVEMCO" parent="Base.Theme.MOBDEVEMCO" />
+    <style name="Theme.Shellfie" parent="Base.Theme.Shellfie" />
 </resources>
