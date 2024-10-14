@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">MOBDEVE MCO</string>
+
+    <string name="navitem1">Home</string>
+    <string name="navitem2">Map</string>
+    <string name="navitem3">Add Sighting</string>
+    <string name="navitem4">Catalogue</string>
+    <string name="navitem5">Profile</string>
+
+
+
 </resources>
