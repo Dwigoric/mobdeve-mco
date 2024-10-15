@@ -6,37 +6,38 @@
     android:layout_height="match_parent">
 
 
-    <ImageView
-        android:id="@+id/imgCategory"
+    <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/nemo" />
+        app:cardCornerRadius="8dp">
 
-    <ImageView
-        android:id="@+id/imgOverlay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/imgCategory"
-        app:layout_constraintEnd_toEndOf="@+id/imgCategory"
-        app:layout_constraintStart_toStartOf="@+id/imgCategory"
-        app:layout_constraintTop_toTopOf="@+id/imgCategory"
-        app:srcCompat="@drawable/category_filter" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/txtCategoryName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Category1"
-        app:layout_constraintBottom_toBottomOf="@+id/imgCategory"
-        app:layout_constraintEnd_toEndOf="@+id/imgCategory"
-        app:layout_constraintStart_toStartOf="@+id/imgCategory"
-        app:layout_constraintTop_toTopOf="@+id/imgCategory"
-        style="@style/BodyBoldInverse"/>
+            <ImageView
+                android:id="@+id/imgCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/nemo" />
+
+            <ImageView
+                android:id="@+id/imgOverlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/category_overlay" />
+
+            <TextView
+                android:id="@+id/txtCategoryName"
+                style="@style/BodyBoldInverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/Category1" />
+        </FrameLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
