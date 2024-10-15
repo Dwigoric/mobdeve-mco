@@ -32,4 +32,15 @@
     <!-- Catalogue -->
     <string name="Category1">Fish</string>
 
+
+    <!-- Profile / Settings -->
+    <string name="SettingsUsernameLabel">Username</string>
+    <string name="SettingsBioLabel">Bio</string>
+    <string name="SettingsContactLink">Links</string>
+
+    <string name="UserBio">BS Computer Science graduate. I have 4 years experience working as a marine biologist researcher.</string>
+    <string name="UserContactLink">thefishwhisperer@gmail.com</string>
+
+    <string name="MySightingsHeader">My Sightings</string>
+
 </resources>

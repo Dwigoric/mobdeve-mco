@@ -11,18 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Username"
-        app:layout_constraintStart_toEndOf="@+id/imgProfPic"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imgSightingPhoto"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgProfPic"
-        app:srcCompat="@drawable/thresher_shark" />
+        app:layout_constraintStart_toEndOf="@+id/contProfPic"
+        tools:layout_editor_absoluteY="0dp" />
 
     <TextView
         android:id="@+id/txtPostTime"
@@ -30,17 +20,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/PostTime"
-        app:layout_constraintStart_toEndOf="@+id/imgProfPic"
-        app:layout_constraintTop_toBottomOf="@+id/txtUsername" />
+        app:layout_constraintStart_toEndOf="@+id/contProfPic"
+        tools:layout_editor_absoluteY="19dp" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/contProfPic"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:cardCornerRadius="100dp">
+
+        <ImageView
+            android:id="@+id/imgProfPic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/profile_pic__500_x_500_px_" />
+    </androidx.cardview.widget.CardView>
 
 
     <ImageView
-        android:id="@+id/imgProfPic"
-        android:layout_width="wrap_content"
+        android:id="@+id/imgSightingPhoto"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/profpic" />
+        app:layout_constraintTop_toBottomOf="@+id/contProfPic"
+        app:srcCompat="@drawable/thresher_shark" />
 
     <ImageButton
         android:id="@+id/btnUpvote"
@@ -89,48 +95,48 @@
 
     <TextView
         android:id="@+id/txtSightingNameScientific"
+        style="@style/BodyItalic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/SightingNameScientific"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtSightingName"
-        style="@style/BodyItalic"/>
+        app:layout_constraintTop_toBottomOf="@+id/txtSightingName" />
 
     <TextView
         android:id="@+id/txtSeaMoreDetails"
+        style="@style/Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ViewMoreDetails"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtSightingNameScientific"
-        style="@style/Caption"/>
+        app:layout_constraintTop_toBottomOf="@+id/txtSightingNameScientific" />
 
     <TextView
         android:id="@+id/txtSightingPlace"
+        style="@style/Body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/SightingPlace"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnMoreDetails"
-        style="@style/Body"/>
+        app:layout_constraintTop_toBottomOf="@+id/btnMoreDetails" />
 
     <TextView
         android:id="@+id/textSightingDate"
+        style="@style/Body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/SightingDate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtSightingPlace"
-        style="@style/Body"/>
+        app:layout_constraintTop_toBottomOf="@+id/txtSightingPlace" />
 
     <TextView
         android:id="@+id/txtPostScore"
+        style="@style/BodyBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/PostScore"
         app:layout_constraintBottom_toBottomOf="@+id/btnDownvote"
         app:layout_constraintStart_toEndOf="@+id/btnDownvote"
-        app:layout_constraintTop_toBottomOf="@+id/imgSightingPhoto"
-        style="@style/BodyBold"/>
+        app:layout_constraintTop_toBottomOf="@+id/imgSightingPhoto" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
