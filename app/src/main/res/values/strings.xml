@@ -29,5 +29,7 @@
     <string name="CommentContent">Wow, amazing! I love marine animals. Literally.</string>
     <string name="CommentTime">2d</string>
 
+    <!-- Catalogue -->
+    <string name="Category1">Fish</string>
 
 </resources>
