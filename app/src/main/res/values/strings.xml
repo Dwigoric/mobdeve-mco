@@ -23,4 +23,11 @@
 
     <string name="NoPhoto">No photo of sighting</string>
 
+
+    <!-- Comment -->
+    <string name="CommentUsername">deeplovesoctopus</string>
+    <string name="CommentContent">Wow, amazing! I love marine animals. Literally.</string>
+    <string name="CommentTime">2d</string>
+
+
 </resources>

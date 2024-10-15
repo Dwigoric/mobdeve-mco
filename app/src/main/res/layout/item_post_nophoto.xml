@@ -127,10 +127,10 @@
         android:id="@+id/no_photo_text"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="@color/darkbg"
+        android:background="?attr/colorOnSurface"
         android:gravity="center"
         android:text="No photo of sighting"
-        android:textColor="@color/lightbg"
+        android:textColor="?attr/colorSurface"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgProfPic" />
