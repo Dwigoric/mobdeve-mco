@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/txtUsername"
+        style="@style/BodyBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Username"
+        app:layout_constraintStart_toEndOf="@+id/imgProfPic"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtPostTime"
+        style="@style/Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/PostTime"
+        app:layout_constraintStart_toEndOf="@+id/imgProfPic"
+        app:layout_constraintTop_toBottomOf="@+id/txtUsername" />
+
+
+    <ImageView
+        android:id="@+id/imgProfPic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/profpic" />
+
+    <ImageButton
+        android:id="@+id/btnUpvote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/no_photo_text"
+        app:srcCompat="@drawable/ic_regular_check" />
+
+    <ImageButton
+        android:id="@+id/btnDownvote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/btnUpvote"
+        app:layout_constraintTop_toBottomOf="@+id/no_photo_text"
+        app:srcCompat="@drawable/ic_regular_report" />
+
+    <ImageButton
+        android:id="@+id/btnComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        app:layout_constraintEnd_toStartOf="@+id/btnMoreDetails"
+        app:layout_constraintTop_toBottomOf="@+id/no_photo_text"
+        app:srcCompat="@drawable/ic_regular_comment" />
+
+    <ImageButton
+        android:id="@+id/btnMoreDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/no_photo_text"
+        app:srcCompat="@drawable/ic_regular_more" />
+
+    <TextView
+        android:id="@+id/txtSightingName"
+        style="@style/Header3Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/SightingName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnDownvote" />
+
+    <TextView
+        android:id="@+id/txtSightingNameScientific"
+        style="@style/BodyItalic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/SightingNameScientific"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtSightingName" />
+
+    <TextView
+        android:id="@+id/txtSeaMoreDetails"
+        style="@style/Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ViewMoreDetails"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtSightingNameScientific" />
+
+    <TextView
+        android:id="@+id/txtSightingPlace"
+        style="@style/Body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/SightingPlace"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMoreDetails" />
+
+    <TextView
+        android:id="@+id/textSightingDate"
+        style="@style/Body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/SightingDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtSightingPlace" />
+
+    <TextView
+        android:id="@+id/txtPostScore"
+        style="@style/BodyBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/PostScore"
+        app:layout_constraintBottom_toBottomOf="@+id/btnDownvote"
+        app:layout_constraintStart_toEndOf="@+id/btnDownvote"
+        app:layout_constraintTop_toBottomOf="@+id/no_photo_text" />
+
+    <TextView
+        android:id="@+id/no_photo_text"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/darkbg"
+        android:gravity="center"
+        android:text="No photo of sighting"
+        android:textColor="@color/lightbg"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgProfPic" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
