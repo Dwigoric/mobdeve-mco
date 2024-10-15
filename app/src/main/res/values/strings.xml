@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MOBDEVE MCO</string>
 
+    <!-- Bottom nav-->
     <string name="navitem1">Home</string>
     <string name="navitem2">Map</string>
     <string name="navitem3">Add Sighting</string>
@@ -8,5 +9,16 @@
     <string name="navitem5">Profile</string>
 
 
+    <!-- Item Post -->
+    <string name="Username">fish.whisperer</string> <!-- to be dynamic -->
+    <string name="PostTime">Posted recently</string> <!-- to be dynamic -->
+    <string name="PostScore">4 pts</string> <!-- to be dynamic %d-->
+
+    <string name="SightingName">Thresher shark</string> <!-- to be dynamic -->
+    <string name="SightingNameScientific">Alopias vulpinus</string> <!-- to be dynamic -->
+    <string name="SightingPlace">Moalboal, Cebu</string> <!-- to be dynamic -->
+    <string name="SightingDate"> Seen on Sep 18, 2024</string> <!-- to be dynamic -->
+
+    <string name="ViewMoreDetails">Sea More Details</string>
 
 </resources>
