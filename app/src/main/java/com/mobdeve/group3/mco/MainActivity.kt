@@ -22,6 +22,12 @@ class MainActivity : AppCompatActivity() {
         val bottomNav: BottomNavigationView = findViewById(R.id.bottom_nav)
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
+                R.id.nav_catalogue -> {
+                    val catalogueIntent = Intent(applicationContext, CatalogueActivity::class.java)
+                    this.startActivity(catalogueIntent)
+                    true
+                }
+
                 R.id.nav_profile -> {
                     val profileIntent = Intent(applicationContext, ProfileActivity::class.java)
                     this.startActivity(profileIntent)
