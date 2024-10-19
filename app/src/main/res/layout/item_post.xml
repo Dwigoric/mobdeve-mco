@@ -10,7 +10,6 @@
         style="@style/BodyBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Username"
         app:layout_constraintStart_toEndOf="@+id/contProfPic"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,7 +18,6 @@
         style="@style/Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/PostTime"
         app:layout_constraintStart_toEndOf="@+id/contProfPic"
         app:layout_constraintTop_toBottomOf="@+id/txtUsername" />
 
@@ -35,7 +33,7 @@
             android:id="@+id/imgProfPic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/profile_pic__500_x_500_px_" />
+            />
     </androidx.cardview.widget.CardView>
 
 
@@ -48,7 +46,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/contProfPic"
-        app:srcCompat="@drawable/thresher_shark" />
+         />
 
     <ImageButton
         android:id="@+id/btnUpvote"
@@ -91,7 +89,6 @@
         style="@style/Header3Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/SightingName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnDownvote" />
 
@@ -100,7 +97,6 @@
         style="@style/BodyItalic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/SightingNameScientific"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtSightingName" />
 
@@ -118,7 +114,6 @@
         style="@style/Body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/SightingPlace"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnMoreDetails" />
 
@@ -127,7 +122,6 @@
         style="@style/Body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/SightingDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtSightingPlace" />
 
@@ -136,7 +130,6 @@
         style="@style/BodyBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/PostScore"
         app:layout_constraintBottom_toBottomOf="@+id/btnDownvote"
         app:layout_constraintStart_toEndOf="@+id/btnDownvote"
         app:layout_constraintTop_toBottomOf="@+id/imgSightingPhoto" />
