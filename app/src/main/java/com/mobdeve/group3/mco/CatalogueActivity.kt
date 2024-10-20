@@ -6,19 +6,21 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.mobdeve.group3.mco.databinding.ActivityCatalogueBinding
 
-class MainActivity : AppCompatActivity() {
+class CatalogueActivity : AppCompatActivity() {
+    private val categories = CategoryGenerator.generateCategories()
     private lateinit var recyclerView: RecyclerView
-    private lateinit var postAdapter: PostAdapter
-    private lateinit var postList: ArrayList<Post>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+
+        val viewBinding = ActivityCatalogueBinding.inflate(layoutInflater)
+        setContentView(viewBinding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -26,16 +28,15 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        setupRecyclerView()
+        this.recyclerView = findViewById(R.id.rcvCatalogueCategories)
+        this.recyclerView.adapter = CatalogueCategoriesAdapter(this.categories)
+        this.recyclerView.layoutManager = GridLayoutManager(this, 2)
 
         val bottomNav: BottomNavigationView = findViewById(R.id.bottom_nav)
-        bottomNav.selectedItemId = R.id.nav_home
+        bottomNav.selectedItemId = R.id.nav_catalogue
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_catalogue -> {
-                    val catalogueIntent = Intent(applicationContext, CatalogueActivity::class.java)
-                    catalogueIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(catalogueIntent)
                     true
                 }
 
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                     val profileIntent = Intent(applicationContext, ProfileActivity::class.java)
                     profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(profileIntent)
+                    finish()
                     true
                 }
 
@@ -50,19 +52,12 @@ class MainActivity : AppCompatActivity() {
                     val homeIntent = Intent(applicationContext, MainActivity::class.java)
                     homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(homeIntent)
+                    finish()
                     true
                 }
 
                 else -> false
             }
         }
-    }
-
-    private fun setupRecyclerView() {
-        recyclerView = findViewById(R.id.rcvMainPosts)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        postList = PostGenerator.generateData()
-        postAdapter = PostAdapter(postList)
-        recyclerView.adapter = postAdapter
     }
 }

@@ -43,11 +43,13 @@
         </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcvMainPosts"
             android:layout_width="0dp"
             android:layout_height="600dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/topbar" />
+            app:layout_constraintTop_toBottomOf="@+id/topbar"
+            tools:listitem="@layout/item_post"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
