@@ -1,10 +1,11 @@
-package com.mobdeve.group3.mco
+package com.mobdeve.group3.mco.post
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.RecyclerView
+import com.mobdeve.group3.mco.R
 
-class PostAdapter(private val data: ArrayList<Post>): Adapter<PostViewHolder>() {
+class PostAdapter(private val data: ArrayList<Post>): RecyclerView.Adapter<PostViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         return if (data[position].imageId != null) {
             R.layout.item_post // Layout for posts with images

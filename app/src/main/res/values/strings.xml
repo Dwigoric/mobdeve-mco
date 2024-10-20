@@ -46,5 +46,6 @@
     <!-- launch -->
     <string name="LaunchHeader">Help protect our oceans, \none shellfie at a time.</string>
     <string name="LaunchSubheader">Join a community of ocean lovers. Spot marine life, snap a photo, and share it for conservation efforts. </string>
+    <string name="logout">Logout</string>
 
 </resources>

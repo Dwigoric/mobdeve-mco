@@ -1,4 +1,6 @@
-package com.mobdeve.group3.mco
+package com.mobdeve.group3.mco.catalogue
+
+import com.mobdeve.group3.mco.R
 
 class CategoryGenerator {
     companion object {

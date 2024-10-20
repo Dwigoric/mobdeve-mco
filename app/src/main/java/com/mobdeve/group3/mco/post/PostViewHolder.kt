@@ -1,4 +1,4 @@
-package com.mobdeve.group3.mco
+package com.mobdeve.group3.mco.post
 
 import android.content.Intent
 import android.view.View
@@ -6,6 +6,8 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.mobdeve.group3.mco.ProfileActivity
+import com.mobdeve.group3.mco.R
 
 class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val userHandle: TextView = itemView.findViewById(R.id.txtUsername)
@@ -16,7 +18,6 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val txtSightingNameScientific: TextView = itemView.findViewById(R.id.txtSightingNameScientific)
     private val txtSighingPlace: TextView = itemView.findViewById(R.id.txtSightingPlace)
     private val txtSightingDate: TextView = itemView.findViewById(R.id.txtSightingDate)
-    private val description: TextView = itemView.findViewById(R.id.txtSeaMoreDetails)
     private val imgSighting: ImageView? = itemView.findViewById(R.id.imgSightingPhoto)
     private val noPhotoText: TextView? = itemView.findViewById(R.id.no_photo_text) // Ensure this exists in the item_post_nophoto layout
     private val btnUpvote: ImageButton = itemView.findViewById(R.id.btnUpvote)
@@ -31,7 +32,6 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         txtSightingNameScientific.text = post.scientificName
         txtSighingPlace.text = post.location
         txtSightingDate.text = "Seen on ${post.sightDate}"
-        description.text = post.description
 
         // Store the imageId in a local variable
         val imageId = post.imageId

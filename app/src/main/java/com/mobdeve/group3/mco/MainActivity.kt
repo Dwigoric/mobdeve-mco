@@ -2,6 +2,9 @@ package com.mobdeve.group3.mco
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
+import android.widget.PopupMenu
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -9,6 +12,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.mobdeve.group3.mco.catalogue.CatalogueActivity
+import com.mobdeve.group3.mco.landing.LandingActivity
+import com.mobdeve.group3.mco.post.Post
+import com.mobdeve.group3.mco.post.PostAdapter
+import com.mobdeve.group3.mco.post.PostGenerator
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -56,13 +64,41 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+        // Set a long press listener on the Profile tab for the popup menu
+        val profileMenuItem = bottomNav.menu.findItem(R.id.nav_profile)
+        findViewById<View>(profileMenuItem.itemId).setOnLongClickListener {
+            showLogoutPopup(it) // Show the popup menu
+            true
+        }
     }
 
     private fun setupRecyclerView() {
         recyclerView = findViewById(R.id.rcvMainPosts)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        postList = PostGenerator.generateData()
+        postList = PostGenerator.Companion.generateData()
         postAdapter = PostAdapter(postList)
         recyclerView.adapter = postAdapter
+    }
+
+    private fun showLogoutPopup(view: View) {
+        val popup = PopupMenu(this, view)
+        popup.menuInflater.inflate(R.menu.logout_popup_menu, popup.menu)
+
+        popup.setOnMenuItemClickListener { menuItem: MenuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_logout -> {
+                    // Handle logout and navigate back to LaunchActivity
+                    val logoutIntent = Intent(applicationContext, LandingActivity::class.java)
+                    logoutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(logoutIntent)
+                    finish()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        popup.show()
     }
 }

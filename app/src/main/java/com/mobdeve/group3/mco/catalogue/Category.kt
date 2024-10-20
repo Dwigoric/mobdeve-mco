@@ -1,4 +1,4 @@
-package com.mobdeve.group3.mco
+package com.mobdeve.group3.mco.catalogue
 
 class Category(
     id: String,

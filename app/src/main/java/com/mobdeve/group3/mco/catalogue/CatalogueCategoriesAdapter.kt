@@ -1,8 +1,9 @@
-package com.mobdeve.group3.mco
+package com.mobdeve.group3.mco.catalogue
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mobdeve.group3.mco.R
 
 class CatalogueCategoriesAdapter(private val data: ArrayList<Category>) :
     RecyclerView.Adapter<CatalogueCategoriesViewHolder>() {

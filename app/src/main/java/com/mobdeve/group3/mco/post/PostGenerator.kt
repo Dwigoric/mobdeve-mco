@@ -1,4 +1,6 @@
-package com.mobdeve.group3.mco
+package com.mobdeve.group3.mco.post
+
+import com.mobdeve.group3.mco.R
 
 class PostGenerator {
     companion object {
@@ -16,7 +18,6 @@ class PostGenerator {
                     "Alopias vulpinus",
                     "Moalboal, Cebu",
                     "2021-07-01",
-                    "A thresher shark was spotted swimming near the shore.",
                     R.drawable.thresher_shark
                 )
             )
@@ -32,7 +33,6 @@ class PostGenerator {
                     "Amphiprioninae",
                     "Anilao, Batangas",
                     "2021-07-02",
-                    "A clownfish was seen swimming in the coral reefs.",
                     R.drawable.nemo // Changed image to Clownfish
                 )
             )
@@ -48,7 +48,6 @@ class PostGenerator {
                     "Amphiprioninae",
                     "Anilao, Batangas",
                     "2021-02-02",
-                    "A clownfish was seen swimming in the coral reefs.",
                     R.drawable.nemo
                 )
             )
@@ -64,7 +63,6 @@ class PostGenerator {
                     "Amphiprioninae",
                     "Anilao, Batangas",
                     "2021-02-02",
-                    "A clownfish was seen swimming in the coral reefs.",
                     R.drawable.nemo
                 )
             )
@@ -80,7 +78,6 @@ class PostGenerator {
                     "Unknown",
                     "Deep Sea",
                     "2024-10-18",
-                    "A mysterious creature was spotted, but no image was taken.",
                     null
                 )
             )
@@ -96,7 +93,6 @@ class PostGenerator {
                     "Chelonioidea",
                     "Tubbataha Reefs",
                     "2023-09-10",
-                    "A large sea turtle was seen gracefully swimming near the coral.",
                     R.drawable.sea_turtle
                 )
             )
@@ -112,7 +108,6 @@ class PostGenerator {
                     "Dugong dugon",
                     "Palawan, Philippines",
                     "2022-11-29",
-                    "A dugong was sighted, but the camera malfunctioned before a picture could be taken.",
                     null // No image
                 )
             )
@@ -128,7 +123,6 @@ class PostGenerator {
                     "Rhincodon typus",
                     "Donsol, Sorsogon",
                     "2024-06-23",
-                    "A massive whale shark was seen gliding through the water!",
                     R.drawable.whale_shark
                 )
             )
@@ -144,7 +138,6 @@ class PostGenerator {
                     "Sphyrnidae",
                     "Tubbataha Reefs",
                     "2024-05-12",
-                    "A hammerhead shark was spotted cruising along the edge of the reef.",
                     R.drawable.hammerhead_shark
                 )
             )
@@ -160,7 +153,6 @@ class PostGenerator {
                     "Octopoda",
                     "Puerto Galera, Philippines",
                     "2023-11-21",
-                    "An octopus was seen camouflaging with the corals, but the sighting happened too fast for a photo.",
                     null // No image
                 )
             )

@@ -1,4 +1,4 @@
-package com.mobdeve.group3.mco
+package com.mobdeve.group3.mco.post
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.databinding.ActivityMainBinding
 
 class PostActivity : AppCompatActivity() {

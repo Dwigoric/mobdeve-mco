@@ -1,4 +1,4 @@
-package com.mobdeve.group3.mco
+package com.mobdeve.group3.mco.post
 
 class Post(
     id: String,
@@ -9,7 +9,6 @@ class Post(
     scientificName: String,
     location: String,
     sightDate: String,
-    description: String,
     imageId: Int?
 ) {
     var id = id
@@ -34,9 +33,6 @@ class Post(
         private set
 
     var sightDate = sightDate
-        private set
-
-    var description = description
         private set
 
     var imageId = imageId
