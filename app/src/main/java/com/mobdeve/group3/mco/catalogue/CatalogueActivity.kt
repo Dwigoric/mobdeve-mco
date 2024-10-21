@@ -37,7 +37,7 @@ class CatalogueActivity : AppCompatActivity() {
 
         this.recyclerView = findViewById(R.id.rcvCatalogueCategories)
         this.recyclerView.adapter = CatalogueCategoriesAdapter(this.categories)
-        this.recyclerView.layoutManager = GridLayoutManager(this, 2)
+        this.recyclerView.layoutManager = GridLayoutManager(this, this.computeSpanCount())
 
         val bottomNav: BottomNavigationView = findViewById(R.id.bottom_nav)
         bottomNav.selectedItemId = R.id.nav_catalogue
@@ -72,6 +72,12 @@ class CatalogueActivity : AppCompatActivity() {
             showLogoutPopup(it) // Show the popup menu
             true
         }
+    }
+
+    private fun computeSpanCount(): Int {
+        val displayMetrics = resources.displayMetrics
+        val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+        return (dpWidth / 180).toInt()
     }
 
     private fun showLogoutPopup(view: View) {
