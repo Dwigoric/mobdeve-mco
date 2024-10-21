@@ -41,10 +41,15 @@ class MainActivity : AppCompatActivity() {
         bottomNav.selectedItemId = R.id.nav_home
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
+                R.id.nav_home -> {
+                    true
+                }
+
                 R.id.nav_catalogue -> {
                     val catalogueIntent = Intent(applicationContext, CatalogueActivity::class.java)
                     catalogueIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(catalogueIntent)
+                    finish()
                     true
                 }
 
@@ -52,13 +57,7 @@ class MainActivity : AppCompatActivity() {
                     val profileIntent = Intent(applicationContext, ProfileActivity::class.java)
                     profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(profileIntent)
-                    true
-                }
-
-                R.id.nav_home -> {
-                    val homeIntent = Intent(applicationContext, MainActivity::class.java)
-                    homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(homeIntent)
+                    finish()
                     true
                 }
 
