@@ -6,8 +6,8 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mobdeve.group3.mco.ProfileActivity
 import com.mobdeve.group3.mco.R
+import com.mobdeve.group3.mco.profile.ProfileActivity
 
 class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val userHandle: TextView = itemView.findViewById(R.id.txtUsername)
@@ -15,11 +15,13 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val userIcon: ImageView = itemView.findViewById(R.id.imgProfPic)
     private val score: TextView = itemView.findViewById(R.id.txtPostScore)
     private val txtSightingName: TextView = itemView.findViewById(R.id.txtSightingName)
-    private val txtSightingNameScientific: TextView = itemView.findViewById(R.id.txtSightingNameScientific)
+    private val txtSightingNameScientific: TextView =
+        itemView.findViewById(R.id.txtSightingNameScientific)
     private val txtSighingPlace: TextView = itemView.findViewById(R.id.txtSightingPlace)
     private val txtSightingDate: TextView = itemView.findViewById(R.id.txtSightingDate)
     private val imgSighting: ImageView? = itemView.findViewById(R.id.imgSightingPhoto)
-    private val noPhotoText: TextView? = itemView.findViewById(R.id.no_photo_text) // Ensure this exists in the item_post_nophoto layout
+    private val noPhotoText: TextView? =
+        itemView.findViewById(R.id.no_photo_text) // Ensure this exists in the item_post_nophoto layout
     private val btnUpvote: ImageButton = itemView.findViewById(R.id.btnUpvote)
     private val btnDownvote: ImageButton = itemView.findViewById(R.id.btnDownvote)
 

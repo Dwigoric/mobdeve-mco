@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mobdeve.group3.mco.MainActivity
-import com.mobdeve.group3.mco.ProfileActivity
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.databinding.ActivityCatalogueBinding
 import com.mobdeve.group3.mco.landing.LandingActivity
+import com.mobdeve.group3.mco.profile.ProfileActivity
 
 class CatalogueActivity : AppCompatActivity() {
     private val categories = CategoryGenerator.generateCategories()
@@ -88,6 +88,7 @@ class CatalogueActivity : AppCompatActivity() {
                     finish()
                     true
                 }
+
                 else -> false
             }
         }

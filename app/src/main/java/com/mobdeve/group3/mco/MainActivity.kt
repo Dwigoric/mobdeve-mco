@@ -17,6 +17,7 @@ import com.mobdeve.group3.mco.landing.LandingActivity
 import com.mobdeve.group3.mco.post.Post
 import com.mobdeve.group3.mco.post.PostAdapter
 import com.mobdeve.group3.mco.post.PostGenerator
+import com.mobdeve.group3.mco.profile.ProfileActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -95,6 +96,7 @@ class MainActivity : AppCompatActivity() {
                     finish()
                     true
                 }
+
                 else -> false
             }
         }

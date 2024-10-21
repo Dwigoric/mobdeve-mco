@@ -1,4 +1,4 @@
-package com.mobdeve.group3.mco
+package com.mobdeve.group3.mco.profile
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +12,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.mobdeve.group3.mco.MainActivity
+import com.mobdeve.group3.mco.R
+import com.mobdeve.group3.mco.SightingGenerator
 import com.mobdeve.group3.mco.catalogue.CatalogueActivity
 import com.mobdeve.group3.mco.databinding.ActivityProfileBinding
 import com.mobdeve.group3.mco.landing.LandingActivity
@@ -57,6 +60,7 @@ class ProfileActivity : AppCompatActivity() {
                     finish()
                     true
                 }
+
                 R.id.nav_profile -> true
                 R.id.nav_home -> {
                     val homeIntent = Intent(applicationContext, MainActivity::class.java)
@@ -65,6 +69,7 @@ class ProfileActivity : AppCompatActivity() {
                     finish()
                     true
                 }
+
                 else -> false
             }
         }
@@ -84,6 +89,7 @@ class ProfileActivity : AppCompatActivity() {
                     finish()
                     true
                 }
+
                 else -> false
             }
         }
