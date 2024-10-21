@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.group3.mco.R
 
-class PostAdapter(private val data: ArrayList<Post>): RecyclerView.Adapter<PostViewHolder>() {
+class PostAdapter(private val data: ArrayList<Post>) : RecyclerView.Adapter<PostViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         return if (data[position].imageId != null) {
             R.layout.item_post // Layout for posts with images
@@ -21,7 +21,7 @@ class PostAdapter(private val data: ArrayList<Post>): RecyclerView.Adapter<PostV
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.bind(data.get(position))
+        holder.bind(data[position])
     }
 
     override fun getItemCount(): Int {

@@ -15,7 +15,7 @@ class ProfileSightingsAdapter(private val data: ArrayList<Sighting>) :
     }
 
     override fun onBindViewHolder(holder: ProfileSightingsViewHolder, position: Int) {
-        holder.bindData(data.get(position))
+        holder.bindData(data[position])
     }
 
     override fun getItemCount(): Int {

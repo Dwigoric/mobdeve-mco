@@ -17,7 +17,7 @@ class CatalogueCategoriesAdapter(private val data: ArrayList<Category>) :
     }
 
     override fun onBindViewHolder(holder: CatalogueCategoriesViewHolder, position: Int) {
-        holder.bindData(data.get(position))
+        holder.bindData(data[position])
     }
 
     override fun getItemCount(): Int {
