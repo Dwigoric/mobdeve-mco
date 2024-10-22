@@ -10,7 +10,6 @@ class PostGenerator {
             // Post 1: Thresher Shark with image
             tempList.add(
                 Post(
-                    "1",
                     "ynapixel",
                     R.drawable.profpic,
                     "2021-08-01",
@@ -25,7 +24,6 @@ class PostGenerator {
             // Post 2: Clownfish with image
             tempList.add(
                 Post(
-                    "2",
                     "ynapixel",
                     R.drawable.profpic,
                     "2021-08-01",
@@ -40,7 +38,6 @@ class PostGenerator {
             // Post 3: Clownfish with image (different user)
             tempList.add(
                 Post(
-                    "3",
                     "mrtnrjn",
                     R.drawable.lelouch,
                     "2021-03-01",
@@ -55,7 +52,6 @@ class PostGenerator {
             // Post 4: Clownfish with image (same as Post 3)
             tempList.add(
                 Post(
-                    "4",
                     "mrtnrjn",
                     R.drawable.lelouch,
                     "2021-03-01",
@@ -70,7 +66,6 @@ class PostGenerator {
             // Post 5: Mysterious creature without image
             tempList.add(
                 Post(
-                    "5",
                     "noimage_user",
                     R.drawable.profpic,
                     "2024-10-19",
@@ -85,7 +80,6 @@ class PostGenerator {
             // Post 6: Sea Turtle with image
             tempList.add(
                 Post(
-                    "6",
                     "seaturtle_lover",
                     R.drawable.profpic,
                     "2023-09-12",
@@ -100,7 +94,6 @@ class PostGenerator {
             // Post 7: Dugong without image
             tempList.add(
                 Post(
-                    "7",
                     "wildlifeenthusiast",
                     R.drawable.profpic,
                     "2022-12-01",
@@ -115,7 +108,6 @@ class PostGenerator {
             // Post 8: Whale Shark with image
             tempList.add(
                 Post(
-                    "8",
                     "oceanadventurer",
                     R.drawable.profpic,
                     "2024-06-25",
@@ -130,7 +122,6 @@ class PostGenerator {
             // Post 9: Hammerhead Shark with image
             tempList.add(
                 Post(
-                    "9",
                     "sharklover",
                     R.drawable.profpic,
                     "2024-05-14",
@@ -145,7 +136,6 @@ class PostGenerator {
             // Post 10: Octopus without image
             tempList.add(
                 Post(
-                    "10",
                     "marinebiologist",
                     R.drawable.profpic,
                     "2023-11-22",
