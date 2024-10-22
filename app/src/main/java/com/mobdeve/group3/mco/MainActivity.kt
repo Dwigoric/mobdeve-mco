@@ -6,6 +6,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -18,11 +20,46 @@ import com.mobdeve.group3.mco.post.Post
 import com.mobdeve.group3.mco.post.PostAdapter
 import com.mobdeve.group3.mco.post.PostGenerator
 import com.mobdeve.group3.mco.profile.ProfileActivity
+import java.util.Date
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
     private lateinit var postList: ArrayList<Post>
+
+    private val addSightingActivityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode != RESULT_OK) return@registerForActivityResult
+
+            val commonName = result.data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY)
+            val scientificName =
+                result.data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY)
+//            val groupSize = result.data?.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0)
+//            val distance = result.data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f)
+            val location = result.data?.getStringExtra(AddSightingActivity.LOCATION_KEY)
+//            val observerType =
+//                result.data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY)
+            val sightingDate =
+                result.data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
+//            val sightingTime =
+//                result.data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
+
+            postList.add(
+                0,
+                Post(
+                    "rosmar",
+                    R.drawable.profpic,
+                    Date().toString(), // TODO: Format this properly
+                    commonName!!,
+                    scientificName!!,
+                    location!!,
+                    sightingDate!!,
+                    R.drawable.nemo
+                )
+            )
+
+            postAdapter.notifyItemInserted(0)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +79,13 @@ class MainActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_home -> {
+                    true
+                }
+
+                R.id.nav_add -> {
+                    val addSightingIntent =
+                        Intent(applicationContext, AddSightingActivity::class.java)
+                    addSightingActivityLauncher.launch(addSightingIntent)
                     true
                 }
 
@@ -76,7 +120,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         recyclerView = findViewById(R.id.rcvMainPosts)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        postList = PostGenerator.Companion.generateData()
+        postList = PostGenerator.generateData()
         postAdapter = PostAdapter(postList)
         recyclerView.adapter = postAdapter
     }
