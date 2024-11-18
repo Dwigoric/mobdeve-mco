@@ -35,11 +35,10 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         txtSighingPlace.text = post.location
         txtSightingDate.text = "Seen on ${post.sightDate}"
 
-        // Store the imageId in a local variable
-        val imageId = post.imageId
-
-        if (imageId != null) {
-            imgSighting?.setImageResource(imageId)
+        // Display image if available
+        val imageUri = post.imageId
+        if (imageUri != null) {
+            imgSighting?.setImageURI(imageUri)
             imgSighting?.visibility = View.VISIBLE
             noPhotoText?.visibility = View.GONE // Hide "No photo" text
         } else {
@@ -64,7 +63,7 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             } else if (!post.hasUpvoted) {
                 post.score++
             } else {
-                post.score--;
+                post.score--
             }
             post.hasUpvoted = !post.hasUpvoted // Toggle upvoted state
             btnUpvote.setImageResource(
@@ -79,9 +78,9 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 post.hasUpvoted = false
                 btnUpvote.setImageResource(R.drawable.ic_regular_check) // Reset upvote button
             } else if (!post.hasDownvoted) {
-                post.score--;
+                post.score--
             } else {
-                post.score++;
+                post.score++
             }
             post.hasDownvoted = !post.hasDownvoted // Toggle downvoted state
             btnDownvote.setImageResource(

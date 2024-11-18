@@ -1,5 +1,6 @@
 package com.mobdeve.group3.mco.post
 
+import android.net.Uri
 import com.mobdeve.group3.mco.R
 
 class PostGenerator {
@@ -17,7 +18,7 @@ class PostGenerator {
                     "Alopias vulpinus",
                     "Moalboal, Cebu",
                     "2021-07-01",
-                    R.drawable.thresher_shark
+                    Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/thresher_shark")
                 )
             )
 
@@ -31,7 +32,7 @@ class PostGenerator {
                     "Amphiprioninae",
                     "Anilao, Batangas",
                     "2021-07-02",
-                    R.drawable.nemo // Changed image to Clownfish
+                    Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/nemo")
                 )
             )
 
@@ -45,7 +46,7 @@ class PostGenerator {
                     "Amphiprioninae",
                     "Anilao, Batangas",
                     "2021-02-02",
-                    R.drawable.nemo
+                    Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/nemo")
                 )
             )
 
@@ -59,7 +60,7 @@ class PostGenerator {
                     "Amphiprioninae",
                     "Anilao, Batangas",
                     "2021-02-02",
-                    R.drawable.nemo
+                    Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/nemo")
                 )
             )
 
@@ -87,7 +88,7 @@ class PostGenerator {
                     "Chelonioidea",
                     "Tubbataha Reefs",
                     "2023-09-10",
-                    R.drawable.sea_turtle
+                    Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/sea_turtle")
                 )
             )
 
@@ -115,7 +116,7 @@ class PostGenerator {
                     "Rhincodon typus",
                     "Donsol, Sorsogon",
                     "2024-06-23",
-                    R.drawable.whale_shark
+                    Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/whale_shark")
                 )
             )
 
@@ -129,7 +130,7 @@ class PostGenerator {
                     "Sphyrnidae",
                     "Tubbataha Reefs",
                     "2024-05-12",
-                    R.drawable.hammerhead_shark
+                    Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/hammerhead_shark")
                 )
             )
 

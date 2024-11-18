@@ -1,5 +1,6 @@
 package com.mobdeve.group3.mco.post
 
+import android.net.Uri
 import java.util.UUID
 
 class Post(
@@ -10,7 +11,7 @@ class Post(
     scientificName: String,
     location: String,
     sightDate: String,
-    imageId: Int?
+    imageId: Uri?
 ) {
     val id = UUID.randomUUID().toString()
 

@@ -1,6 +1,7 @@
 package com.mobdeve.group3.mco
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -43,6 +44,8 @@ class MainActivity : AppCompatActivity() {
                 result.data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
 //            val sightingTime =
 //                result.data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
+            val imageUriString = result.data?.getStringExtra("IMAGE_URI")
+            val imageUri = if (!imageUriString.isNullOrEmpty()) Uri.parse(imageUriString) else null
 
             postList.add(
                 0,
@@ -54,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                     scientificName!!,
                     location!!,
                     sightingDate!!,
-                    R.drawable.nemo
+                    imageUri
                 )
             )
 
