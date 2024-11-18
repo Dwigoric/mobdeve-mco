@@ -1,10 +1,12 @@
 package com.mobdeve.group3.mco
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageButton
 import android.widget.PopupMenu
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResult
@@ -75,7 +77,13 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        // Set up sort button click listener
+        findViewById<ImageButton>(R.id.btnSort).setOnClickListener {
+            showSortPopup(it)
+        }
+
         setupRecyclerView()
+
 
         val bottomNav: BottomNavigationView = findViewById(R.id.bottom_nav)
         bottomNav.selectedItemId = R.id.nav_home
@@ -148,5 +156,42 @@ class MainActivity : AppCompatActivity() {
         }
 
         popup.show()
+    }
+
+    private fun showSortPopup(view: View) {
+        val popupMenu = PopupMenu(this, view)
+        menuInflater.inflate(R.menu.sort_options_menu, popupMenu.menu)
+
+        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+            when (item.itemId) {
+                R.id.option_sort_score -> {
+                    // Sort based on score
+                    sortPostsByScore()
+                    true
+                }
+                R.id.option_sort_recency -> {
+                    // Sort based on recency
+                    sortPostsByRecency()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        popupMenu.show()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun sortPostsByScore() {
+        // Implement sorting logic based on score (Descending order)
+        postList.sortByDescending { it.score }
+        postAdapter.notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun sortPostsByRecency() {
+        // Implement sorting logic based on recency (Descending order)
+        postList.sortByDescending { it.postingDate }
+        postAdapter.notifyDataSetChanged()
     }
 }
