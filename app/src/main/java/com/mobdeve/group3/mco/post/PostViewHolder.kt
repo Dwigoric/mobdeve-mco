@@ -5,8 +5,10 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.group3.mco.R
+import com.mobdeve.group3.mco.comment.CommentsDialogFragment
 import com.mobdeve.group3.mco.profile.ProfileActivity
 
 class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -24,6 +26,7 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         itemView.findViewById(R.id.no_photo_text) // Ensure this exists in the item_post_nophoto layout
     private val btnUpvote: ImageButton = itemView.findViewById(R.id.btnUpvote)
     private val btnDownvote: ImageButton = itemView.findViewById(R.id.btnDownvote)
+    private val btnComment: ImageButton = itemView.findViewById(R.id.btnComment)
 
     fun bind(post: Post) {
         userHandle.text = post.userHandler
@@ -95,5 +98,11 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val profileIntent = Intent(context, ProfileActivity::class.java)
             context.startActivity(profileIntent)
         }
+
+        btnComment.setOnClickListener {
+            val dialog = CommentsDialogFragment.newInstance(post)
+            dialog.show((itemView.context as AppCompatActivity).supportFragmentManager, "CommentsDialog")
+        }
+
     }
 }

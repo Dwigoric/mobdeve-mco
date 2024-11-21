@@ -1,6 +1,7 @@
 package com.mobdeve.group3.mco.post
 
 import android.net.Uri
+import com.mobdeve.group3.mco.comment.Comment
 import java.util.UUID
 
 class Post(
@@ -42,4 +43,19 @@ class Post(
     var score: Int = 4
     var hasUpvoted: Boolean = false
     var hasDownvoted: Boolean = false
+
+    // List of comments associated with this post
+    private val _comments: MutableList<Comment> = mutableListOf()
+    val comments: List<Comment>
+        get() = _comments // Expose as an immutable list
+
+    fun addComment(comment: Comment) {
+        if (comment.postId == this.id) {
+            _comments.add(comment)
+        }
+    }
+
+    fun removeComment(comment: Comment) {
+        _comments.remove(comment)
+    }
 }

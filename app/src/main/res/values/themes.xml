@@ -27,4 +27,11 @@
     </style>
 
     <style name="Theme.Shellfie" parent="Base.Theme.Shellfie" />
+
+    <style name="CommentsDialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@drawable/dialog_background</item>
+        <item name="android:windowMinWidthMajor">90%</item> <!-- 90% of screen width -->
+        <item name="android:windowMinWidthMinor">90%</item> <!-- 90% of screen width -->
+    </style>
+
 </resources>
