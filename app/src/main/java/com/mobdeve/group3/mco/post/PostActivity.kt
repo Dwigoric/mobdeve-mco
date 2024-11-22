@@ -13,6 +13,7 @@ import com.mobdeve.group3.mco.databinding.ActivityMainBinding
 class PostActivity : AppCompatActivity() {
     private val postList = PostGenerator.generateData()
     private lateinit var recyclerView: RecyclerView
+    private lateinit var postAdapter: PostAdapter  // Store the adapter reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +29,9 @@ class PostActivity : AppCompatActivity() {
         }
 
         this.recyclerView = findViewById(R.id.rcvMainPosts)
-        this.recyclerView.adapter = PostAdapter(this.postList)
-        this.recyclerView.layoutManager = LinearLayoutManager(this)
+
+        postAdapter = PostAdapter(this.postList)
+        recyclerView.adapter = postAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
     }
 }

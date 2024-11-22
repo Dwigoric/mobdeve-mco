@@ -1,17 +1,33 @@
 package com.mobdeve.group3.mco.post
 
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.mobdeve.group3.mco.MainActivity
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.comment.CommentsDialogFragment
 import com.mobdeve.group3.mco.profile.ProfileActivity
 
 class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    companion object {
+        const val COMMON_NAME_KEY = "COMMON_NAME_KEY"
+        const val SCIENTIFIC_NAME_KEY = "SCIENTIFIC_NAME_KEY"
+        const val GROUP_SIZE_KEY = "GROUP_SIZE_KEY"
+        const val DISTANCE_KEY = "DISTANCE_KEY"
+        const val LOCATION_KEY = "LOCATION_KEY"
+        const val OBSERVER_TYPE_KEY = "OBSERVER_TYPE_KEY"
+        const val SIGHTING_DATE_KEY = "SIGHTING_DATE_KEY"
+        const val SIGHTING_TIME_KEY = "SIGHTING_TIME_KEY"
+        const val IMAGE_URI_KEY = "IMAGE_URI_KEY"
+    }
+
     private val userHandle: TextView = itemView.findViewById(R.id.txtUsername)
     private val postingDate: TextView = itemView.findViewById(R.id.txtPostTime)
     private val userIcon: ImageView = itemView.findViewById(R.id.imgProfPic)
@@ -27,6 +43,8 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val btnUpvote: ImageButton = itemView.findViewById(R.id.btnUpvote)
     private val btnDownvote: ImageButton = itemView.findViewById(R.id.btnDownvote)
     private val btnComment: ImageButton = itemView.findViewById(R.id.btnComment)
+    private val btnModify: ImageButton = itemView.findViewById(R.id.btnModify)
+    private val txtSeaMoreDetails: TextView = itemView.findViewById(R.id.txtSeaMoreDetails)
 
     fun bind(post: Post) {
         userHandle.text = post.userHandler
@@ -104,5 +122,76 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             dialog.show((itemView.context as AppCompatActivity).supportFragmentManager, "CommentsDialog")
         }
 
+        txtSeaMoreDetails.setOnClickListener {
+            val dialogFragment = SeaMoreDialogFragment()
+
+            // Pass data to the dialog using arguments (Bundle)
+            val args = Bundle().apply {
+                putString("species", post.scientificName)
+                putString("commonName", post.animalName)
+                putString("groupSize", post.groupSize.toString())
+                putString("location", post.location)
+                putString("distance", post.distance.toString())
+                putString("observerType", post.observerType)
+                putString("sightingDate", post.sightDate)
+                putString("sightingTime", post.sightingTime)
+            }
+
+            dialogFragment.arguments = args
+
+            // Show the dialog
+            val fragmentManager = (itemView.context as AppCompatActivity).supportFragmentManager
+            dialogFragment.show(fragmentManager, "sea_more_dialog")
+        }
+
+        btnModify.setOnClickListener {
+            val options = arrayOf("Edit", "Delete")
+            val builder = AlertDialog.Builder(itemView.context)
+            builder.setTitle("Modify Post")
+                .setItems(options) { _, which ->
+                    when (which) {
+                        0 -> {
+                            // Handle Edit
+                            val context = itemView.context
+                            val editIntent = Intent(context, EditSightingActivity::class.java)
+                            editIntent.putExtra(COMMON_NAME_KEY, post.animalName)
+                            editIntent.putExtra(SCIENTIFIC_NAME_KEY, post.scientificName)
+                            editIntent.putExtra(GROUP_SIZE_KEY, post.groupSize)
+                            editIntent.putExtra(DISTANCE_KEY, post.distance)
+                            editIntent.putExtra(LOCATION_KEY, post.location)
+                            editIntent.putExtra(OBSERVER_TYPE_KEY, post.observerType)
+                            editIntent.putExtra(SIGHTING_DATE_KEY, post.sightDate)
+                            editIntent.putExtra(SIGHTING_TIME_KEY, post.sightingTime)
+                            editIntent.putExtra(IMAGE_URI_KEY, post.imageId.toString())
+                            editIntent.putExtra("POST_ID", post.id)
+                            context.startActivity(editIntent)
+                        }
+                        1 -> {
+                            // Handle Delete - show confirmation dialog or delete the post
+                            val position = bindingAdapterPosition
+                            if (position != RecyclerView.NO_POSITION) {
+                                showDeleteConfirmationDialog(post, position)
+                            }
+                        }
+                    }
+                }
+                .show()
+        }
+    }
+
+    private fun showDeleteConfirmationDialog(post: Post, position: Int) {
+        val builder = AlertDialog.Builder(itemView.context)
+        builder.setTitle("Delete Post")
+            .setMessage("Are you sure you want to delete this post?")
+            .setPositiveButton("Yes") { _, _ ->
+                deletePost(post, position)
+            }
+            .setNegativeButton("No", null)
+            .show()
+    }
+
+    private fun deletePost(post: Post, position: Int) {
+        val activity = itemView.context as MainActivity
+        activity.deletePostAtPosition(position)
     }
 }

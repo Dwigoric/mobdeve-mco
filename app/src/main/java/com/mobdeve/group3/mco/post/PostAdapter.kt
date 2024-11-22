@@ -27,4 +27,9 @@ class PostAdapter(private val data: ArrayList<Post>) : RecyclerView.Adapter<Post
     override fun getItemCount(): Int {
         return data.size
     }
+
+    fun updatePost(position: Int, updatedPost: Post) {
+        data[position] = updatedPost
+        notifyItemChanged(position)
+    }
 }

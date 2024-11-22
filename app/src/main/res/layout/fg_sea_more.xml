@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="30dp">
@@ -20,73 +19,145 @@
         android:id="@+id/txtSpecies"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Species: "
         android:layout_marginTop="24dp"
-        android:text="Species"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtSightingDetails" />
+
+    <TextView
+        android:id="@+id/txtSpeciesValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lion"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintStart_toEndOf="@+id/txtSpecies"
+        app:layout_constraintTop_toTopOf="@+id/txtSpecies" />
 
     <TextView
         android:id="@+id/txtCommonName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Common Name"
+        android:text="Common Name: "
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtSpecies" />
+        app:layout_constraintTop_toBottomOf="@+id/txtSpeciesValue" />
+
+    <TextView
+        android:id="@+id/txtCommonNameValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lion King"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintStart_toEndOf="@+id/txtCommonName"
+        app:layout_constraintTop_toTopOf="@+id/txtCommonName" />
 
     <TextView
         android:id="@+id/txtGroupSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Group Size"
+        android:text="Group Size: "
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtCommonName" />
+        app:layout_constraintTop_toBottomOf="@+id/txtCommonNameValue" />
+
+    <TextView
+        android:id="@+id/txtGroupSizeValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintStart_toEndOf="@+id/txtGroupSize"
+        app:layout_constraintTop_toTopOf="@+id/txtGroupSize" />
 
     <TextView
         android:id="@+id/txtLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Location"
+        android:text="Location: "
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtGroupSize" />
+        app:layout_constraintTop_toBottomOf="@+id/txtGroupSizeValue" />
+
+    <TextView
+        android:id="@+id/txtLocationValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Africa"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintStart_toEndOf="@+id/txtLocation"
+        app:layout_constraintTop_toTopOf="@+id/txtLocation" />
 
     <TextView
         android:id="@+id/txtDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Distance"
+        android:text="Distance: "
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtLocation" />
+        app:layout_constraintTop_toBottomOf="@+id/txtLocationValue" />
+
+    <TextView
+        android:id="@+id/txtDistanceValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="200m"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintStart_toEndOf="@+id/txtDistance"
+        app:layout_constraintTop_toTopOf="@+id/txtDistance" />
 
     <TextView
         android:id="@+id/txtObserverType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Observer Type"
+        android:text="Observer Type: "
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtDistance" />
+        app:layout_constraintTop_toBottomOf="@+id/txtDistanceValue" />
+
+    <TextView
+        android:id="@+id/txtObserverTypeValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wildlife Enthusiast"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintStart_toEndOf="@+id/txtObserverType"
+        app:layout_constraintTop_toTopOf="@+id/txtObserverType" />
 
     <TextView
         android:id="@+id/txtSDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Sighting Date"
+        android:text="Sighting Date: "
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtObserverType" />
+        app:layout_constraintTop_toBottomOf="@+id/txtObserverTypeValue" />
+
+    <TextView
+        android:id="@+id/txtSDateValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2024-11-22"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintStart_toEndOf="@+id/txtSDate"
+        app:layout_constraintTop_toTopOf="@+id/txtSDate" />
 
     <TextView
         android:id="@+id/txtSTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Sighting Time"
+        android:text="Sighting Time: "
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtSDate" />
+        app:layout_constraintTop_toBottomOf="@+id/txtSDateValue" />
+
+    <TextView
+        android:id="@+id/txtSTimeValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="14:30"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintStart_toEndOf="@+id/txtSTime"
+        app:layout_constraintTop_toTopOf="@+id/txtSTime" />
 
     <ImageButton
         android:id="@+id/btnClose"

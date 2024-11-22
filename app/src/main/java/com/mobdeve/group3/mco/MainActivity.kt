@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,11 +25,16 @@ import com.mobdeve.group3.mco.post.PostAdapter
 import com.mobdeve.group3.mco.post.PostGenerator
 import com.mobdeve.group3.mco.profile.ProfileActivity
 import java.util.Date
+import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
     private lateinit var postList: ArrayList<Post>
+
+    companion object {
+        const val REQUEST_CODE_EDIT_SIGHTING = 1001
+    }
 
     private val addSightingActivityLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -37,32 +43,36 @@ class MainActivity : AppCompatActivity() {
             val commonName = result.data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY)
             val scientificName =
                 result.data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY)
-//            val groupSize = result.data?.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0)
-//            val distance = result.data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f)
+            val groupSize = result.data?.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0)
+            val distance = result.data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f)
             val location = result.data?.getStringExtra(AddSightingActivity.LOCATION_KEY)
-//            val observerType =
-//                result.data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY)
+            val observerType =
+                result.data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY)
             val sightingDate =
                 result.data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
-//            val sightingTime =
-//                result.data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
+            val sightingTime =
+               result.data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
             val imageUriString = result.data?.getStringExtra("IMAGE_URI")
             val imageUri = if (!imageUriString.isNullOrEmpty()) Uri.parse(imageUriString) else null
 
             postList.add(
                 0,
                 Post(
-                    "rosmar",
-                    R.drawable.profpic,
-                    Date().toString(), // TODO: Format this properly
-                    commonName!!,
-                    scientificName!!,
-                    location!!,
-                    sightingDate!!,
-                    imageUri
+                    id = UUID.randomUUID().toString(),
+                    userHandler = "rosmar",
+                    userIcon = R.drawable.profpic,
+                    postingDate = Date().toString(),
+                    animalName = commonName ?: "",
+                    scientificName = scientificName ?: "",
+                    location = location ?: "",
+                    sightDate = sightingDate ?: "",
+                    imageId = imageUri,
+                    groupSize = groupSize ?: 0,
+                    distance = distance ?: 0.0f,
+                    observerType = observerType ?: "",
+                    sightingTime = sightingTime ?: ""
                 )
             )
-
             postAdapter.notifyItemInserted(0)
         }
 
@@ -194,4 +204,16 @@ class MainActivity : AppCompatActivity() {
         postList.sortByDescending { it.postingDate }
         postAdapter.notifyDataSetChanged()
     }
+
+    fun deletePostAtPosition(position: Int) {
+        // Remove the post from the list
+        postList.removeAt(position)
+
+        // Notify the adapter that an item was removed
+        postAdapter.notifyItemRemoved(position)
+        postAdapter.notifyItemRangeChanged(position, postList.size)
+
+        Toast.makeText(this, "Post deleted", Toast.LENGTH_SHORT).show()
+    }
+
 }

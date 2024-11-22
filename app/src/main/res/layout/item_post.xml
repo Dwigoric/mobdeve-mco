@@ -70,12 +70,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#00FFFFFF"
-        app:layout_constraintEnd_toStartOf="@+id/btnMoreDetails"
+        app:layout_constraintEnd_toStartOf="@+id/btnModify"
         app:layout_constraintTop_toBottomOf="@+id/imgSightingPhoto"
         app:srcCompat="@drawable/ic_regular_comment" />
 
     <ImageButton
-        android:id="@+id/btnMoreDetails"
+        android:id="@+id/btnModify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#00FFFFFF"
@@ -114,7 +114,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnMoreDetails" />
+        app:layout_constraintTop_toBottomOf="@+id/btnModify" />
 
     <TextView
         android:id="@+id/txtSightingDate"
