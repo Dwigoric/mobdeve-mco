@@ -25,28 +25,24 @@ class LandingActivity : AppCompatActivity() {
         val viewBinding = ActivityLandingBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
-        val btnLogIn = findViewById<Button>(R.id.btnLogIn)
-        val btnRegister = findViewById<Button>(R.id.btnRegister)
-
-        btnLogIn.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-
-        btnRegister.setOnClickListener {
-            val intent = Intent(this, SignupActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
         if (auth.currentUser != null) {
             val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
             finish()
+        } else {
+            val btnLogIn = findViewById<Button>(R.id.btnLogIn)
+            val btnRegister = findViewById<Button>(R.id.btnRegister)
+
+            btnLogIn.setOnClickListener {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            }
+
+            btnRegister.setOnClickListener {
+                val intent = Intent(this, SignupActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 }
