@@ -98,10 +98,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:text="@string/SettingsBioLabel"
-                app:layout_constraintBottom_toTopOf="@+id/txtSettingsContactLabel"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtSettingsUsernameLabel"
-                app:layout_constraintVertical_bias="0.162" />
+                app:layout_constraintTop_toBottomOf="@+id/txtSettingsUsernameLabel" />
 
             <TextView
                 android:id="@+id/txtSettingsBio"
@@ -109,28 +107,8 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="@string/UserBio"
-                app:layout_constraintBottom_toTopOf="@+id/txtSettingsContact"
                 app:layout_constraintStart_toEndOf="@+id/txtSettingsBioLabel"
                 app:layout_constraintTop_toBottomOf="@+id/txtSettingsUsername" />
-
-            <TextView
-                android:id="@+id/txtSettingsContactLabel"
-                style="@style/Body"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="29dp"
-                android:text="@string/SettingsContactLink"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtSettingsBio" />
-
-            <TextView
-                android:id="@+id/txtSettingsContact"
-                style="@style/Body"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/UserContactLink"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/txtSettingsContactLabel" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
