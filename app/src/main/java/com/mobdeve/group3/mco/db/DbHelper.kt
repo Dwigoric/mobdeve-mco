@@ -27,8 +27,8 @@ class DbHelper {
         return map
     }
 
-    fun addDocument(collection: String, data: HashMap<String, Any>): String {
-        val document = db.collection(collection).document()
+    fun addDocument(collection: String, documentId: String, data: HashMap<String, Any>): String {
+        val document = db.collection(collection).document(documentId)
         document.set(data)
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot added with ID: ${document.id}") }
             .addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }

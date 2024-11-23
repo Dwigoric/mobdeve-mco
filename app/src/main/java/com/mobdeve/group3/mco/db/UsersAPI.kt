@@ -14,7 +14,9 @@ class UsersAPI {
         }
     }
 
-    // TODO: Register/Login using Firebase Auth
+    fun addUser(userId: String, data: HashMap<String, Any>): String {
+        return dbHelper.addDocument("users", userId, data)
+    }
 
     fun getUser(userId: String): HashMap<String, Any> {
         return dbHelper.getDocument("users", userId)
