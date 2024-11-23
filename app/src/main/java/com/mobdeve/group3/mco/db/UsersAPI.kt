@@ -1,7 +1,5 @@
 package com.mobdeve.group3.mco.db
 
-import android.util.Log
-
 class UsersAPI {
     private val dbHelper = DbHelper.getInstance()
 
@@ -18,17 +16,21 @@ class UsersAPI {
 
     private constructor()
 
-    fun addUser(userId: String, data: HashMap<String, Any>): Boolean {
-        return dbHelper.addDocument("users", userId, data)
+    fun addUser(userId: String, data: HashMap<String, Any>, callback: (Boolean) -> Unit) {
+        dbHelper.addDocument("users", userId, data) { success ->
+            callback(success)
+        }
     }
 
     fun getUser(userId: String, callback: (HashMap<String, Any>) -> Unit) {
-        dbHelper.getDocumentA("users", userId) { userData ->
+        dbHelper.getDocument("users", userId) { userData ->
             callback(userData)  // Pass the result to the callback
         }
     }
 
-    fun updateUser(userId: String, data: HashMap<String, Any>): Boolean {
-        return dbHelper.updateDocument("users", userId, data)
+    fun updateUser(userId: String, data: HashMap<String, Any>, callback: (Boolean) -> Unit) {
+        dbHelper.updateDocument("users", userId, data) { success ->
+            callback(success)
+        }
     }
 }

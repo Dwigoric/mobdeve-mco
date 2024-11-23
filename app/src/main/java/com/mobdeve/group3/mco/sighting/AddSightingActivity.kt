@@ -20,13 +20,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
+import com.google.firebase.auth.FirebaseAuth
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.databinding.ActivityAddSightingBinding
-import java.io.File
-import java.io.IOException
-import com.google.firebase.auth.FirebaseAuth
 import com.mobdeve.group3.mco.db.SightingsAPI
 import com.mobdeve.group3.mco.db.UsersAPI
+import java.io.File
+import java.io.IOException
 
 class AddSightingActivity : AppCompatActivity() {
     companion object {
@@ -41,7 +41,6 @@ class AddSightingActivity : AppCompatActivity() {
     }
 
     private lateinit var auth: FirebaseAuth
-    private lateinit var dbHelper: SightingsAPI
     private var commonName: String = ""
     private var scientificName: String = ""
     private var groupSize: Int = 0
@@ -67,7 +66,6 @@ class AddSightingActivity : AppCompatActivity() {
 
         imageView = viewBinding.imgSelectedPhoto
         auth = FirebaseAuth.getInstance()
-        dbHelper = SightingsAPI.getInstance()
 
         // Set listeners for input fields
         viewBinding.etCommonName.addTextChangedListener { commonName = it.toString() }
@@ -102,25 +100,25 @@ class AddSightingActivity : AppCompatActivity() {
                 )
 
                 // Add the sighting to Firestore
-                val sightingId = dbHelper.addSighting(sightingData)
+                SightingsAPI.getInstance().addSighting(sightingData) { sightingId ->
+                    // Return the sightingId back to the previous activity
+                    val returnIntent = Intent()
+                    returnIntent.putExtra("SIGHTING_ID", sightingId)
+                    returnIntent.putExtra("userHandler", username)
+                    returnIntent.putExtra("userIcon", avatarUrl)
+                    returnIntent.putExtra("COMMON_NAME_KEY", commonName)
+                    returnIntent.putExtra("SCIENTIFIC_NAME_KEY", scientificName)
+                    returnIntent.putExtra("GROUP_SIZE_KEY", groupSize)
+                    returnIntent.putExtra("DISTANCE_KEY", distance)
+                    returnIntent.putExtra("LOCATION_KEY", location)
+                    returnIntent.putExtra("OBSERVER_TYPE_KEY", observerType)
+                    returnIntent.putExtra("SIGHTING_DATE_KEY", sightingDate)
+                    returnIntent.putExtra("SIGHTING_TIME_KEY", sightingTime)
+                    returnIntent.putExtra("IMAGE_URI", imageUri.toString())
 
-                // Return the sightingId back to the previous activity
-                val returnIntent = Intent()
-                returnIntent.putExtra("SIGHTING_ID", sightingId)
-                returnIntent.putExtra("userHandler", username)
-                returnIntent.putExtra("userIcon", avatarUrl)
-                returnIntent.putExtra("COMMON_NAME_KEY", commonName)
-                returnIntent.putExtra("SCIENTIFIC_NAME_KEY", scientificName)
-                returnIntent.putExtra("GROUP_SIZE_KEY", groupSize)
-                returnIntent.putExtra("DISTANCE_KEY", distance)
-                returnIntent.putExtra("LOCATION_KEY", location)
-                returnIntent.putExtra("OBSERVER_TYPE_KEY", observerType)
-                returnIntent.putExtra("SIGHTING_DATE_KEY", sightingDate)
-                returnIntent.putExtra("SIGHTING_TIME_KEY", sightingTime)
-                returnIntent.putExtra("IMAGE_URI", imageUri.toString())
-
-                setResult(RESULT_OK, returnIntent)
-                finish()
+                    setResult(RESULT_OK, returnIntent)
+                    finish()
+                }
             }
         }
 

@@ -26,10 +26,8 @@ import com.mobdeve.group3.mco.landing.LandingActivity
 import com.mobdeve.group3.mco.profile.ProfileActivity
 import com.mobdeve.group3.mco.sighting.AddSightingActivity
 import com.mobdeve.group3.mco.sighting.Sighting
-import com.mobdeve.group3.mco.sighting.SightingGenerator
 import com.mobdeve.group3.mco.sighting.SightingPostAdapter
 import java.util.Date
-import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -53,16 +51,25 @@ class MainActivity : AppCompatActivity() {
             // Make sure sightingId is not null
             if (sightingId != null) {
                 // Extract other sighting data from the result if needed
-                val commonName = result.data?.getStringExtra(AddSightingActivity.Companion.COMMON_NAME_KEY)
-                val scientificName = result.data?.getStringExtra(AddSightingActivity.Companion.SCIENTIFIC_NAME_KEY)
-                val groupSize = result.data?.getIntExtra(AddSightingActivity.Companion.GROUP_SIZE_KEY, 0)
-                val distance = result.data?.getFloatExtra(AddSightingActivity.Companion.DISTANCE_KEY, 0.0f)
-                val location = result.data?.getStringExtra(AddSightingActivity.Companion.LOCATION_KEY)
-                val observerType = result.data?.getStringExtra(AddSightingActivity.Companion.OBSERVER_TYPE_KEY)
-                val sightingDate = result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_DATE_KEY)
-                val sightingTime = result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_TIME_KEY)
+                val commonName =
+                    result.data?.getStringExtra(AddSightingActivity.Companion.COMMON_NAME_KEY)
+                val scientificName =
+                    result.data?.getStringExtra(AddSightingActivity.Companion.SCIENTIFIC_NAME_KEY)
+                val groupSize =
+                    result.data?.getIntExtra(AddSightingActivity.Companion.GROUP_SIZE_KEY, 0)
+                val distance =
+                    result.data?.getFloatExtra(AddSightingActivity.Companion.DISTANCE_KEY, 0.0f)
+                val location =
+                    result.data?.getStringExtra(AddSightingActivity.Companion.LOCATION_KEY)
+                val observerType =
+                    result.data?.getStringExtra(AddSightingActivity.Companion.OBSERVER_TYPE_KEY)
+                val sightingDate =
+                    result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_DATE_KEY)
+                val sightingTime =
+                    result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_TIME_KEY)
                 val imageUriString = result.data?.getStringExtra("IMAGE_URI")
-                val imageUri = if (!imageUriString.isNullOrEmpty()) Uri.parse(imageUriString) else null
+                val imageUri =
+                    if (!imageUriString.isNullOrEmpty()) Uri.parse(imageUriString) else null
 
                 // Add the sighting data to the list
                 sightingList.add(

@@ -16,23 +16,37 @@ class SightingsAPI {
 
     private constructor()
 
-    fun addSighting(data: HashMap<String, Any>): String {
-        return dbHelper.addDocument("sightings", data)
+    fun addSighting(data: HashMap<String, Any>, callback: (String) -> Unit) {
+        dbHelper.addDocument("sightings", data) { sightingId ->
+            callback(sightingId)
+        }
     }
 
-    fun getSighting(sightingId: String): HashMap<String, Any> {
-        return dbHelper.getDocument("sightings", sightingId)
+    fun getSighting(sightingId: String, callback: (HashMap<String, Any>) -> Unit) {
+        dbHelper.getDocument("sightings", sightingId) { sightingData ->
+            callback(sightingData)
+        }
     }
 
-    fun getSightings(): ArrayList<HashMap<String, Any>> {
-        return dbHelper.getDocuments("sightings")
+    fun getSightings(callback: (ArrayList<HashMap<String, Any>>) -> Unit) {
+        dbHelper.getDocuments("sightings") { sightings ->
+            callback(sightings)
+        }
     }
 
-    fun updateSighting(sightingId: String, data: HashMap<String, Any>): Boolean {
-        return dbHelper.updateDocument("sightings", sightingId, data)
+    fun updateSighting(
+        sightingId: String,
+        data: HashMap<String, Any>,
+        callback: (Boolean) -> Unit
+    ) {
+        dbHelper.updateDocument("sightings", sightingId, data) { success ->
+            callback(success)
+        }
     }
 
-    fun deleteSighting(sightingId: String): Boolean {
-        return dbHelper.deleteDocument("sightings", sightingId)
+    fun deleteSighting(sightingId: String, callback: (Boolean) -> Unit) {
+        dbHelper.deleteDocument("sightings", sightingId) { success ->
+            callback(success)
+        }
     }
 }

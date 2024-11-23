@@ -45,7 +45,13 @@ class SignupActivity : AppCompatActivity() {
                     )
 
                     // Add user data to Firestore
-                    UsersAPI.getInstance().addUser(auth.currentUser?.uid!!, user)
+                    UsersAPI.getInstance().addUser(auth.currentUser?.uid!!, user) { success ->
+                        if (success) {
+                            Log.d(TAG, "User data added to Firestore")
+                        } else {
+                            Log.w(TAG, "User data not added to Firestore")
+                        }
+                    }
 
                     // Navigate to MainActivity after registration
                     val intent = Intent(this, MainActivity::class.java)

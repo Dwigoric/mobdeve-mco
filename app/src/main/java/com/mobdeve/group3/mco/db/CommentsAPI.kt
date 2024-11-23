@@ -20,21 +20,27 @@ class CommentsAPI {
 
     private constructor()
 
-    fun addComment(sightingId: String, content: String): String {
+    fun addComment(sightingId: String, content: String, callback: (String) -> Unit) {
         val data = dbHelper.constructData(
             "userId" to auth.currentUser!!.uid,
             "sightingId" to sightingId,
             "content" to content
         )
 
-        return dbHelper.addDocument("comments", data)
+        dbHelper.addDocument("comments", data) { commentId ->
+            callback(commentId)
+        }
     }
 
-    fun getComments(sightingId: String): ArrayList<HashMap<String, Any>> {
-        return dbHelper.getDocumentsWhere("comments", "sightingId", sightingId)
+    fun getComments(sightingId: String, callback: (ArrayList<HashMap<String, Any>>) -> Unit) {
+        dbHelper.getDocumentsWhere("comments", "sightingId", sightingId) { comments ->
+            callback(comments)
+        }
     }
 
-    fun deleteComment(commentId: String): Boolean {
-        return dbHelper.deleteDocument("comments", commentId)
+    fun deleteComment(commentId: String, callback: (Boolean) -> Unit) {
+        dbHelper.deleteDocument("comments", commentId) { success ->
+            callback(success)
+        }
     }
 }

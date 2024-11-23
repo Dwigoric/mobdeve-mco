@@ -1,10 +1,8 @@
 package com.mobdeve.group3.mco.db
 
 import android.util.Log
-import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.firestore
 
 class DbHelper {
@@ -32,82 +30,79 @@ class DbHelper {
         return map
     }
 
-    fun addDocument(collection: String, documentId: String, data: HashMap<String, Any>): Boolean {
-        var success = true
-
+    fun addDocument(
+        collection: String,
+        documentId: String,
+        data: HashMap<String, Any>,
+        callback: (Boolean) -> Unit
+    ) {
         val document = db.collection(collection).document(documentId)
         document.set(data)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot added with ID: ${document.id}") }
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot added with ID: ${document.id}")
+                callback(true)
+            }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
-                success = false
+                callback(false)
             }
-
-        return success
     }
 
-    fun addDocument(collection: String, data: HashMap<String, Any>): String {
+    fun addDocument(
+        collection: String,
+        data: HashMap<String, Any>,
+        callback: (String) -> Unit
+    ) {
         val document = db.collection(collection).document()
         document.set(data)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot added with ID: ${document.id}") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
-
-        return document.id
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot added with ID: ${document.id}")
+                callback(document.id)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+                callback("")
+            }
     }
 
     fun updateDocument(
         collection: String,
         documentId: String,
-        data: HashMap<String, Any>
-    ): Boolean {
-        var success = true
-
+        data: HashMap<String, Any>,
+        callback: (Boolean) -> Unit
+    ) {
         db.collection(collection)
             .document(documentId)
             .update(data)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot successfully updated!")
+                callback(true)
+            }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error updating document", e)
-                success = false
+                callback(false)
             }
-
-        return success
     }
 
-    fun deleteDocument(collection: String, documentId: String): Boolean {
-        var success = true
-
+    fun deleteDocument(collection: String, documentId: String, callback: (Boolean) -> Unit) {
         db.collection(collection)
             .document(documentId)
             .delete()
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                callback(true)
+            }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error deleting document", e)
-                success = false
+                callback(false)
             }
-
-        return success
     }
 
     fun getDocument(
         collection: String,
-        documentId: String
-    ): HashMap<String, Any> {
-        val document = HashMap<String, Any>()
-        db.collection(collection)
-            .document(documentId)
-            .get()
-            .addOnSuccessListener { result ->
-                document.putAll(result.data as HashMap<String, Any>)
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting document.", exception)
-            }
-
-        return document
-    }
-
-    fun getDocumentA(collection: String, documentId: String, callback: (HashMap<String, Any>) -> Unit) {
+        documentId: String,
+        callback: (HashMap<String, Any>) -> Unit
+    ) {
         val document = HashMap<String, Any>()
         db.collection(collection)
             .document(documentId)
@@ -125,7 +120,7 @@ class DbHelper {
     }
 
 
-    fun getDocuments(collection: String): ArrayList<HashMap<String, Any>> {
+    fun getDocuments(collection: String, callback: (ArrayList<HashMap<String, Any>>) -> Unit) {
         val documents = ArrayList<HashMap<String, Any>>()
         db.collection(collection)
             .get()
@@ -133,19 +128,20 @@ class DbHelper {
                 for (document in result) {
                     documents.add(document.data as HashMap<String, Any>)
                 }
+                callback(documents)  // Return the documents through the callback
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents.", exception)
+                callback(documents)  // Empty documents on failure
             }
-
-        return documents
     }
 
     fun getDocumentsWhere(
         collection: String,
         field: String,
-        value: Any
-    ): ArrayList<HashMap<String, Any>> {
+        value: Any,
+        callback: (ArrayList<HashMap<String, Any>>) -> Unit
+    ) {
         val documents = ArrayList<HashMap<String, Any>>()
         db.collection(collection)
             .whereEqualTo(field, value)
@@ -154,33 +150,35 @@ class DbHelper {
                 for (document in result) {
                     documents.add(document.data as HashMap<String, Any>)
                 }
+                callback(documents)  // Return the documents through the callback
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents.", exception)
+                callback(documents)  // Empty documents on failure
             }
-
-        return documents
     }
 
     fun getDocumentsWhereMultiple(
         collection: String,
-        fields: HashMap<String, Any>
-    ): ArrayList<HashMap<String, Any>> {
+        fields: HashMap<String, Any>,
+        callback: (ArrayList<HashMap<String, Any>>) -> Unit
+    ) {
         val documents = ArrayList<HashMap<String, Any>>()
         var query = db.collection(collection)
         for (field in fields) {
             query = query.whereEqualTo(field.key, field.value) as CollectionReference
         }
+        
         query.get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     documents.add(document.data as HashMap<String, Any>)
                 }
+                callback(documents)  // Return the documents through the callback
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents.", exception)
+                callback(documents)  // Empty documents on failure
             }
-
-        return documents
     }
 }
