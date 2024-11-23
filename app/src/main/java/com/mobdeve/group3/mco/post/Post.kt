@@ -18,7 +18,7 @@ data class Post(
     val distance: Float,
     val observerType: String,
     val sightingTime: String,
-    var score: Int = 4,
+    var score: Int = 0,
     var hasUpvoted: Boolean = false,
     var hasDownvoted: Boolean = false,
     private val _comments: MutableList<Comment> = mutableListOf()
