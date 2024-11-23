@@ -109,9 +109,9 @@ class DbHelper {
             .document(documentId)
             .get()
             .addOnSuccessListener { result ->
-                result.data?.let {
-                    document.putAll(it)
-                }
+                val data = result.data
+                data?.set("id", result.id)
+                document.putAll(data as HashMap<String, Any>)
                 callback(document)  // Return the document through the callback
             }
             .addOnFailureListener { exception ->
@@ -127,7 +127,9 @@ class DbHelper {
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    documents.add(document.data as HashMap<String, Any>)
+                    val data = document.data as HashMap<String, Any>
+                    data["id"] = document.id
+                    documents.add(data)
                 }
                 callback(documents)  // Return the documents through the callback
             }
@@ -149,7 +151,9 @@ class DbHelper {
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    documents.add(document.data as HashMap<String, Any>)
+                    val data = document.data as HashMap<String, Any>
+                    data["id"] = document.id
+                    documents.add(data)
                 }
                 callback(documents)  // Return the documents through the callback
             }
@@ -169,11 +173,13 @@ class DbHelper {
         for (field in fields) {
             query = query.whereEqualTo(field.key, field.value) as CollectionReference
         }
-        
+
         query.get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    documents.add(document.data as HashMap<String, Any>)
+                    val data = document.data as HashMap<String, Any>
+                    data["id"] = document.id
+                    documents.add(data)
                 }
                 callback(documents)  // Return the documents through the callback
             }

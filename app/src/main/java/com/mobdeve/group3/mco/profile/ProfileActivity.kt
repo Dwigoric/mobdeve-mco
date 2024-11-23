@@ -1,6 +1,7 @@
 package com.mobdeve.group3.mco.profile
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -16,6 +17,7 @@ import com.mobdeve.group3.mco.MainActivity
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.catalogue.CatalogueActivity
 import com.mobdeve.group3.mco.databinding.ActivityProfileBinding
+import com.mobdeve.group3.mco.db.SightingsAPI
 import com.mobdeve.group3.mco.landing.LandingActivity
 import com.mobdeve.group3.mco.sighting.Sighting
 
@@ -51,6 +53,8 @@ class ProfileActivity : AppCompatActivity() {
             true
         }
 
+        populateSightings()
+
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_catalogue -> {
@@ -72,6 +76,52 @@ class ProfileActivity : AppCompatActivity() {
 
                 else -> false
             }
+        }
+    }
+
+    private fun populateSightings() {
+        SightingsAPI.getInstance().getUserSightings { sightings ->
+            sightings.forEach { sightingData ->
+                val sightingId = sightingData["id"] as String
+                val userHandler = sightingData["userHandler"] as String
+                val userIcon = sightingData["userIcon"] as Uri
+                val postingDate = sightingData["postingDate"] as String
+                val animalName = sightingData["animalName"] as String
+                val scientificName = sightingData["scientificName"] as String
+                val location = sightingData["location"] as String
+                val sightDate = sightingData["sightDate"] as String
+                val imageUri = sightingData["imageId"] as Uri
+                val groupSize = sightingData["groupSize"] as Int
+                val distance = sightingData["distance"] as Float
+                val observerType = sightingData["observerType"] as String
+                val sightingTime = sightingData["sightingTime"] as String
+                val score = sightingData["score"] as Int
+                val hasUpvoted = sightingData["hasUpvoted"] as Boolean
+                val hasDownvoted = sightingData["hasDownvoted"] as Boolean
+
+                val sighting = Sighting(
+                    id = sightingId,
+                    userHandler = userHandler,
+                    userIcon = userIcon,
+                    postingDate = postingDate,
+                    animalName = animalName,
+                    scientificName = scientificName,
+                    location = location,
+                    sightDate = sightDate,
+                    imageUri = imageUri,
+                    groupSize = groupSize,
+                    distance = distance,
+                    observerType = observerType,
+                    sightingTime = sightingTime,
+                    score = score,
+                    hasUpvoted = hasUpvoted,
+                    hasDownvoted = hasDownvoted
+                )
+
+                this.sightingsList.add(sighting)
+            }
+
+            this.recyclerView.adapter?.notifyDataSetChanged()
         }
     }
 

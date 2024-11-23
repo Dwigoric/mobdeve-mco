@@ -1,9 +1,12 @@
 package com.mobdeve.group3.mco.db
 
 import android.util.Log
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 class SightingsAPI {
     private val dbHelper = DbHelper.getInstance()
+    private val auth = Firebase.auth
 
     companion object {
         private var instance: SightingsAPI? = null
@@ -33,9 +36,22 @@ class SightingsAPI {
     fun getSightings(callback: (ArrayList<HashMap<String, Any>>) -> Unit) {
         val documents = ArrayList<HashMap<String, Any>>()
         dbHelper.getDocuments("sightings") { fetchedDocs ->
-            Log.d("getSightings", "Fetched ${fetchedDocs.size} documents from Firestore") // Add this
+            Log.d(
+                "getSightings",
+                "Fetched ${fetchedDocs.size} documents from Firestore"
+            ) // Add this
             documents.addAll(fetchedDocs)
             callback(documents)
+        }
+    }
+
+    fun getUserSightings(callback: (ArrayList<HashMap<String, Any>>) -> Unit) {
+        dbHelper.getDocumentsWhere(
+            "sightings",
+            "author",
+            UsersAPI.getInstance().getUserReference(auth.currentUser!!.uid) as Any
+        ) { sightings ->
+            callback(sightings)
         }
     }
 
