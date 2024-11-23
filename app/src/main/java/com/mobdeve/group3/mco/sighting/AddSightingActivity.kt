@@ -20,7 +20,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.databinding.ActivityAddSightingBinding
 import com.mobdeve.group3.mco.db.SightingsAPI
@@ -65,7 +67,7 @@ class AddSightingActivity : AppCompatActivity() {
         setContentView(viewBinding.root)
 
         imageView = viewBinding.imgSelectedPhoto
-        auth = FirebaseAuth.getInstance()
+        auth = Firebase.auth
 
         // Set listeners for input fields
         viewBinding.etCommonName.addTextChangedListener { commonName = it.toString() }
