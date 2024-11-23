@@ -8,8 +8,9 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -43,7 +44,7 @@
         </activity>
 
         <activity
-            android:name=".AddSightingActivity"
+            android:name=".sighting.AddSightingActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -70,7 +71,7 @@
         </activity>
 
         <activity
-            android:name=".post.PostActivity"
+            android:name=".sighting.SightingPostActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -97,7 +98,7 @@
         </activity>
 
         <activity
-            android:name=".post.EditSightingActivity"
+            android:name=".sighting.EditSightingActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

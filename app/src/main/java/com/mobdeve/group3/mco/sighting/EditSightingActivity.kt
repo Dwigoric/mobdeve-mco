@@ -1,4 +1,4 @@
-package com.mobdeve.group3.mco.post
+package com.mobdeve.group3.mco.sighting
 
 import androidx.appcompat.app.AppCompatActivity
 

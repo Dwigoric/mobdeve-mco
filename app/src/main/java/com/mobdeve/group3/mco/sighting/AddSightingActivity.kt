@@ -1,5 +1,6 @@
-package com.mobdeve.group3.mco
+package com.mobdeve.group3.mco.sighting
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -19,6 +20,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
+import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.databinding.ActivityAddSightingBinding
 import java.io.File
 import java.io.IOException
@@ -124,22 +126,24 @@ class AddSightingActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.option_camera -> {
                     if (ContextCompat.checkSelfPermission(
-                            this, android.Manifest.permission.CAMERA
+                            this, Manifest.permission.CAMERA
                         ) == PackageManager.PERMISSION_GRANTED
                     ) {
                         openCamera()
                     } else {
                         ActivityCompat.requestPermissions(
-                            this, arrayOf(android.Manifest.permission.CAMERA),
+                            this, arrayOf(Manifest.permission.CAMERA),
                             REQUEST_CAMERA
                         )
                     }
                     true
                 }
+
                 R.id.option_gallery -> {
                     openGallery()
                     true
                 }
+
                 else -> false
             }
         }
@@ -183,7 +187,11 @@ class AddSightingActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openCamera()
             } else {
-                Toast.makeText(this, "Camera permission is required to capture a photo", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Camera permission is required to capture a photo",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

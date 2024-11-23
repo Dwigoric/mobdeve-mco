@@ -1,4 +1,4 @@
-package com.mobdeve.group3.mco.post
+package com.mobdeve.group3.mco.sighting
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +14,7 @@ import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.comment.CommentsDialogFragment
 import com.mobdeve.group3.mco.profile.ProfileActivity
 
-class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class SightingPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     companion object {
         const val COMMON_NAME_KEY = "COMMON_NAME_KEY"
         const val SCIENTIFIC_NAME_KEY = "SCIENTIFIC_NAME_KEY"
@@ -46,18 +45,18 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val btnModify: ImageButton = itemView.findViewById(R.id.btnModify)
     private val txtSeaMoreDetails: TextView = itemView.findViewById(R.id.txtSeaMoreDetails)
 
-    fun bind(post: Post) {
-        userHandle.text = post.userHandler
-        userIcon.setImageResource(post.userIcon)
-        score.text = post.score.toString()
-        postingDate.text = "Posted on ${post.postingDate}"
-        txtSightingName.text = post.animalName
-        txtSightingNameScientific.text = post.scientificName
-        txtSighingPlace.text = post.location
-        txtSightingDate.text = "Seen on ${post.sightDate}"
+    fun bind(sighting: Sighting) {
+        userHandle.text = sighting.userHandler
+        userIcon.setImageResource(sighting.userIcon)
+        score.text = sighting.score.toString()
+        postingDate.text = "Posted on ${sighting.postingDate}"
+        txtSightingName.text = sighting.animalName
+        txtSightingNameScientific.text = sighting.scientificName
+        txtSighingPlace.text = sighting.location
+        txtSightingDate.text = "Seen on ${sighting.sightDate}"
 
         // Display image if available
-        val imageUri = post.imageId
+        val imageUri = sighting.imageUri
         if (imageUri != null) {
             imgSighting?.setImageURI(imageUri)
             imgSighting?.visibility = View.VISIBLE
@@ -69,45 +68,45 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         // Set button states based on the post's current voting state
         btnUpvote.setImageResource(
-            if (post.hasUpvoted) R.drawable.ic_check_filled else R.drawable.ic_regular_check
+            if (sighting.hasUpvoted) R.drawable.ic_check_filled else R.drawable.ic_regular_check
         )
         btnDownvote.setImageResource(
-            if (post.hasDownvoted) R.drawable.ic_report_filled else R.drawable.ic_regular_report
+            if (sighting.hasDownvoted) R.drawable.ic_report_filled else R.drawable.ic_regular_report
         )
 
         // Handle button clicks
         btnUpvote.setOnClickListener {
-            if (post.hasDownvoted) {
-                post.score += 2 // Increment score by 2
-                post.hasDownvoted = false
+            if (sighting.hasDownvoted) {
+                sighting.score += 2 // Increment score by 2
+                sighting.hasDownvoted = false
                 btnDownvote.setImageResource(R.drawable.ic_regular_report) // Reset downvote button
-            } else if (!post.hasUpvoted) {
-                post.score++
+            } else if (!sighting.hasUpvoted) {
+                sighting.score++
             } else {
-                post.score--
+                sighting.score--
             }
-            post.hasUpvoted = !post.hasUpvoted // Toggle upvoted state
+            sighting.hasUpvoted = !sighting.hasUpvoted // Toggle upvoted state
             btnUpvote.setImageResource(
-                if (post.hasUpvoted) R.drawable.ic_check_filled else R.drawable.ic_regular_check
+                if (sighting.hasUpvoted) R.drawable.ic_check_filled else R.drawable.ic_regular_check
             ) // Update button image
-            score.text = post.score.toString() // Update score text
+            score.text = sighting.score.toString() // Update score text
         }
 
         btnDownvote.setOnClickListener {
-            if (post.hasUpvoted) {
-                post.score -= 2 // Decrement score by 2
-                post.hasUpvoted = false
+            if (sighting.hasUpvoted) {
+                sighting.score -= 2 // Decrement score by 2
+                sighting.hasUpvoted = false
                 btnUpvote.setImageResource(R.drawable.ic_regular_check) // Reset upvote button
-            } else if (!post.hasDownvoted) {
-                post.score--
+            } else if (!sighting.hasDownvoted) {
+                sighting.score--
             } else {
-                post.score++
+                sighting.score++
             }
-            post.hasDownvoted = !post.hasDownvoted // Toggle downvoted state
+            sighting.hasDownvoted = !sighting.hasDownvoted // Toggle downvoted state
             btnDownvote.setImageResource(
-                if (post.hasDownvoted) R.drawable.ic_report_filled else R.drawable.ic_regular_report
+                if (sighting.hasDownvoted) R.drawable.ic_report_filled else R.drawable.ic_regular_report
             ) // Update button image
-            score.text = post.score.toString() // Update score text
+            score.text = sighting.score.toString() // Update score text
         }
 
         // Set OnClickListener for the user icon to redirect to ProfileActivity
@@ -118,8 +117,11 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
 
         btnComment.setOnClickListener {
-            val dialog = CommentsDialogFragment.newInstance(post)
-            dialog.show((itemView.context as AppCompatActivity).supportFragmentManager, "CommentsDialog")
+            val dialog = CommentsDialogFragment.newInstance(sighting)
+            dialog.show(
+                (itemView.context as AppCompatActivity).supportFragmentManager,
+                "CommentsDialog"
+            )
         }
 
         txtSeaMoreDetails.setOnClickListener {
@@ -127,14 +129,14 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
             // Pass data to the dialog using arguments (Bundle)
             val args = Bundle().apply {
-                putString("species", post.scientificName)
-                putString("commonName", post.animalName)
-                putString("groupSize", post.groupSize.toString())
-                putString("location", post.location)
-                putString("distance", post.distance.toString())
-                putString("observerType", post.observerType)
-                putString("sightingDate", post.sightDate)
-                putString("sightingTime", post.sightingTime)
+                putString("species", sighting.scientificName)
+                putString("commonName", sighting.animalName)
+                putString("groupSize", sighting.groupSize.toString())
+                putString("location", sighting.location)
+                putString("distance", sighting.distance.toString())
+                putString("observerType", sighting.observerType)
+                putString("sightingDate", sighting.sightDate)
+                putString("sightingTime", sighting.sightingTime)
             }
 
             dialogFragment.arguments = args
@@ -154,23 +156,24 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                             // Handle Edit
                             val context = itemView.context
                             val editIntent = Intent(context, EditSightingActivity::class.java)
-                            editIntent.putExtra(COMMON_NAME_KEY, post.animalName)
-                            editIntent.putExtra(SCIENTIFIC_NAME_KEY, post.scientificName)
-                            editIntent.putExtra(GROUP_SIZE_KEY, post.groupSize)
-                            editIntent.putExtra(DISTANCE_KEY, post.distance)
-                            editIntent.putExtra(LOCATION_KEY, post.location)
-                            editIntent.putExtra(OBSERVER_TYPE_KEY, post.observerType)
-                            editIntent.putExtra(SIGHTING_DATE_KEY, post.sightDate)
-                            editIntent.putExtra(SIGHTING_TIME_KEY, post.sightingTime)
-                            editIntent.putExtra(IMAGE_URI_KEY, post.imageId.toString())
-                            editIntent.putExtra("POST_ID", post.id)
+                            editIntent.putExtra(COMMON_NAME_KEY, sighting.animalName)
+                            editIntent.putExtra(SCIENTIFIC_NAME_KEY, sighting.scientificName)
+                            editIntent.putExtra(GROUP_SIZE_KEY, sighting.groupSize)
+                            editIntent.putExtra(DISTANCE_KEY, sighting.distance)
+                            editIntent.putExtra(LOCATION_KEY, sighting.location)
+                            editIntent.putExtra(OBSERVER_TYPE_KEY, sighting.observerType)
+                            editIntent.putExtra(SIGHTING_DATE_KEY, sighting.sightDate)
+                            editIntent.putExtra(SIGHTING_TIME_KEY, sighting.sightingTime)
+                            editIntent.putExtra(IMAGE_URI_KEY, sighting.imageUri.toString())
+                            editIntent.putExtra("POST_ID", sighting.id)
                             context.startActivity(editIntent)
                         }
+
                         1 -> {
                             // Handle Delete - show confirmation dialog or delete the post
                             val position = bindingAdapterPosition
                             if (position != RecyclerView.NO_POSITION) {
-                                showDeleteConfirmationDialog(post, position)
+                                showDeleteConfirmationDialog(sighting, position)
                             }
                         }
                     }
@@ -179,18 +182,18 @@ class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
     }
 
-    private fun showDeleteConfirmationDialog(post: Post, position: Int) {
+    private fun showDeleteConfirmationDialog(sighting: Sighting, position: Int) {
         val builder = AlertDialog.Builder(itemView.context)
         builder.setTitle("Delete Post")
             .setMessage("Are you sure you want to delete this post?")
             .setPositiveButton("Yes") { _, _ ->
-                deletePost(post, position)
+                deletePost(sighting, position)
             }
             .setNegativeButton("No", null)
             .show()
     }
 
-    private fun deletePost(post: Post, position: Int) {
+    private fun deletePost(sighting: Sighting, position: Int) {
         val activity = itemView.context as MainActivity
         activity.deletePostAtPosition(position)
     }

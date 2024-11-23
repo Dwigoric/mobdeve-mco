@@ -12,7 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.group3.mco.R
-import com.mobdeve.group3.mco.post.Post
+import com.mobdeve.group3.mco.sighting.Sighting
 import java.util.Date
 
 class CommentsDialogFragment : DialogFragment() {
@@ -21,7 +21,7 @@ class CommentsDialogFragment : DialogFragment() {
     private lateinit var commentAdapter: CommentAdapter
     private lateinit var edtCommentInput: EditText
     private lateinit var btnSubmitComment: Button
-    private lateinit var post: Post
+    private lateinit var sighting: Sighting
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setStyle(STYLE_NORMAL, R.style.BottomDialogTheme)
@@ -38,7 +38,7 @@ class CommentsDialogFragment : DialogFragment() {
         edtCommentInput = view.findViewById(R.id.edtCommentInput)
         btnSubmitComment = view.findViewById(R.id.btnSubmitComment)
 
-        commentAdapter = CommentAdapter(post.comments.toMutableList())
+        commentAdapter = CommentAdapter(sighting.comments.toMutableList())
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = commentAdapter
@@ -51,16 +51,16 @@ class CommentsDialogFragment : DialogFragment() {
                     userIcon = R.drawable.profpic,
                     content = newCommentContent,
                     commentTime = Date().toString(),
-                    postId = post.id
+                    postId = sighting.id
                 )
 
-                post.addComment(newComment)
+                sighting.addComment(newComment)
                 // Log the comment list to check if it's updating
-                Log.d("Comments", "Updated comments list: ${post.comments}")
+                Log.d("Comments", "Updated comments list: ${sighting.comments}")
 
                 // Update the adapter's data
-                commentAdapter.updateComments(post.comments)  // Update all comments
-                commentAdapter.notifyItemInserted(post.comments.size - 1)  // Notify about the new item
+                commentAdapter.updateComments(sighting.comments)  // Update all comments
+                commentAdapter.notifyItemInserted(sighting.comments.size - 1)  // Notify about the new item
 
                 edtCommentInput.text.clear()
             }
@@ -87,9 +87,9 @@ class CommentsDialogFragment : DialogFragment() {
 
 
     companion object {
-        fun newInstance(post: Post): CommentsDialogFragment {
+        fun newInstance(sighting: Sighting): CommentsDialogFragment {
             val fragment = CommentsDialogFragment()
-            fragment.post = post
+            fragment.sighting = sighting
             return fragment
         }
     }

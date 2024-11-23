@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.mobdeve.group3.mco.R
-import com.mobdeve.group3.mco.Sighting
+import com.mobdeve.group3.mco.sighting.Sighting
 
 class ProfileSightingsAdapter(private val data: ArrayList<Sighting>) :
     Adapter<ProfileSightingsViewHolder>() {

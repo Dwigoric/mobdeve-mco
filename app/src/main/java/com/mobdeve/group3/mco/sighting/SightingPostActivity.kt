@@ -1,4 +1,4 @@
-package com.mobdeve.group3.mco.post
+package com.mobdeve.group3.mco.sighting
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.databinding.ActivityMainBinding
 
-class PostActivity : AppCompatActivity() {
-    private val postList = PostGenerator.generateData()
+class SightingPostActivity : AppCompatActivity() {
+    private val sightingList = SightingGenerator.generateData()
     private lateinit var recyclerView: RecyclerView
-    private lateinit var postAdapter: PostAdapter  // Store the adapter reference
+    private lateinit var sightingPostAdapter: SightingPostAdapter  // Store the adapter reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +30,8 @@ class PostActivity : AppCompatActivity() {
 
         this.recyclerView = findViewById(R.id.rcvMainPosts)
 
-        postAdapter = PostAdapter(this.postList)
-        recyclerView.adapter = postAdapter
+        sightingPostAdapter = SightingPostAdapter(this.sightingList)
+        recyclerView.adapter = sightingPostAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
 }

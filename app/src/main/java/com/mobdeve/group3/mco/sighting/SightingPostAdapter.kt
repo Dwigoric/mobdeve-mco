@@ -1,26 +1,27 @@
-package com.mobdeve.group3.mco.post
+package com.mobdeve.group3.mco.sighting
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.group3.mco.R
 
-class PostAdapter(private val data: ArrayList<Post>) : RecyclerView.Adapter<PostViewHolder>() {
+class SightingPostAdapter(private val data: ArrayList<Sighting>) :
+    RecyclerView.Adapter<SightingPostViewHolder>() {
     override fun getItemViewType(position: Int): Int {
-        return if (data[position].imageId != null) {
+        return if (data[position].imageUri != null) {
             R.layout.item_post // Layout for posts with images
         } else {
             R.layout.item_post_nophoto // Layout for posts without images
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SightingPostViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(viewType, parent, false)
-        return PostViewHolder(view)
+        return SightingPostViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SightingPostViewHolder, position: Int) {
         holder.bind(data[position])
     }
 
@@ -28,8 +29,8 @@ class PostAdapter(private val data: ArrayList<Post>) : RecyclerView.Adapter<Post
         return data.size
     }
 
-    fun updatePost(position: Int, updatedPost: Post) {
-        data[position] = updatedPost
+    fun updatePost(position: Int, updatedSighting: Sighting) {
+        data[position] = updatedSighting
         notifyItemChanged(position)
     }
 }

@@ -1,10 +1,10 @@
-package com.mobdeve.group3.mco.post
+package com.mobdeve.group3.mco.sighting
 
 import android.net.Uri
 import com.mobdeve.group3.mco.comment.Comment
 import java.util.UUID
 
-data class Post(
+data class Sighting(
     val id: String = UUID.randomUUID().toString(),
     val userHandler: String,
     val userIcon: Int,
@@ -13,7 +13,7 @@ data class Post(
     val scientificName: String,
     val location: String,
     val sightDate: String,
-    val imageId: Uri?,
+    val imageUri: Uri?,
     val groupSize: Int,
     val distance: Float,
     val observerType: String,

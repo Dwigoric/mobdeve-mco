@@ -14,14 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mobdeve.group3.mco.MainActivity
 import com.mobdeve.group3.mco.R
-import com.mobdeve.group3.mco.SightingGenerator
 import com.mobdeve.group3.mco.catalogue.CatalogueActivity
 import com.mobdeve.group3.mco.databinding.ActivityProfileBinding
 import com.mobdeve.group3.mco.landing.LandingActivity
+import com.mobdeve.group3.mco.sighting.Sighting
 
 
 class ProfileActivity : AppCompatActivity() {
-    private val sightingsList = SightingGenerator.generateData()
+    private val sightingsList = ArrayList<Sighting>()
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {

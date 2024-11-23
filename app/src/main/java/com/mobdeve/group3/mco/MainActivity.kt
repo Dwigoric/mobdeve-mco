@@ -23,17 +23,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.mobdeve.group3.mco.catalogue.CatalogueActivity
 import com.mobdeve.group3.mco.landing.LandingActivity
-import com.mobdeve.group3.mco.post.Post
-import com.mobdeve.group3.mco.post.PostAdapter
-import com.mobdeve.group3.mco.post.PostGenerator
 import com.mobdeve.group3.mco.profile.ProfileActivity
+import com.mobdeve.group3.mco.sighting.AddSightingActivity
+import com.mobdeve.group3.mco.sighting.Sighting
+import com.mobdeve.group3.mco.sighting.SightingGenerator
+import com.mobdeve.group3.mco.sighting.SightingPostAdapter
 import java.util.Date
 import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var postAdapter: PostAdapter
-    private lateinit var postList: ArrayList<Post>
+    private lateinit var sightingPostAdapter: SightingPostAdapter
+    private lateinit var sightingList: ArrayList<Sighting>
     private lateinit var auth: FirebaseAuth
 
     companion object {
@@ -44,24 +45,27 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode != RESULT_OK) return@registerForActivityResult
 
-            val commonName = result.data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY)
+            val commonName =
+                result.data?.getStringExtra(AddSightingActivity.Companion.COMMON_NAME_KEY)
             val scientificName =
-                result.data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY)
-            val groupSize = result.data?.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0)
-            val distance = result.data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f)
-            val location = result.data?.getStringExtra(AddSightingActivity.LOCATION_KEY)
+                result.data?.getStringExtra(AddSightingActivity.Companion.SCIENTIFIC_NAME_KEY)
+            val groupSize =
+                result.data?.getIntExtra(AddSightingActivity.Companion.GROUP_SIZE_KEY, 0)
+            val distance =
+                result.data?.getFloatExtra(AddSightingActivity.Companion.DISTANCE_KEY, 0.0f)
+            val location = result.data?.getStringExtra(AddSightingActivity.Companion.LOCATION_KEY)
             val observerType =
-                result.data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY)
+                result.data?.getStringExtra(AddSightingActivity.Companion.OBSERVER_TYPE_KEY)
             val sightingDate =
-                result.data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
+                result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_DATE_KEY)
             val sightingTime =
-                result.data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
+                result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_TIME_KEY)
             val imageUriString = result.data?.getStringExtra("IMAGE_URI")
             val imageUri = if (!imageUriString.isNullOrEmpty()) Uri.parse(imageUriString) else null
 
-            postList.add(
+            sightingList.add(
                 0,
-                Post(
+                Sighting(
                     id = UUID.randomUUID().toString(),
                     userHandler = "rosmar",
                     userIcon = R.drawable.profpic,
@@ -70,14 +74,14 @@ class MainActivity : AppCompatActivity() {
                     scientificName = scientificName ?: "",
                     location = location ?: "",
                     sightDate = sightingDate ?: "",
-                    imageId = imageUri,
+                    imageUri = imageUri,
                     groupSize = groupSize ?: 0,
                     distance = distance ?: 0.0f,
                     observerType = observerType ?: "",
                     sightingTime = sightingTime ?: ""
                 )
             )
-            postAdapter.notifyItemInserted(0)
+            sightingPostAdapter.notifyItemInserted(0)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -147,9 +151,9 @@ class MainActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         recyclerView = findViewById(R.id.rcvMainPosts)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        postList = PostGenerator.generateData()
-        postAdapter = PostAdapter(postList)
-        recyclerView.adapter = postAdapter
+        sightingList = SightingGenerator.generateData()
+        sightingPostAdapter = SightingPostAdapter(sightingList)
+        recyclerView.adapter = sightingPostAdapter
     }
 
     private fun showLogoutPopup(view: View) {
@@ -205,24 +209,24 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostsByScore() {
         // Implement sorting logic based on score (Descending order)
-        postList.sortByDescending { it.score }
-        postAdapter.notifyDataSetChanged()
+        sightingList.sortByDescending { it.score }
+        sightingPostAdapter.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostsByRecency() {
         // Implement sorting logic based on recency (Descending order)
-        postList.sortByDescending { it.postingDate }
-        postAdapter.notifyDataSetChanged()
+        sightingList.sortByDescending { it.postingDate }
+        sightingPostAdapter.notifyDataSetChanged()
     }
 
     fun deletePostAtPosition(position: Int) {
         // Remove the post from the list
-        postList.removeAt(position)
+        sightingList.removeAt(position)
 
         // Notify the adapter that an item was removed
-        postAdapter.notifyItemRemoved(position)
-        postAdapter.notifyItemRangeChanged(position, postList.size)
+        sightingPostAdapter.notifyItemRemoved(position)
+        sightingPostAdapter.notifyItemRangeChanged(position, sightingList.size)
 
         Toast.makeText(this, "Post deleted", Toast.LENGTH_SHORT).show()
     }

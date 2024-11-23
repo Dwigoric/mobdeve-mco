@@ -1,16 +1,16 @@
-package com.mobdeve.group3.mco.post
+package com.mobdeve.group3.mco.sighting
 
 import android.net.Uri
 import com.mobdeve.group3.mco.R
 
-class PostGenerator {
+class SightingGenerator {
     companion object {
-        fun generateData(): ArrayList<Post> {
-            val tempList = ArrayList<Post>()
+        fun generateData(): ArrayList<Sighting> {
+            val tempList = ArrayList<Sighting>()
 
             // Post 1: Thresher Shark with image
             tempList.add(
-                Post(
+                Sighting(
                     userHandler = "ynapixel",
                     userIcon = R.drawable.profpic,
                     postingDate = "2021-08-01",
@@ -18,7 +18,7 @@ class PostGenerator {
                     scientificName = "Alopias vulpinus",
                     location = "Moalboal, Cebu",
                     sightDate = "2021-07-01",
-                    imageId = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/thresher_shark"),
+                    imageUri = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/thresher_shark"),
                     groupSize = 3,
                     distance = 20.5f,
                     observerType = "Researcher",
@@ -28,7 +28,7 @@ class PostGenerator {
 
             // Post 2: Clownfish with image
             tempList.add(
-                Post(
+                Sighting(
                     userHandler = "ynapixel",
                     userIcon = R.drawable.profpic,
                     postingDate = "2021-08-01",
@@ -36,7 +36,7 @@ class PostGenerator {
                     scientificName = "Amphiprioninae",
                     location = "Anilao, Batangas",
                     sightDate = "2021-07-02",
-                    imageId = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/nemo"),
+                    imageUri = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/nemo"),
                     groupSize = 1,
                     distance = 5.0f,
                     observerType = "Amateur",
@@ -46,7 +46,7 @@ class PostGenerator {
 
             // Post 3: Clownfish with image (different user)
             tempList.add(
-                Post(
+                Sighting(
                     userHandler = "mrtnrjn",
                     userIcon = R.drawable.lelouch,
                     postingDate = "2021-03-01",
@@ -54,7 +54,7 @@ class PostGenerator {
                     scientificName = "Amphiprioninae",
                     location = "Anilao, Batangas",
                     sightDate = "2021-02-02",
-                    imageId = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/nemo"),
+                    imageUri = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/nemo"),
                     groupSize = 2,
                     distance = 10.0f,
                     observerType = "Diver",
@@ -64,7 +64,7 @@ class PostGenerator {
 
             // Post 4: Clownfish with image (same as Post 3)
             tempList.add(
-                Post(
+                Sighting(
                     userHandler = "mrtnrjn",
                     userIcon = R.drawable.lelouch,
                     postingDate = "2021-03-01",
@@ -72,7 +72,7 @@ class PostGenerator {
                     scientificName = "Amphiprioninae",
                     location = "Anilao, Batangas",
                     sightDate = "2021-02-02",
-                    imageId = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/nemo"),
+                    imageUri = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/nemo"),
                     groupSize = 2,
                     distance = 8.0f,
                     observerType = "Diver",
@@ -82,7 +82,7 @@ class PostGenerator {
 
             // Post 5: Mysterious creature without image
             tempList.add(
-                Post(
+                Sighting(
                     userHandler = "noimage_user",
                     userIcon = R.drawable.profpic,
                     postingDate = "2024-10-19",
@@ -90,7 +90,7 @@ class PostGenerator {
                     scientificName = "Unknown",
                     location = "Deep Sea",
                     sightDate = "2024-10-18",
-                    imageId = null,
+                    imageUri = null,
                     groupSize = 0,
                     distance = 0.0f,
                     observerType = "Unknown",
@@ -100,7 +100,7 @@ class PostGenerator {
 
             // Post 6: Sea Turtle with image
             tempList.add(
-                Post(
+                Sighting(
                     userHandler = "seaturtle_lover",
                     userIcon = R.drawable.profpic,
                     postingDate = "2023-09-12",
@@ -108,7 +108,7 @@ class PostGenerator {
                     scientificName = "Chelonioidea",
                     location = "Tubbataha Reefs",
                     sightDate = "2023-09-10",
-                    imageId = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/sea_turtle"),
+                    imageUri = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/sea_turtle"),
                     groupSize = 5,
                     distance = 30.0f,
                     observerType = "Diver",
@@ -118,7 +118,7 @@ class PostGenerator {
 
             // Post 7: Dugong without image
             tempList.add(
-                Post(
+                Sighting(
                     userHandler = "wildlifeenthusiast",
                     userIcon = R.drawable.profpic,
                     postingDate = "2022-12-01",
@@ -126,7 +126,7 @@ class PostGenerator {
                     scientificName = "Dugong dugon",
                     location = "Palawan, Philippines",
                     sightDate = "2022-11-29",
-                    imageId = null,
+                    imageUri = null,
                     groupSize = 1,
                     distance = 50.0f,
                     observerType = "Tourist",
@@ -136,7 +136,7 @@ class PostGenerator {
 
             // Post 8: Whale Shark with image
             tempList.add(
-                Post(
+                Sighting(
                     userHandler = "oceanadventurer",
                     userIcon = R.drawable.profpic,
                     postingDate = "2024-06-25",
@@ -144,7 +144,7 @@ class PostGenerator {
                     scientificName = "Rhincodon typus",
                     location = "Donsol, Sorsogon",
                     sightDate = "2024-06-23",
-                    imageId = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/whale_shark"),
+                    imageUri = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/whale_shark"),
                     groupSize = 10,
                     distance = 100.0f,
                     observerType = "Researcher",
@@ -154,7 +154,7 @@ class PostGenerator {
 
             // Post 9: Hammerhead Shark with image
             tempList.add(
-                Post(
+                Sighting(
                     userHandler = "sharklover",
                     userIcon = R.drawable.profpic,
                     postingDate = "2024-05-14",
@@ -162,7 +162,7 @@ class PostGenerator {
                     scientificName = "Sphyrnidae",
                     location = "Tubbataha Reefs",
                     sightDate = "2024-05-12",
-                    imageId = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/hammerhead_shark"),
+                    imageUri = Uri.parse("android.resource://com.mobdeve.group3.mco/drawable/hammerhead_shark"),
                     groupSize = 4,
                     distance = 20.0f,
                     observerType = "Researcher",
@@ -172,7 +172,7 @@ class PostGenerator {
 
             // Post 10: Octopus without image
             tempList.add(
-                Post(
+                Sighting(
                     userHandler = "marinebiologist",
                     userIcon = R.drawable.profpic,
                     postingDate = "2023-11-22",
@@ -180,7 +180,7 @@ class PostGenerator {
                     scientificName = "Octopoda",
                     location = "Puerto Galera, Philippines",
                     sightDate = "2023-11-21",
-                    imageId = null,
+                    imageUri = null,
                     groupSize = 2,
                     distance = 15.0f,
                     observerType = "Scientist",

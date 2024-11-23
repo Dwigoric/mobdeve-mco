@@ -5,7 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.mobdeve.group3.mco.R
-import com.mobdeve.group3.mco.Sighting
+import com.mobdeve.group3.mco.sighting.Sighting
 
 class ProfileSightingsViewHolder(itemView: View) : ViewHolder(itemView) {
     private val imgSighting: ImageView = itemView.findViewById(R.id.imgSighting)
@@ -16,10 +16,10 @@ class ProfileSightingsViewHolder(itemView: View) : ViewHolder(itemView) {
     private val txtSightingDate: TextView = itemView.findViewById(R.id.txtSightingDate)
 
     fun bindData(sighting: Sighting) {
-        imgSighting.setImageResource(sighting.imageId)
-        txtSightingName.text = sighting.name
+        imgSighting.setImageURI(sighting.imageUri)
+        txtSightingName.text = sighting.animalName
         txtSightingNameScientific.text = sighting.scientificName
         txtSighingPlace.text = sighting.location
-        txtSightingDate.text = "Seen on ${sighting.date}"
+        txtSightingDate.text = "Seen on ${sighting.sightDate}"
     }
 }
