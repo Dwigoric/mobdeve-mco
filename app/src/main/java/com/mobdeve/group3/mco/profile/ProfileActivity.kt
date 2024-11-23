@@ -13,11 +13,16 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.mobdeve.group3.mco.MainActivity
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.catalogue.CatalogueActivity
 import com.mobdeve.group3.mco.databinding.ActivityProfileBinding
 import com.mobdeve.group3.mco.db.SightingsAPI
+import com.mobdeve.group3.mco.db.UsersAPI
 import com.mobdeve.group3.mco.landing.LandingActivity
 import com.mobdeve.group3.mco.sighting.Sighting
 
@@ -25,6 +30,7 @@ import com.mobdeve.group3.mco.sighting.Sighting
 class ProfileActivity : AppCompatActivity() {
     private val sightingsList = ArrayList<Sighting>()
     private lateinit var recyclerView: RecyclerView
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +38,8 @@ class ProfileActivity : AppCompatActivity() {
 
         val viewBinding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+
+        auth = Firebase.auth
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -81,47 +89,42 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun populateSightings() {
         SightingsAPI.getInstance().getUserSightings { sightings ->
-            sightings.forEach { sightingData ->
-                val sightingId = sightingData["id"] as String
-                val userHandler = sightingData["userHandler"] as String
-                val userIcon = sightingData["userIcon"] as Uri
-                val postingDate = sightingData["postingDate"] as String
-                val animalName = sightingData["animalName"] as String
-                val scientificName = sightingData["scientificName"] as String
-                val location = sightingData["location"] as String
-                val sightDate = sightingData["sightDate"] as String
-                val imageUri = sightingData["imageId"] as Uri
-                val groupSize = sightingData["groupSize"] as Int
-                val distance = sightingData["distance"] as Float
-                val observerType = sightingData["observerType"] as String
-                val sightingTime = sightingData["sightingTime"] as String
-                val score = sightingData["score"] as Int
-                val hasUpvoted = sightingData["hasUpvoted"] as Boolean
-                val hasDownvoted = sightingData["hasDownvoted"] as Boolean
+            UsersAPI.getInstance().getUser(auth.currentUser!!.uid) { author ->
+                sightings.forEach { sightingData ->
+                    val sightingId = sightingData["id"] as String
+                    val postingDate =
+                        (sightingData["postingDate"] as? Timestamp)?.toDate()?.toString() ?: ""
+                    val animalName = (sightingData["commonName"] as? String) ?: ""
+                    val scientificName = (sightingData["scientificName"] as? String) ?: ""
+                    val location = sightingData["location"] as? String ?: ""
+                    val sightDate =
+                        (sightingData["sightDate"] as? Timestamp)?.toDate()?.toString() ?: ""
+                    val imageUri =
+                        (sightingData["imageId"] as? String).let { if (it != null) Uri.parse(it) else null }
+                    val groupSize = sightingData["groupSize"] as? Int ?: 0
+                    val distance = sightingData["distance"] as? Float ?: 0.0f
+                    val observerType = sightingData["observerType"] as? String ?: ""
+                    val sightingTime = sightingData["sightingTime"] as? String ?: ""
 
-                val sighting = Sighting(
-                    id = sightingId,
-                    userHandler = userHandler,
-                    userIcon = userIcon,
-                    postingDate = postingDate,
-                    animalName = animalName,
-                    scientificName = scientificName,
-                    location = location,
-                    sightDate = sightDate,
-                    imageUri = imageUri,
-                    groupSize = groupSize,
-                    distance = distance,
-                    observerType = observerType,
-                    sightingTime = sightingTime,
-                    score = score,
-                    hasUpvoted = hasUpvoted,
-                    hasDownvoted = hasDownvoted
-                )
-
-                this.sightingsList.add(sighting)
+                    val sighting = Sighting(
+                        id = sightingId,
+                        userHandler = author.get("username") as String,
+                        userIcon = if (author.get("avatar") != null) Uri.parse(author.get("avatar") as String) else null,
+                        postingDate = postingDate,
+                        animalName = animalName,
+                        scientificName = scientificName,
+                        location = location,
+                        sightDate = sightDate,
+                        imageUri = imageUri,
+                        groupSize = groupSize,
+                        distance = distance,
+                        observerType = observerType,
+                        sightingTime = sightingTime
+                    )
+                    this.sightingsList.add(sighting)
+                }
+                this.recyclerView.adapter?.notifyDataSetChanged()
             }
-
-            this.recyclerView.adapter?.notifyDataSetChanged()
         }
     }
 
