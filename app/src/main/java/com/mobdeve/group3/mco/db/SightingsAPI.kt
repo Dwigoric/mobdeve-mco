@@ -24,6 +24,10 @@ class SightingsAPI {
         return dbHelper.getDocument("sightings", sightingId)
     }
 
+    fun getSightings(): ArrayList<HashMap<String, Any>> {
+        return dbHelper.getDocuments("sightings")
+    }
+
     fun updateSighting(sightingId: String, data: HashMap<String, Any>): Boolean {
         return dbHelper.updateDocument("sightings", sightingId, data)
     }
