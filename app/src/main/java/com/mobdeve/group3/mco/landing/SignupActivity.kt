@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.mobdeve.group3.mco.MainActivity
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.db.UsersAPI
 
@@ -46,8 +47,8 @@ class SignupActivity : AppCompatActivity() {
                     // Add user data to Firestore
                     UsersAPI.getInstance().addUser(auth.currentUser?.uid!!, user)
 
-                    // Navigate to LoginActivity after registration
-                    val intent = Intent(this, LoginActivity::class.java)
+                    // Navigate to MainActivity after registration
+                    val intent = Intent(this, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                     finish() // Optionally close SignupActivity
