@@ -45,44 +45,53 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode != RESULT_OK) return@registerForActivityResult
 
-            val commonName =
-                result.data?.getStringExtra(AddSightingActivity.Companion.COMMON_NAME_KEY)
-            val scientificName =
-                result.data?.getStringExtra(AddSightingActivity.Companion.SCIENTIFIC_NAME_KEY)
-            val groupSize =
-                result.data?.getIntExtra(AddSightingActivity.Companion.GROUP_SIZE_KEY, 0)
-            val distance =
-                result.data?.getFloatExtra(AddSightingActivity.Companion.DISTANCE_KEY, 0.0f)
-            val location = result.data?.getStringExtra(AddSightingActivity.Companion.LOCATION_KEY)
-            val observerType =
-                result.data?.getStringExtra(AddSightingActivity.Companion.OBSERVER_TYPE_KEY)
-            val sightingDate =
-                result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_DATE_KEY)
-            val sightingTime =
-                result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_TIME_KEY)
-            val imageUriString = result.data?.getStringExtra("IMAGE_URI")
-            val imageUri = if (!imageUriString.isNullOrEmpty()) Uri.parse(imageUriString) else null
+            // Extract sighting ID and user data
+            val sightingId = result.data?.getStringExtra("SIGHTING_ID")
+            val userHandler = result.data?.getStringExtra("userHandler") // Fetch username
+            val userIcon = result.data?.getStringExtra("userIcon") // Fetch avatar URL
 
-            sightingList.add(
-                0,
-                Sighting(
-                    id = UUID.randomUUID().toString(),
-                    userHandler = "rosmar",
-                    userIcon = R.drawable.profpic,
-                    postingDate = Date().toString(),
-                    animalName = commonName ?: "",
-                    scientificName = scientificName ?: "",
-                    location = location ?: "",
-                    sightDate = sightingDate ?: "",
-                    imageUri = imageUri,
-                    groupSize = groupSize ?: 0,
-                    distance = distance ?: 0.0f,
-                    observerType = observerType ?: "",
-                    sightingTime = sightingTime ?: ""
+            // Make sure sightingId is not null
+            if (sightingId != null) {
+                // Extract other sighting data from the result if needed
+                val commonName = result.data?.getStringExtra(AddSightingActivity.Companion.COMMON_NAME_KEY)
+                val scientificName = result.data?.getStringExtra(AddSightingActivity.Companion.SCIENTIFIC_NAME_KEY)
+                val groupSize = result.data?.getIntExtra(AddSightingActivity.Companion.GROUP_SIZE_KEY, 0)
+                val distance = result.data?.getFloatExtra(AddSightingActivity.Companion.DISTANCE_KEY, 0.0f)
+                val location = result.data?.getStringExtra(AddSightingActivity.Companion.LOCATION_KEY)
+                val observerType = result.data?.getStringExtra(AddSightingActivity.Companion.OBSERVER_TYPE_KEY)
+                val sightingDate = result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_DATE_KEY)
+                val sightingTime = result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_TIME_KEY)
+                val imageUriString = result.data?.getStringExtra("IMAGE_URI")
+                val imageUri = if (!imageUriString.isNullOrEmpty()) Uri.parse(imageUriString) else null
+
+                // Add the sighting data to the list
+                sightingList.add(
+                    0,
+                    Sighting(
+                        id = sightingId,
+                        userHandler = userHandler ?: "Unknown",
+                        userIcon = if (!userIcon.isNullOrEmpty()) Uri.parse(userIcon) else null,
+                        postingDate = Date().toString(),
+                        animalName = commonName ?: "",
+                        scientificName = scientificName ?: "",
+                        location = location ?: "",
+                        sightDate = sightingDate ?: "",
+                        imageUri = imageUri,
+                        groupSize = groupSize ?: 0,
+                        distance = distance ?: 0.0f,
+                        observerType = observerType ?: "",
+                        sightingTime = sightingTime ?: ""
+                    )
                 )
-            )
-            sightingPostAdapter.notifyItemInserted(0)
+
+                // Notify the adapter that the data has changed
+                sightingPostAdapter.notifyItemInserted(0)
+
+                // Optionally, scroll to the new item
+                recyclerView.scrollToPosition(0)
+            }
         }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -158,7 +167,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         recyclerView = findViewById(R.id.rcvMainPosts)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        sightingList = SightingGenerator.generateData()
+        sightingList = ArrayList<Sighting>()
         sightingPostAdapter = SightingPostAdapter(sightingList)
         recyclerView.adapter = sightingPostAdapter
     }

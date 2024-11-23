@@ -11,7 +11,7 @@ import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.databinding.ActivityMainBinding
 
 class SightingPostActivity : AppCompatActivity() {
-    private val sightingList = SightingGenerator.generateData()
+    private val sightingList = ArrayList<Sighting>()
     private lateinit var recyclerView: RecyclerView
     private lateinit var sightingPostAdapter: SightingPostAdapter  // Store the adapter reference
 

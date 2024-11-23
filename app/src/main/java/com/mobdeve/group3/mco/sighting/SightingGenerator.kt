@@ -4,7 +4,7 @@ import android.net.Uri
 import com.mobdeve.group3.mco.R
 
 class SightingGenerator {
-    companion object {
+    /**companion object {
         fun generateData(): ArrayList<Sighting> {
             val tempList = ArrayList<Sighting>()
 
@@ -190,5 +190,5 @@ class SightingGenerator {
 
             return tempList
         }
-    }
+    }*/
 }

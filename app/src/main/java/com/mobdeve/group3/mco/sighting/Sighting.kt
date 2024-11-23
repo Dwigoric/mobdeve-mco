@@ -7,7 +7,7 @@ import java.util.UUID
 data class Sighting(
     val id: String = UUID.randomUUID().toString(),
     val userHandler: String,
-    val userIcon: Int,
+    val userIcon: Uri?,
     val postingDate: String,
     val animalName: String,
     val scientificName: String,

@@ -24,6 +24,9 @@ import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.databinding.ActivityAddSightingBinding
 import java.io.File
 import java.io.IOException
+import com.google.firebase.auth.FirebaseAuth
+import com.mobdeve.group3.mco.db.SightingsAPI
+import com.mobdeve.group3.mco.db.UsersAPI
 
 class AddSightingActivity : AppCompatActivity() {
     companion object {
@@ -37,6 +40,8 @@ class AddSightingActivity : AppCompatActivity() {
         const val SIGHTING_TIME_KEY = "SIGHTING_TIME_KEY"
     }
 
+    private lateinit var auth: FirebaseAuth
+    private lateinit var dbHelper: SightingsAPI
     private var commonName: String = ""
     private var scientificName: String = ""
     private var groupSize: Int = 0
@@ -50,7 +55,6 @@ class AddSightingActivity : AppCompatActivity() {
     private var imageUri: Uri? = null
     private lateinit var imageView: ImageView
 
-    // Declare ActivityResultLauncher for Camera and Gallery
     private lateinit var cameraResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var galleryResultLauncher: ActivityResultLauncher<Intent>
 
@@ -62,6 +66,8 @@ class AddSightingActivity : AppCompatActivity() {
         setContentView(viewBinding.root)
 
         imageView = viewBinding.imgSelectedPhoto
+        auth = FirebaseAuth.getInstance()
+        dbHelper = SightingsAPI.getInstance()
 
         // Set listeners for input fields
         viewBinding.etCommonName.addTextChangedListener { commonName = it.toString() }
@@ -73,21 +79,51 @@ class AddSightingActivity : AppCompatActivity() {
         viewBinding.etSightingDate.addTextChangedListener { sightingDate = it.toString() }
         viewBinding.etSightingTime.addTextChangedListener { sightingTime = it.toString() }
 
-        // Handle submit button click
         viewBinding.btnPost.setOnClickListener {
-            val returnIntent = Intent()
-            returnIntent.putExtra(COMMON_NAME_KEY, commonName)
-            returnIntent.putExtra(SCIENTIFIC_NAME_KEY, scientificName)
-            returnIntent.putExtra(GROUP_SIZE_KEY, groupSize)
-            returnIntent.putExtra(DISTANCE_KEY, distance)
-            returnIntent.putExtra(LOCATION_KEY, location)
-            returnIntent.putExtra(OBSERVER_TYPE_KEY, observerType)
-            returnIntent.putExtra(SIGHTING_DATE_KEY, sightingDate)
-            returnIntent.putExtra(SIGHTING_TIME_KEY, sightingTime)
-            returnIntent.putExtra("IMAGE_URI", imageUri.toString())
-            setResult(RESULT_OK, returnIntent)
-            finish()
+            val userId = auth.currentUser?.uid!!
+
+            UsersAPI.getInstance().getUser(userId) { userData ->
+                val username = userData["username"] as? String ?: "Unknown User"
+                val avatarUrl = userData["avatar"] as? String ?: ""
+
+                val sightingData = hashMapOf<String, Any>(
+                    "commonName" to commonName,
+                    "scientificName" to scientificName,
+                    "groupSize" to groupSize,
+                    "distance" to distance,
+                    "location" to location,
+                    "observerType" to observerType,
+                    "sightingDate" to sightingDate,
+                    "sightingTime" to sightingTime,
+                    "userId" to userId,
+                    "imageUri" to imageUri.toString(),
+                    "userHandler" to username,
+                    "userIcon" to avatarUrl
+                )
+
+                // Add the sighting to Firestore
+                val sightingId = dbHelper.addSighting(sightingData)
+
+                // Return the sightingId back to the previous activity
+                val returnIntent = Intent()
+                returnIntent.putExtra("SIGHTING_ID", sightingId)
+                returnIntent.putExtra("userHandler", username)
+                returnIntent.putExtra("userIcon", avatarUrl)
+                returnIntent.putExtra("COMMON_NAME_KEY", commonName)
+                returnIntent.putExtra("SCIENTIFIC_NAME_KEY", scientificName)
+                returnIntent.putExtra("GROUP_SIZE_KEY", groupSize)
+                returnIntent.putExtra("DISTANCE_KEY", distance)
+                returnIntent.putExtra("LOCATION_KEY", location)
+                returnIntent.putExtra("OBSERVER_TYPE_KEY", observerType)
+                returnIntent.putExtra("SIGHTING_DATE_KEY", sightingDate)
+                returnIntent.putExtra("SIGHTING_TIME_KEY", sightingTime)
+                returnIntent.putExtra("IMAGE_URI", imageUri.toString())
+
+                setResult(RESULT_OK, returnIntent)
+                finish()
+            }
         }
+
 
         // Initialize the ActivityResultLauncher for Camera
         cameraResultLauncher = registerForActivityResult(

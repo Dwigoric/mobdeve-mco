@@ -1,8 +1,10 @@
 package com.mobdeve.group3.mco.db
 
 import android.util.Log
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.firestore
 
 class DbHelper {
@@ -104,6 +106,24 @@ class DbHelper {
 
         return document
     }
+
+    fun getDocumentA(collection: String, documentId: String, callback: (HashMap<String, Any>) -> Unit) {
+        val document = HashMap<String, Any>()
+        db.collection(collection)
+            .document(documentId)
+            .get()
+            .addOnSuccessListener { result ->
+                result.data?.let {
+                    document.putAll(it)
+                }
+                callback(document)  // Return the document through the callback
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting document.", exception)
+                callback(document)  // Return an empty document on failure
+            }
+    }
+
 
     fun getDocuments(collection: String): ArrayList<HashMap<String, Any>> {
         val documents = ArrayList<HashMap<String, Any>>()

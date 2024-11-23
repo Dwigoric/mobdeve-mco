@@ -47,7 +47,7 @@ class SightingPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     fun bind(sighting: Sighting) {
         userHandle.text = sighting.userHandler
-        userIcon.setImageResource(sighting.userIcon)
+        userIcon.setImageURI(sighting.userIcon)
         score.text = sighting.score.toString()
         postingDate.text = "Posted on ${sighting.postingDate}"
         txtSightingName.text = sighting.animalName
