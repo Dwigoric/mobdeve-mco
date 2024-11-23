@@ -18,6 +18,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.mobdeve.group3.mco.catalogue.CatalogueActivity
 import com.mobdeve.group3.mco.landing.LandingActivity
 import com.mobdeve.group3.mco.post.Post
@@ -31,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
     private lateinit var postList: ArrayList<Post>
+    private lateinit var auth: FirebaseAuth
 
     companion object {
         const val REQUEST_CODE_EDIT_SIGHTING = 1001
@@ -51,7 +55,7 @@ class MainActivity : AppCompatActivity() {
             val sightingDate =
                 result.data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
             val sightingTime =
-               result.data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
+                result.data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
             val imageUriString = result.data?.getStringExtra("IMAGE_URI")
             val imageUri = if (!imageUriString.isNullOrEmpty()) Uri.parse(imageUriString) else null
 
@@ -80,6 +84,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
+        auth = Firebase.auth
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -153,6 +159,9 @@ class MainActivity : AppCompatActivity() {
         popup.setOnMenuItemClickListener { menuItem: MenuItem ->
             when (menuItem.itemId) {
                 R.id.menu_logout -> {
+                    // Sign out the user
+                    auth.signOut()
+
                     // Handle logout and navigate back to LaunchActivity
                     val logoutIntent = Intent(applicationContext, LandingActivity::class.java)
                     logoutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -179,11 +188,13 @@ class MainActivity : AppCompatActivity() {
                     sortPostsByScore()
                     true
                 }
+
                 R.id.option_sort_recency -> {
                     // Sort based on recency
                     sortPostsByRecency()
                     true
                 }
+
                 else -> false
             }
         }
