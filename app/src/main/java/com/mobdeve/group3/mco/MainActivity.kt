@@ -97,6 +97,13 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        if (auth.currentUser == null) {
+            val launchIntent = Intent(applicationContext, LandingActivity::class.java)
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(launchIntent)
+            finish()
+        }
+
         // Set up sort button click listener
         findViewById<ImageButton>(R.id.btnSort).setOnClickListener {
             showSortPopup(it)
