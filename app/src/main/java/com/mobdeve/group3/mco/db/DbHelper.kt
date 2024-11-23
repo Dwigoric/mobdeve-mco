@@ -2,6 +2,7 @@ package com.mobdeve.group3.mco.db
 
 import android.util.Log
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.firestore
 
 class DbHelper {
@@ -127,6 +128,28 @@ class DbHelper {
         db.collection(collection)
             .whereEqualTo(field, value)
             .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    documents.add(document.data as HashMap<String, Any>)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents.", exception)
+            }
+
+        return documents
+    }
+
+    fun getDocumentsWhereMultiple(
+        collection: String,
+        fields: HashMap<String, Any>
+    ): ArrayList<HashMap<String, Any>> {
+        val documents = ArrayList<HashMap<String, Any>>()
+        var query = db.collection(collection)
+        for (field in fields) {
+            query = query.whereEqualTo(field.key, field.value) as CollectionReference
+        }
+        query.get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     documents.add(document.data as HashMap<String, Any>)
