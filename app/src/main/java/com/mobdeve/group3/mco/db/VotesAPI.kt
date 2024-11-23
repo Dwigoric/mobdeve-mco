@@ -18,14 +18,29 @@ class VotesAPI {
         }
     }
 
-    fun addVote(sightingId: String, isUpvote: Boolean): String {
-        val data = dbHelper.constructData(
-            "userId" to auth.currentUser!!.uid,
-            "sightingId" to sightingId,
-            "isUpvote" to isUpvote
+    fun setVote(sightingId: String, isUpvote: Boolean): String {
+        val existingVote = dbHelper.getDocumentsWhereMultiple(
+            "votes", hashMapOf(
+                "userId" to auth.currentUser!!.uid,
+                "sightingId" to sightingId
+            )
         )
 
-        return dbHelper.addDocument("votes", data)
+        if (existingVote.isNotEmpty()) {
+            val vote = existingVote[0]
+            vote["isUpvote"] = isUpvote
+            dbHelper.updateDocument("votes", vote["id"] as String, vote)
+            return vote["id"] as String
+        } else {
+            return dbHelper.addDocument(
+                "votes",
+                hashMapOf(
+                    "userId" to auth.currentUser!!.uid,
+                    "sightingId" to sightingId,
+                    "isUpvote" to isUpvote
+                )
+            )
+        }
     }
 
     fun countVotes(sightingId: String): Int {
