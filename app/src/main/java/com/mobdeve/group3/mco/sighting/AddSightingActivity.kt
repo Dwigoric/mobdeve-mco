@@ -21,14 +21,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.DocumentReference
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.databinding.ActivityAddSightingBinding
 import com.mobdeve.group3.mco.db.SightingsAPI
 import com.mobdeve.group3.mco.db.UsersAPI
 import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class AddSightingActivity : AppCompatActivity() {
     companion object {
@@ -80,25 +84,36 @@ class AddSightingActivity : AppCompatActivity() {
         viewBinding.etSightingTime.addTextChangedListener { sightingTime = it.toString() }
 
         viewBinding.btnPost.setOnClickListener {
-            val userId = auth.currentUser?.uid!!
+            val userId = auth.currentUser?.uid ?: return@setOnClickListener
+
+            // Use UsersAPI to fetch the user reference
+            val authorRef = UsersAPI.getInstance().getUserReference(userId)
+            if (authorRef == null) {
+                Log.e("AddSighting", "Invalid user reference for userId: $userId")
+                return@setOnClickListener
+            }
+
+            // Combine sighting date and time
+            val combinedSightTime = SimpleDateFormat("MM/dd/yyyy hh:mm", Locale.getDefault()).parse(
+                "$sightingDate $sightingTime"
+            )?.let { Timestamp(it) }
 
             UsersAPI.getInstance().getUser(userId) { userData ->
                 val username = userData["username"] as? String ?: "Unknown User"
                 val avatarUrl = userData["avatar"] as? String ?: ""
-
+                // Prepare sighting data
                 val sightingData = hashMapOf<String, Any>(
                     "commonName" to commonName,
                     "scientificName" to scientificName,
                     "groupSize" to groupSize,
-                    "distance" to distance,
+                    "distance" to "${distance}km",
                     "location" to location,
                     "observerType" to observerType,
-                    "sightingDate" to sightingDate,
-                    "sightingTime" to sightingTime,
-                    "userId" to userId,
-                    "imageUri" to imageUri.toString(),
-                    "userHandler" to username,
-                    "userIcon" to avatarUrl
+                    "sightTime" to (combinedSightTime ?: Timestamp.now()),
+                    "postingDate" to Timestamp.now(),
+                    "imageUri" to (imageUri?.toString() ?: ""),
+                    "author" to authorRef, // DocumentReference
+                    "comments" to listOf<DocumentReference>() // Empty list for comments
                 )
 
                 // Add the sighting to Firestore
@@ -123,7 +138,6 @@ class AddSightingActivity : AppCompatActivity() {
                 }
             }
         }
-
 
         // Initialize the ActivityResultLauncher for Camera
         cameraResultLauncher = registerForActivityResult(

@@ -3,6 +3,7 @@ package com.mobdeve.group3.mco.db
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.firestore
 
 class DbHelper {
@@ -181,4 +182,14 @@ class DbHelper {
                 callback(documents)  // Empty documents on failure
             }
     }
+
+    fun getDocumentReference(collection: String, documentId: String): DocumentReference? {
+        return if (documentId.isNotEmpty()) {
+            db.collection(collection).document(documentId)
+        } else {
+            Log.e(TAG, "getDocumentReference called with an empty documentId")
+            null
+        }
+    }
+
 }

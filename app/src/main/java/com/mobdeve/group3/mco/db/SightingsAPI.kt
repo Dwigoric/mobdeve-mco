@@ -1,5 +1,7 @@
 package com.mobdeve.group3.mco.db
 
+import android.util.Log
+
 class SightingsAPI {
     private val dbHelper = DbHelper.getInstance()
 
@@ -29,8 +31,11 @@ class SightingsAPI {
     }
 
     fun getSightings(callback: (ArrayList<HashMap<String, Any>>) -> Unit) {
-        dbHelper.getDocuments("sightings") { sightings ->
-            callback(sightings)
+        val documents = ArrayList<HashMap<String, Any>>()
+        dbHelper.getDocuments("sightings") { fetchedDocs ->
+            Log.d("getSightings", "Fetched ${fetchedDocs.size} documents from Firestore") // Add this
+            documents.addAll(fetchedDocs)
+            callback(documents)
         }
     }
 

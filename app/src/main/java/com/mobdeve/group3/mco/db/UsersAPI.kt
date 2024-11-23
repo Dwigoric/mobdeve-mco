@@ -1,5 +1,8 @@
 package com.mobdeve.group3.mco.db
 
+import android.util.Log
+import com.google.firebase.firestore.DocumentReference
+
 class UsersAPI {
     private val dbHelper = DbHelper.getInstance()
 
@@ -23,9 +26,18 @@ class UsersAPI {
     }
 
     fun getUser(userId: String, callback: (HashMap<String, Any>) -> Unit) {
-        dbHelper.getDocument("users", userId) { userData ->
-            callback(userData)  // Pass the result to the callback
+        if (userId.isEmpty()) {
+            Log.e("UsersAPI", "getUser called with empty userId")
+            callback(HashMap()) // Return an empty map
+            return
         }
+        dbHelper.getDocument("users", userId) { userData ->
+            callback(userData)
+        }
+    }
+
+    fun getUserReference(userId: String): DocumentReference? {
+        return dbHelper.getDocumentReference("users", userId)
     }
 
     fun updateUser(userId: String, data: HashMap<String, Any>, callback: (Boolean) -> Unit) {

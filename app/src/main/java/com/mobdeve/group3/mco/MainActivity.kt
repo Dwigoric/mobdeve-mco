@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
@@ -19,9 +20,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.DocumentReference
 import com.mobdeve.group3.mco.catalogue.CatalogueActivity
+import com.mobdeve.group3.mco.db.SightingsAPI
+import com.mobdeve.group3.mco.db.UsersAPI
 import com.mobdeve.group3.mco.landing.LandingActivity
 import com.mobdeve.group3.mco.profile.ProfileActivity
 import com.mobdeve.group3.mco.sighting.AddSightingActivity
@@ -177,7 +182,77 @@ class MainActivity : AppCompatActivity() {
         sightingList = ArrayList<Sighting>()
         sightingPostAdapter = SightingPostAdapter(sightingList)
         recyclerView.adapter = sightingPostAdapter
+
+        loadSightings()
     }
+
+    private fun loadSightings() {
+        SightingsAPI.getInstance().getSightings { sightingsData ->
+            Log.d("loadSightings", "Sightings fetched: ${sightingsData.size} items")
+            sightingList.clear()
+
+            val usersAPI = UsersAPI.getInstance()
+            val tempList = ArrayList<Sighting>()
+
+            for (sightingData in sightingsData) {
+                val authorRef = sightingData["author"] as? DocumentReference
+                if (authorRef == null) {
+                    Log.e("loadSightings", "Invalid author reference in sighting: $sightingData")
+                    continue // Skip this sighting
+                }
+
+                // Fetch the user data from the author reference
+                authorRef.get().addOnSuccessListener { documentSnapshot ->
+                    if (documentSnapshot.exists()) {
+                        val userData = documentSnapshot.data ?: emptyMap<String, Any>()
+                        val userHandler = userData["username"] as? String ?: "Unknown User"
+                        val userIconUrl = userData["avatar"] as? String ?: ""
+                        val userIcon = if (userIconUrl.isNotEmpty()) Uri.parse(userIconUrl) else null
+
+                        Log.d("loadSightings", "Fetched user data: username=$userHandler, avatar=$userIconUrl")
+
+                        // Create the Sighting object
+                        val sighting = Sighting(
+                            id = sightingData["id"] as? String ?: "",
+                            userHandler = userHandler,
+                            userIcon = userIcon,
+                            postingDate = (sightingData["postingDate"] as? Timestamp)?.toDate()?.toString() ?: "",
+                            animalName = sightingData["commonName"] as? String ?: "",
+                            scientificName = sightingData["scientificName"] as? String ?: "",
+                            location = sightingData["location"] as? String ?: "",
+                            sightDate = (sightingData["sightTime"] as? Timestamp)?.toDate()?.toString() ?: "",
+                            imageUri = (sightingData["imageUri"] as? String)?.let { Uri.parse(it) },
+                            groupSize = (sightingData["groupSize"] as? Long)?.toInt() ?: 0,
+                            distance = (sightingData["distance"] as? String)?.replace("km", "")?.toFloat() ?: 0.0f,
+                            observerType = sightingData["observerType"] as? String ?: "",
+                            sightingTime = (sightingData["sightTime"] as? Timestamp)?.toDate()?.toString() ?: ""
+                        )
+
+                        tempList.add(sighting)
+
+                        // Log progress for each sighting
+                        Log.d(
+                            "loadSightings",
+                            "Sighting added to tempList: id=${sighting.id}, animalName=${sighting.animalName}"
+                        )
+
+                        // Update RecyclerView after all sightings are processed
+                        if (tempList.size == sightingsData.size) {
+                            sightingList.addAll(tempList.sortedByDescending { it.postingDate })
+                            sightingPostAdapter.notifyDataSetChanged()
+                            Log.d("loadSightings", "RecyclerView updated with ${sightingList.size} items")
+                        }
+                    } else {
+                        Log.e("loadSightings", "User not found for author reference: $authorRef")
+                    }
+                }.addOnFailureListener { exception ->
+                    Log.e("loadSightings", "Error fetching user data: ${exception.message}")
+                }
+            }
+        }
+    }
+
+
 
     private fun showLogoutPopup(view: View) {
         val popup = PopupMenu(this, view)
