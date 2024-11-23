@@ -13,7 +13,9 @@ class SightingsAPI {
             return instance as SightingsAPI
         }
     }
-    
+
+    private constructor()
+
     fun addSighting(data: HashMap<String, Any>): String {
         return dbHelper.addDocument("sightings", data)
     }

@@ -18,6 +18,8 @@ class VotesAPI {
         }
     }
 
+    private constructor()
+
     fun setVote(sightingId: String, isUpvote: Boolean): String {
         val existingVote = dbHelper.getDocumentsWhereMultiple(
             "votes", hashMapOf(

@@ -18,6 +18,8 @@ class CommentsAPI {
         }
     }
 
+    private constructor()
+
     fun addComment(sightingId: String, content: String): String {
         val data = dbHelper.constructData(
             "userId" to auth.currentUser!!.uid,
