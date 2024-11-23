@@ -51,7 +51,7 @@ class VotesAPI {
             )
         )
 
-        if (votes.isEmpty) {
+        if (votes.isEmpty()) {
             return false
         }
 
