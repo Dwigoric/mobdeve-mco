@@ -14,7 +14,7 @@ class UsersAPI {
         }
     }
 
-    fun addUser(userId: String, data: HashMap<String, Any>): String {
+    fun addUser(userId: String, data: HashMap<String, Any>): Boolean {
         return dbHelper.addDocument("users", userId, data)
     }
 
