@@ -119,7 +119,12 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun updateAvatar(imgBytes: ByteArray) {
         ImagesAPI.getInstance().putProfileImage(auth.currentUser!!.uid, imgBytes) { remoteUri ->
-            avatarImageView.setImageURI(Uri.parse(remoteUri))
+            UsersAPI.getInstance()
+                .updateUser(auth.currentUser!!.uid, hashMapOf("avatar" to remoteUri)) { success ->
+                    if (success) {
+                        avatarImageView.setImageURI(Uri.parse(remoteUri))
+                    }
+                }
         }
     }
 
