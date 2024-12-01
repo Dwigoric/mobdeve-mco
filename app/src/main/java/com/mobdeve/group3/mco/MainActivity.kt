@@ -207,25 +207,33 @@ class MainActivity : AppCompatActivity() {
                         val userData = documentSnapshot.data ?: emptyMap<String, Any>()
                         val userHandler = userData["username"] as? String ?: "Unknown User"
                         val userIconUrl = userData["avatar"] as? String ?: ""
-                        val userIcon = if (userIconUrl.isNotEmpty()) Uri.parse(userIconUrl) else null
+                        val userIcon =
+                            if (userIconUrl.isNotEmpty()) Uri.parse(userIconUrl) else null
 
-                        Log.d("loadSightings", "Fetched user data: username=$userHandler, avatar=$userIconUrl")
+                        Log.d(
+                            "loadSightings",
+                            "Fetched user data: username=$userHandler, avatar=$userIconUrl"
+                        )
 
                         // Create the Sighting object
                         val sighting = Sighting(
                             id = sightingData["id"] as? String ?: "",
                             userHandler = userHandler,
                             userIcon = userIcon,
-                            postingDate = (sightingData["postingDate"] as? Timestamp)?.toDate()?.toString() ?: "",
+                            postingDate = (sightingData["postingDate"] as? Timestamp)?.toDate()
+                                ?.toString() ?: "",
                             animalName = sightingData["commonName"] as? String ?: "",
                             scientificName = sightingData["scientificName"] as? String ?: "",
                             location = sightingData["location"] as? String ?: "",
-                            sightDate = (sightingData["sightTime"] as? Timestamp)?.toDate()?.toString() ?: "",
+                            sightDate = (sightingData["sightTime"] as? Timestamp)?.toDate()
+                                ?.toString() ?: "",
                             imageUri = (sightingData["imageUri"] as? String)?.let { Uri.parse(it) },
                             groupSize = (sightingData["groupSize"] as? Long)?.toInt() ?: 0,
-                            distance = (sightingData["distance"] as? String)?.replace("km", "")?.toFloat() ?: 0.0f,
+                            distance = (sightingData["distance"] as? String)?.replace("km", "")
+                                ?.toFloat() ?: 0.0f,
                             observerType = sightingData["observerType"] as? String ?: "",
-                            sightingTime = (sightingData["sightTime"] as? Timestamp)?.toDate()?.toString() ?: ""
+                            sightingTime = (sightingData["sightTime"] as? Timestamp)?.toDate()
+                                ?.toString() ?: ""
                         )
 
                         tempList.add(sighting)
@@ -240,7 +248,10 @@ class MainActivity : AppCompatActivity() {
                         if (tempList.size == sightingsData.size) {
                             sightingList.addAll(tempList.sortedByDescending { it.postingDate })
                             sightingPostAdapter.notifyDataSetChanged()
-                            Log.d("loadSightings", "RecyclerView updated with ${sightingList.size} items")
+                            Log.d(
+                                "loadSightings",
+                                "RecyclerView updated with ${sightingList.size} items"
+                            )
                         }
                     } else {
                         Log.e("loadSightings", "User not found for author reference: $authorRef")
@@ -251,7 +262,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
 
     private fun showLogoutPopup(view: View) {
@@ -319,14 +329,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun deletePostAtPosition(position: Int) {
-        // Remove the post from the list
-        sightingList.removeAt(position)
+        val sightingToDelete = sightingList[position]
+        val sightingId =
+            sightingToDelete.id
 
-        // Notify the adapter that an item was removed
-        sightingPostAdapter.notifyItemRemoved(position)
-        sightingPostAdapter.notifyItemRangeChanged(position, sightingList.size)
+        SightingsAPI.getInstance().deleteSighting(sightingId) { success ->
+            if (success) {
+                // If deletion from Firestore is successful, update the UI
+                sightingList.removeAt(position)
+                sightingPostAdapter.notifyItemRemoved(position)
+                sightingPostAdapter.notifyItemRangeChanged(position, sightingList.size)
 
-        Toast.makeText(this, "Post deleted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Post deleted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Failed to delete post from database", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
-
 }

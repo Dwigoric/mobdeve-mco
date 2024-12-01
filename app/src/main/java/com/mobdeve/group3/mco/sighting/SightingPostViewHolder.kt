@@ -38,7 +38,7 @@ class SightingPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     private val txtSightingDate: TextView = itemView.findViewById(R.id.txtSightingDate)
     private val imgSighting: ImageView? = itemView.findViewById(R.id.imgSightingPhoto)
     private val noPhotoText: TextView? =
-        itemView.findViewById(R.id.no_photo_text) // Ensure this exists in the item_post_nophoto layout
+        itemView.findViewById(R.id.no_photo_text)
     private val btnUpvote: ImageButton = itemView.findViewById(R.id.btnUpvote)
     private val btnDownvote: ImageButton = itemView.findViewById(R.id.btnDownvote)
     private val btnComment: ImageButton = itemView.findViewById(R.id.btnComment)
