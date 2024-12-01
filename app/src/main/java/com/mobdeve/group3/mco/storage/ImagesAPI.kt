@@ -16,84 +16,80 @@ class ImagesAPI {
 
     private constructor()
 
-    private fun getImage(path: Array<String>, name: String, callback: (ByteArray) -> Unit) {
-        val path = arrayOf("images") + path
-        storageHelper.getObject(path, name) { data ->
+    private fun getImage(path: String, name: String, callback: (ByteArray) -> Unit) {
+        storageHelper.getObject(arrayOf("images", path), name) { data ->
             callback(data)
         }
     }
 
     private fun putImage(
-        path: Array<String>,
+        path: String,
         name: String,
         data: ByteArray,
         callback: (String) -> Unit
     ) {
-        val path = arrayOf("images") + path
-        storageHelper.putObject(path, name, data) { url ->
+        storageHelper.putObject(arrayOf("images", path), name, data) { url ->
             callback(url)
         }
     }
 
-    private fun deleteImage(path: Array<String>, name: String, callback: (Boolean) -> Unit) {
-        val path = arrayOf("images") + path
-        storageHelper.deleteObject(path, name) { success ->
+    private fun deleteImage(path: String, name: String, callback: (Boolean) -> Unit) {
+        storageHelper.deleteObject(arrayOf("images", path), name) { success ->
             callback(success)
         }
     }
 
-    private fun getDownloadUrl(path: Array<String>, name: String, callback: (String) -> Unit) {
-        val path = arrayOf("images") + path
-        storageHelper.getDownloadUrl(path, name) { url ->
+    private fun getDownloadUrl(path: String, name: String, callback: (String) -> Unit) {
+        storageHelper.getDownloadUrl(arrayOf("images", path), name) { url ->
             callback(url)
         }
     }
 
     fun getProfileImage(userId: String, callback: (ByteArray) -> Unit) {
-        getImage(arrayOf("profile"), userId, callback)
+        getImage("profile", userId, callback)
     }
 
     fun getProfileImageUrl(userId: String, callback: (String) -> Unit) {
-        getDownloadUrl(arrayOf("profile"), userId, callback)
+        getDownloadUrl("profile", userId, callback)
     }
 
     fun putProfileImage(userId: String, data: ByteArray, callback: (String) -> Unit) {
-        putImage(arrayOf("profile"), userId, data, callback)
+        putImage("profile", userId, data, callback)
     }
 
     fun deleteProfileImage(userId: String, callback: (Boolean) -> Unit) {
-        deleteImage(arrayOf("profile"), userId, callback)
+        deleteImage("profile", userId, callback)
     }
 
     fun getSightingImage(sightingId: String, callback: (ByteArray) -> Unit) {
-        getImage(arrayOf("sightings"), sightingId, callback)
+        getImage("sightings", sightingId, callback)
     }
 
     fun getSightingImageUrl(sightingId: String, callback: (String) -> Unit) {
-        getDownloadUrl(arrayOf("sightings"), sightingId, callback)
+        getDownloadUrl("sightings", sightingId, callback)
     }
 
     fun putSightingImage(sightingId: String, data: ByteArray, callback: (String) -> Unit) {
-        putImage(arrayOf("sightings"), sightingId, data, callback)
+        putImage("sightings", sightingId, data, callback)
     }
 
     fun deleteSightingImage(sightingId: String, callback: (Boolean) -> Unit) {
-        deleteImage(arrayOf("sightings"), sightingId, callback)
+        deleteImage("sightings", sightingId, callback)
     }
 
     fun getSpeciesImage(scientificName: String, callback: (ByteArray) -> Unit) {
-        getImage(arrayOf("species"), scientificName, callback)
+        getImage("species", scientificName, callback)
     }
 
     fun getSpeciesImageUrl(scientificName: String, callback: (String) -> Unit) {
-        getDownloadUrl(arrayOf("species"), scientificName, callback)
+        getDownloadUrl("species", scientificName, callback)
     }
 
     fun putSpeciesImage(scientificName: String, data: ByteArray, callback: (String) -> Unit) {
-        putImage(arrayOf("species"), scientificName, data, callback)
+        putImage("species", scientificName, data, callback)
     }
 
     fun deleteSpeciesImage(scientificName: String, callback: (Boolean) -> Unit) {
-        deleteImage(arrayOf("species"), scientificName, callback)
+        deleteImage("species", scientificName, callback)
     }
 }
