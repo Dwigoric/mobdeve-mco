@@ -9,6 +9,8 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -27,12 +29,16 @@ import com.mobdeve.group3.mco.db.SightingsAPI
 import com.mobdeve.group3.mco.db.UsersAPI
 import com.mobdeve.group3.mco.landing.LandingActivity
 import com.mobdeve.group3.mco.sighting.Sighting
+import com.mobdeve.group3.mco.storage.ImagesAPI
 
 
 class ProfileActivity : AppCompatActivity() {
     private val sightingsList = ArrayList<Sighting>()
     private lateinit var recyclerView: RecyclerView
     private lateinit var auth: FirebaseAuth
+
+    private lateinit var galleryResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var avatarImageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +65,14 @@ class ProfileActivity : AppCompatActivity() {
         // Set a long press listener on the Profile tab for the popup menu
         val profileMenuItem = bottomNav.menu.findItem(R.id.nav_profile)
         findViewById<View>(profileMenuItem.itemId).setOnLongClickListener {
-            showLogoutPopup(it) // Show the popup menu
+            showLogoutPopup(it)
+            true
+        }
+
+        // Set a long press listener on the avatar image for the popup menu
+        avatarImageView = findViewById<ImageView>(R.id.imgProfPic)
+        avatarImageView.setOnLongClickListener {
+            showAvatarPopup(it)
             true
         }
 
@@ -87,6 +100,26 @@ class ProfileActivity : AppCompatActivity() {
 
                 else -> false
             }
+        }
+
+        galleryResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    val imageUri = result.data?.data
+                    var imageByteArray: ByteArray? = null
+                    if (imageUri != null) {
+                        imageByteArray = contentResolver.openInputStream(imageUri)?.readBytes()
+                    }
+                    if (imageByteArray != null) {
+                        updateAvatar(imageByteArray)
+                    }
+                }
+            }
+    }
+
+    private fun updateAvatar(imgBytes: ByteArray) {
+        ImagesAPI.getInstance().putProfileImage(auth.currentUser!!.uid, imgBytes) { remoteUri ->
+            avatarImageView.setImageURI(Uri.parse(remoteUri))
         }
     }
 
@@ -150,6 +183,44 @@ class ProfileActivity : AppCompatActivity() {
                 this.recyclerView.adapter?.notifyDataSetChanged()
             }
         }
+    }
+
+    private fun showAvatarPopup(view: View) {
+        val popup = PopupMenu(this, view)
+
+        popup.menuInflater.inflate(R.menu.avatar_popup_menu, popup.menu)
+
+        popup.setOnMenuItemClickListener { menuItem: MenuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_upload_avatar -> {
+                    val uploadIntent = Intent(Intent.ACTION_GET_CONTENT)
+                    uploadIntent.type = "image/*"
+                    galleryResultLauncher.launch(uploadIntent)
+
+                    true
+                }
+
+                R.id.menu_remove_avatar -> {
+                    UsersAPI.getInstance()
+                        .updateUser(auth.currentUser!!.uid, hashMapOf("avatar" to "")) { success ->
+                            if (success) {
+                                avatarImageView.setImageResource(R.drawable.profpic)
+                            }
+                        }
+                    ImagesAPI.getInstance().deleteProfileImage(auth.currentUser!!.uid) { success ->
+                        if (success) {
+                            avatarImageView.setImageResource(R.drawable.profpic)
+                        }
+                    }
+
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        popup.show()
     }
 
     private fun showLogoutPopup(view: View) {
