@@ -49,6 +49,7 @@ class AddSightingActivity : AppCompatActivity() {
         const val OBSERVER_TYPE_KEY = "OBSERVER_TYPE_KEY"
         const val SIGHTING_DATE_KEY = "SIGHTING_DATE_KEY"
         const val SIGHTING_TIME_KEY = "SIGHTING_TIME_KEY"
+        const val IMAGE_URI_KEY = "IMAGE_URI_KEY"
     }
 
     private lateinit var auth: FirebaseAuth
@@ -152,8 +153,8 @@ class AddSightingActivity : AppCompatActivity() {
                     "sightTime" to (combinedSightTime ?: Timestamp.now()),
                     "postingDate" to Timestamp.now(),
                     "imageUri" to (imageUri?.toString() ?: ""),
-                    "author" to authorRef, // DocumentReference
-                    "comments" to listOf<DocumentReference>() // Empty list for comments
+                    "author" to authorRef,
+                    "comments" to listOf<DocumentReference>()
                 )
 
                 // Add the sighting to Firestore
@@ -171,7 +172,7 @@ class AddSightingActivity : AppCompatActivity() {
                     returnIntent.putExtra("OBSERVER_TYPE_KEY", observerType)
                     returnIntent.putExtra("SIGHTING_DATE_KEY", sightingDate)
                     returnIntent.putExtra("SIGHTING_TIME_KEY", sightingTime)
-                    returnIntent.putExtra("IMAGE_URI", imageUri.toString())
+                    returnIntent.putExtra("IMAGE_URI_KEY", imageUri.toString())
 
                     setResult(RESULT_OK, returnIntent)
                     finish()

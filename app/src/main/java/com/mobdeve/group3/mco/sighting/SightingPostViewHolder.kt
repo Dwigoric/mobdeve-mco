@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -18,19 +19,7 @@ import com.mobdeve.group3.mco.profile.ProfileActivity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class SightingPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    companion object {
-        const val COMMON_NAME_KEY = "COMMON_NAME_KEY"
-        const val SCIENTIFIC_NAME_KEY = "SCIENTIFIC_NAME_KEY"
-        const val GROUP_SIZE_KEY = "GROUP_SIZE_KEY"
-        const val DISTANCE_KEY = "DISTANCE_KEY"
-        const val LOCATION_KEY = "LOCATION_KEY"
-        const val OBSERVER_TYPE_KEY = "OBSERVER_TYPE_KEY"
-        const val SIGHTING_DATE_KEY = "SIGHTING_DATE_KEY"
-        const val SIGHTING_TIME_KEY = "SIGHTING_TIME_KEY"
-        const val IMAGE_URI_KEY = "IMAGE_URI_KEY"
-    }
-
+class SightingPostViewHolder(itemView: View, private val editSightingActivityLauncher: ActivityResultLauncher<Intent>) : RecyclerView.ViewHolder(itemView) {
     private val userHandle: TextView = itemView.findViewById(R.id.txtUsername)
     private val postingDate: TextView = itemView.findViewById(R.id.txtPostTime)
     private val userIcon: ImageView = itemView.findViewById(R.id.imgProfPic)
@@ -71,8 +60,8 @@ class SightingPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
             txtSightingDate.text = "Seen on $formattedSightDate"
         } catch (e: Exception) {
             e.printStackTrace()
-            postingDate.text = "Invalid Date"
-            txtSightingDate.text = "Invalid Date"
+            postingDate.text = originalPostDate
+            txtSightingDate.text = originalSightDate
         }
 
         val imageUri = sighting.imageUri
@@ -205,18 +194,20 @@ class SightingPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                         0 -> {
                             // Handle Edit
                             val context = itemView.context
-                            val editIntent = Intent(context, EditSightingActivity::class.java)
-                            editIntent.putExtra(COMMON_NAME_KEY, sighting.animalName)
-                            editIntent.putExtra(SCIENTIFIC_NAME_KEY, sighting.scientificName)
-                            editIntent.putExtra(GROUP_SIZE_KEY, sighting.groupSize)
-                            editIntent.putExtra(DISTANCE_KEY, sighting.distance)
-                            editIntent.putExtra(LOCATION_KEY, sighting.location)
-                            editIntent.putExtra(OBSERVER_TYPE_KEY, sighting.observerType)
-                            editIntent.putExtra(SIGHTING_DATE_KEY, sighting.sightDate)
-                            editIntent.putExtra(SIGHTING_TIME_KEY, sighting.sightingTime)
-                            editIntent.putExtra(IMAGE_URI_KEY, sighting.imageUri.toString())
-                            editIntent.putExtra("POST_ID", sighting.id)
-                            context.startActivity(editIntent)
+                            val editIntent = Intent(context, EditSightingActivity::class.java).apply {
+                                putExtra("COMMON_NAME_KEY", sighting.animalName)
+                                putExtra("SCIENTIFIC_NAME_KEY", sighting.scientificName)
+                                putExtra("GROUP_SIZE_KEY", sighting.groupSize)
+                                putExtra("DISTANCE_KEY", sighting.distance)
+                                putExtra("LOCATION_KEY", sighting.location)
+                                putExtra("OBSERVER_TYPE_KEY", sighting.observerType)
+                                putExtra("SIGHTING_DATE_KEY", sighting.sightDate)
+                                putExtra("SIGHTING_TIME_KEY", sighting.sightingTime)
+                                putExtra("IMAGE_URI_KEY", sighting.imageUri.toString())
+                                putExtra("POST_ID", sighting.id)
+                            }
+
+                            editSightingActivityLauncher.launch(editIntent)
                         }
 
                         1 -> {

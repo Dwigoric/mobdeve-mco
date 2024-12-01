@@ -1,11 +1,15 @@
 package com.mobdeve.group3.mco.sighting
 
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.group3.mco.R
 
-class SightingPostAdapter(private val data: ArrayList<Sighting>) :
+class SightingPostAdapter(private val data: ArrayList<Sighting>,
+                          private val editSightingActivityLauncher: ActivityResultLauncher<Intent>) :
     RecyclerView.Adapter<SightingPostViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         return if (data[position].imageUri != null) {
@@ -18,7 +22,7 @@ class SightingPostAdapter(private val data: ArrayList<Sighting>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SightingPostViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(viewType, parent, false)
-        return SightingPostViewHolder(view)
+        return SightingPostViewHolder(view, editSightingActivityLauncher)
     }
 
     override fun onBindViewHolder(holder: SightingPostViewHolder, position: Int) {

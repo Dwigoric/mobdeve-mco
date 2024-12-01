@@ -26,7 +26,6 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentReference
 import com.mobdeve.group3.mco.catalogue.CatalogueActivity
 import com.mobdeve.group3.mco.db.SightingsAPI
-import com.mobdeve.group3.mco.db.UsersAPI
 import com.mobdeve.group3.mco.landing.LandingActivity
 import com.mobdeve.group3.mco.profile.ProfileActivity
 import com.mobdeve.group3.mco.sighting.AddSightingActivity
@@ -39,10 +38,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sightingPostAdapter: SightingPostAdapter
     private lateinit var sightingList: ArrayList<Sighting>
     private lateinit var auth: FirebaseAuth
-
-    companion object {
-        const val REQUEST_CODE_EDIT_SIGHTING = 1001
-    }
 
     private val addSightingActivityLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -92,7 +87,9 @@ class MainActivity : AppCompatActivity() {
                         groupSize = groupSize ?: 0,
                         distance = distance ?: 0.0f,
                         observerType = observerType ?: "",
-                        sightingTime = sightingTime ?: ""
+                        sightingTime = sightingTime ?: "",
+                        isOwnedByCurrentUser = true,
+                        score = 0
                     )
                 )
 
@@ -104,6 +101,55 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    private val editSightingActivityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data = result.data
+                val sightingId = data?.getStringExtra("SIGHTING_ID")
+                val userHandler = data?.getStringExtra("userHandler")
+                val userIcon = data?.getStringExtra("userIcon")
+                val postingDate = data?.getStringExtra("postingDate")
+
+                if (sightingId != null) {
+                    // Extract other sighting data from the result
+                    val commonName = data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY)
+                    val scientificName = data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY)
+                    val groupSize = data?.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0)
+                    val distance = data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f)
+                    val location = data?.getStringExtra(AddSightingActivity.LOCATION_KEY)
+                    val observerType = data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY)
+                    val sightingDate = data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
+                    val sightingTime = data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
+                    val imageUriString = data?.getStringExtra("IMAGE_URI")
+                    val imageUri = if (!imageUriString.isNullOrEmpty()) Uri.parse(imageUriString) else null
+
+                    // Create an updated Sighting object
+                    val updatedSighting = Sighting(
+                        id = sightingId,
+                        userHandler = userHandler ?: "Unknown",
+                        userIcon = if (!userIcon.isNullOrEmpty()) Uri.parse(userIcon) else null,
+                        postingDate = postingDate ?: "",
+                        animalName = commonName ?: "",
+                        scientificName = scientificName ?: "",
+                        location = location ?: "",
+                        sightDate = sightingDate ?: "",
+                        imageUri = imageUri,
+                        groupSize = groupSize ?: 0,
+                        distance = distance ?: 0.0f,
+                        observerType = observerType ?: "",
+                        sightingTime = sightingTime ?: "",
+                        isOwnedByCurrentUser = true
+                    )
+
+                    // Find the position of the sighting to update
+                    val position = sightingList.indexOfFirst { it.id == sightingId }
+                    if (position != -1) {
+                        sightingList[position] = updatedSighting
+                        sightingPostAdapter.notifyItemChanged(position)
+                    }
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -180,7 +226,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.rcvMainPosts)
         recyclerView.layoutManager = LinearLayoutManager(this)
         sightingList = ArrayList<Sighting>()
-        sightingPostAdapter = SightingPostAdapter(sightingList)
+        sightingPostAdapter = SightingPostAdapter(sightingList, editSightingActivityLauncher)
         recyclerView.adapter = sightingPostAdapter
 
         loadSightings()
@@ -218,6 +264,10 @@ class MainActivity : AppCompatActivity() {
                             "Fetched user data: username=$userHandler, avatar=$userIconUrl"
                         )
 
+                        // Check and update the imageUri to null if it's an empty string
+                        val imageUriString = (sightingData["imageUri"] as? String)?.takeIf { it.isNotEmpty() }
+                        val imageUri = imageUriString?.let { Uri.parse(it) }
+
                         // Create the Sighting object
                         val sighting = Sighting(
                             id = sightingData["id"] as? String ?: "",
@@ -230,7 +280,7 @@ class MainActivity : AppCompatActivity() {
                             location = sightingData["location"] as? String ?: "",
                             sightDate = (sightingData["sightTime"] as? Timestamp)?.toDate()
                                 ?.toString() ?: "",
-                            imageUri = (sightingData["imageUri"] as? String)?.let { Uri.parse(it) },
+                            imageUri = imageUri,
                             groupSize = (sightingData["groupSize"] as? Long)?.toInt() ?: 0,
                             distance = (sightingData["distance"] as? String)?.replace("km", "")
                                 ?.toFloat() ?: 0.0f,
@@ -245,7 +295,7 @@ class MainActivity : AppCompatActivity() {
                         // Log progress for each sighting
                         Log.d(
                             "loadSightings",
-                            "Sighting added to tempList: id=${sighting.id}, animalName=${sighting.animalName}"
+                            "Sighting added to tempList: id=${sighting.id}, animalName=${sighting.animalName}, image=${sighting.imageUri}"
                         )
 
                         // Update RecyclerView after all sightings are processed
