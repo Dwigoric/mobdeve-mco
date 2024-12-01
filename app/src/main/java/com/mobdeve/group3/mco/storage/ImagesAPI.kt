@@ -27,11 +27,11 @@ class ImagesAPI {
         path: Array<String>,
         name: String,
         data: ByteArray,
-        callback: (Boolean) -> Unit
+        callback: (String) -> Unit
     ) {
         val path = arrayOf("images") + path
-        storageHelper.putObject(path, name, data) { success ->
-            callback(success)
+        storageHelper.putObject(path, name, data) { url ->
+            callback(url)
         }
     }
 
@@ -57,7 +57,7 @@ class ImagesAPI {
         getDownloadUrl(arrayOf("profile"), userId, callback)
     }
 
-    fun putProfileImage(userId: String, data: ByteArray, callback: (Boolean) -> Unit) {
+    fun putProfileImage(userId: String, data: ByteArray, callback: (String) -> Unit) {
         putImage(arrayOf("profile"), userId, data, callback)
     }
 
@@ -73,7 +73,7 @@ class ImagesAPI {
         getDownloadUrl(arrayOf("sightings"), sightingId, callback)
     }
 
-    fun putSightingImage(sightingId: String, data: ByteArray, callback: (Boolean) -> Unit) {
+    fun putSightingImage(sightingId: String, data: ByteArray, callback: (String) -> Unit) {
         putImage(arrayOf("sightings"), sightingId, data, callback)
     }
 
@@ -89,7 +89,7 @@ class ImagesAPI {
         getDownloadUrl(arrayOf("species"), scientificName, callback)
     }
 
-    fun putSpeciesImage(scientificName: String, data: ByteArray, callback: (Boolean) -> Unit) {
+    fun putSpeciesImage(scientificName: String, data: ByteArray, callback: (String) -> Unit) {
         putImage(arrayOf("species"), scientificName, data, callback)
     }
 

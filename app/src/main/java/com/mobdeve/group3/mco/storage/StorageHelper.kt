@@ -33,16 +33,16 @@ class StorageHelper {
             }
     }
 
-    fun putObject(path: Array<String>, name: String, data: ByteArray, callback: (Boolean) -> Unit) {
+    fun putObject(path: Array<String>, name: String, data: ByteArray, callback: (String) -> Unit) {
         val objectRef = storageRef.child(path.joinToString("/") + "/" + name)
         objectRef.putBytes(data)
             .addOnSuccessListener {
                 Log.d("StorageHelper", "Successfully uploaded object")
-                callback(true)
+                callback(objectRef.downloadUrl.toString())
             }
             .addOnFailureListener {
                 Log.e("StorageHelper", "Error uploading object", it)
-                callback(false)
+                callback("")
             }
     }
 
