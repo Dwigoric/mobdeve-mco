@@ -5,7 +5,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -61,6 +63,7 @@ class ProfileActivity : AppCompatActivity() {
             true
         }
 
+        populateUserDetails()
         populateSightings()
 
         bottomNav.setOnItemSelectedListener {
@@ -83,6 +86,27 @@ class ProfileActivity : AppCompatActivity() {
                 }
 
                 else -> false
+            }
+        }
+    }
+
+    private fun populateUserDetails() {
+        UsersAPI.getInstance().getUser(auth.currentUser!!.uid) { user ->
+            val username = user["username"] as String
+            val bio = user["bio"] as String
+            val avatarUri =
+                if (user["avatar"] != null || user["avatar"] != "") Uri.parse(user["avatar"] as String) else null
+
+            val usernameTextView = findViewById<TextView>(R.id.txtSettingsUsername)
+            val bioTextView = findViewById<TextView>(R.id.txtSettingsBio)
+            val avatarImageView = findViewById<ImageView>(R.id.imgProfPic)
+
+            usernameTextView.text = username
+            bioTextView.text = bio
+            if (avatarUri != null) {
+                avatarImageView.setImageURI(avatarUri)
+            } else {
+                avatarImageView.setImageResource(R.drawable.profpic)
             }
         }
     }
