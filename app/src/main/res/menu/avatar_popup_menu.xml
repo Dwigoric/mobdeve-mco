@@ -3,8 +3,8 @@
 
     <item
         android:id="@+id/menu_upload_avatar"
-        android:title="menu_upload_avatar" />
+        android:title="Upload" />
     <item
         android:id="@+id/menu_remove_avatar"
-        android:title="menu_remove_avatar" />
+        android:title="Remove" />
 </menu>
