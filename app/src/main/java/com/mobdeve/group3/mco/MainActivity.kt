@@ -187,28 +187,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadSightings() {
+        val currentUserId = Firebase.auth.currentUser?.uid ?: return
         SightingsAPI.getInstance().getSightings { sightingsData ->
             Log.d("loadSightings", "Sightings fetched: ${sightingsData.size} items")
             sightingList.clear()
 
-            val usersAPI = UsersAPI.getInstance()
             val tempList = ArrayList<Sighting>()
 
             for (sightingData in sightingsData) {
                 val authorRef = sightingData["author"] as? DocumentReference
                 if (authorRef == null) {
                     Log.e("loadSightings", "Invalid author reference in sighting: $sightingData")
-                    continue // Skip this sighting
+                    continue
                 }
 
                 // Fetch the user data from the author reference
                 authorRef.get().addOnSuccessListener { documentSnapshot ->
                     if (documentSnapshot.exists()) {
+                        val authorId = documentSnapshot.id
                         val userData = documentSnapshot.data ?: emptyMap<String, Any>()
                         val userHandler = userData["username"] as? String ?: "Unknown User"
                         val userIconUrl = userData["avatar"] as? String ?: ""
                         val userIcon =
                             if (userIconUrl.isNotEmpty()) Uri.parse(userIconUrl) else null
+
+                        val isOwnedByCurrentUser = authorId == currentUserId
 
                         Log.d(
                             "loadSightings",
@@ -233,7 +236,8 @@ class MainActivity : AppCompatActivity() {
                                 ?.toFloat() ?: 0.0f,
                             observerType = sightingData["observerType"] as? String ?: "",
                             sightingTime = (sightingData["sightTime"] as? Timestamp)?.toDate()
-                                ?.toString() ?: ""
+                                ?.toString() ?: "",
+                            isOwnedByCurrentUser = isOwnedByCurrentUser
                         )
 
                         tempList.add(sighting)

@@ -2,14 +2,18 @@ package com.mobdeve.group3.mco.sighting
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -32,6 +36,7 @@ import com.mobdeve.group3.mco.db.UsersAPI
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 class AddSightingActivity : AppCompatActivity() {
@@ -76,12 +81,47 @@ class AddSightingActivity : AppCompatActivity() {
         // Set listeners for input fields
         viewBinding.etCommonName.addTextChangedListener { commonName = it.toString() }
         viewBinding.etSpecies.addTextChangedListener { scientificName = it.toString() }
-        viewBinding.etGroupType.addTextChangedListener { groupSize = it.toString().toInt() }
-        viewBinding.etDistance.addTextChangedListener { distance = it.toString().toFloat() }
+
+        viewBinding.etGroupType.addTextChangedListener { text ->
+            if (!text.isNullOrEmpty()) {
+                try {
+                    // Only parse if there's text
+                    groupSize = text.toString().toInt()
+                } catch (e: NumberFormatException) {
+                    // If the input is invalid, reset the value or handle it
+                    groupSize = 0
+                }
+            } else {
+                // Handle the case where the input field is empty (after backspace)
+                groupSize = 0
+            }
+        }
+
+        viewBinding.etDistance.addTextChangedListener { text ->
+            if (!text.isNullOrEmpty()) {
+                try {
+                    // Only parse if there's text
+                    distance = text.toString().toFloat()
+                } catch (e: NumberFormatException) {
+                    // If the input is invalid, reset the value or handle it
+                    distance = 0.0F
+                }
+            } else {
+                // Handle the case where the input field is empty (after backspace)
+                distance = 0.0F
+            }
+        }
+
         viewBinding.etLocation.addTextChangedListener { location = it.toString() }
         viewBinding.etObserver.addTextChangedListener { observerType = it.toString() }
-        viewBinding.etSightingDate.addTextChangedListener { sightingDate = it.toString() }
-        viewBinding.etSightingTime.addTextChangedListener { sightingTime = it.toString() }
+
+        viewBinding.etSightingDate.setOnClickListener {
+            showDatePickerDialog()
+        }
+
+        viewBinding.etSightingTime.setOnClickListener {
+            showTimePickerDialog()
+        }
 
         viewBinding.btnPost.setOnClickListener {
             val userId = auth.currentUser?.uid ?: return@setOnClickListener
@@ -164,6 +204,55 @@ class AddSightingActivity : AppCompatActivity() {
         viewBinding.btnAddPhoto.setOnClickListener {
             showPhotoOptionsMenu(it)
         }
+    }
+
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val datePickerDialog = DatePickerDialog(
+            this,
+            DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                sightingDate = "$dayOfMonth/${month + 1}/$year"
+                viewBinding.etSightingDate.setText(sightingDate)  // Update the EditText
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+
+        datePickerDialog.show()
+
+        val datePickerDialogButton = datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
+        datePickerDialogButton.setTextColor(Color.WHITE)
+        val cancelButton = datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
+        cancelButton.setTextColor(Color.WHITE)
+
+    }
+
+    private fun showTimePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val timePickerDialog = TimePickerDialog(
+            this,
+            TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                sightingTime = String.format("%02d:%02d", hourOfDay, minute)
+                viewBinding.etSightingTime.setText(sightingTime)  // Update the EditText
+            },
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            true
+        )
+
+        timePickerDialog.show()
+
+        val timePickerDialogButton = timePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE)
+        timePickerDialogButton.setTextColor(Color.WHITE)
+        val cancelButton = timePickerDialog.getButton(TimePickerDialog.BUTTON_NEGATIVE)
+        cancelButton.setTextColor(Color.WHITE)
+    }
+
+    // Function to hide the keyboard
+    private fun hideKeyboard(view: View) {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     // Function to show the photo options menu

@@ -8,11 +8,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.group3.mco.MainActivity
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.comment.CommentsDialogFragment
 import com.mobdeve.group3.mco.profile.ProfileActivity
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class SightingPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     companion object {
@@ -49,13 +53,28 @@ class SightingPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         userHandle.text = sighting.userHandler
         userIcon.setImageURI(sighting.userIcon)
         score.text = sighting.score.toString()
-        postingDate.text = "Posted on ${sighting.postingDate}"
         txtSightingName.text = sighting.animalName
         txtSightingNameScientific.text = sighting.scientificName
         txtSighingPlace.text = sighting.location
-        txtSightingDate.text = "Seen on ${sighting.sightDate}"
 
-        // Display image if available
+        val originalSightDate = sighting.sightDate
+        val originalPostDate = sighting.postingDate
+        val inputFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'Z yyyy", Locale.ENGLISH)
+        val outputFormat = SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss", Locale.ENGLISH)
+
+        try {
+            val sightDate = inputFormat.parse(originalSightDate)
+            val formattedSightDate = outputFormat.format(sightDate)
+            val postDate = inputFormat.parse(originalPostDate)
+            val formattedPostDate = outputFormat.format(postDate)
+            postingDate.text = "Posted on ${formattedPostDate}"
+            txtSightingDate.text = "Seen on $formattedSightDate"
+        } catch (e: Exception) {
+            e.printStackTrace()
+            postingDate.text = "Invalid Date"
+            txtSightingDate.text = "Invalid Date"
+        }
+
         val imageUri = sighting.imageUri
         if (imageUri != null) {
             imgSighting?.setImageURI(imageUri)
@@ -64,6 +83,37 @@ class SightingPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         } else {
             imgSighting?.visibility = View.GONE
             noPhotoText?.visibility = View.VISIBLE // Show "No photo" text
+        }
+
+        // Show or hide the modify button based on ownership
+        if (sighting.isOwnedByCurrentUser) {
+            btnModify.visibility = View.VISIBLE
+
+            // Adjust txtSightingPlace constraint to btnModify
+            val constraintLayout = itemView as ConstraintLayout
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(constraintLayout)
+            constraintSet.connect(
+                R.id.txtSightingPlace,
+                ConstraintSet.TOP,
+                R.id.btnModify,
+                ConstraintSet.BOTTOM
+            )
+            constraintSet.applyTo(constraintLayout)
+        } else {
+            btnModify.visibility = View.GONE
+
+            // Adjust txtSightingPlace constraint to btnComment
+            val constraintLayout = itemView as ConstraintLayout
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(constraintLayout)
+            constraintSet.connect(
+                R.id.txtSightingPlace,
+                ConstraintSet.TOP,
+                R.id.btnComment,
+                ConstraintSet.BOTTOM
+            )
+            constraintSet.applyTo(constraintLayout)
         }
 
         // Set button states based on the post's current voting state

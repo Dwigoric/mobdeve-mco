@@ -21,6 +21,7 @@ data class Sighting(
     var score: Int = 0,
     var hasUpvoted: Boolean = false,
     var hasDownvoted: Boolean = false,
+    var isOwnedByCurrentUser: Boolean = false,
     private val _comments: MutableList<Comment> = mutableListOf()
 ) {
     val comments: List<Comment> get() = _comments
