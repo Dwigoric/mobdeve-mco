@@ -1,6 +1,7 @@
 package com.mobdeve.group3.mco.sighting
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
@@ -15,11 +16,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.group3.mco.MainActivity
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.comment.CommentsDialogFragment
+import com.mobdeve.group3.mco.db.UsersAPI
 import com.mobdeve.group3.mco.profile.ProfileActivity
+import com.mobdeve.group3.mco.storage.ImagesAPI
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class SightingPostViewHolder(itemView: View, private val editSightingActivityLauncher: ActivityResultLauncher<Intent>) : RecyclerView.ViewHolder(itemView) {
+class SightingPostViewHolder(
+    itemView: View,
+    private val editSightingActivityLauncher: ActivityResultLauncher<Intent>
+) : RecyclerView.ViewHolder(itemView) {
     private val userHandle: TextView = itemView.findViewById(R.id.txtUsername)
     private val postingDate: TextView = itemView.findViewById(R.id.txtPostTime)
     private val userIcon: ImageView = itemView.findViewById(R.id.imgProfPic)
@@ -40,7 +46,6 @@ class SightingPostViewHolder(itemView: View, private val editSightingActivityLau
 
     fun bind(sighting: Sighting) {
         userHandle.text = sighting.userHandler
-        userIcon.setImageURI(sighting.userIcon)
         score.text = sighting.score.toString()
         txtSightingName.text = sighting.animalName
         txtSightingNameScientific.text = sighting.scientificName
@@ -50,6 +55,18 @@ class SightingPostViewHolder(itemView: View, private val editSightingActivityLau
         val originalPostDate = sighting.postingDate
         val inputFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'Z yyyy", Locale.ENGLISH)
         val outputFormat = SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss", Locale.ENGLISH)
+
+        UsersAPI.getInstance().getUserWithUsername(sighting.userHandler) { user ->
+            val userId = user["id"] as String
+            ImagesAPI.getInstance().getProfileImage(userId) { imgBytes ->
+                if (imgBytes != null) {
+                    val imgBitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
+                    userIcon.setImageBitmap(imgBitmap)
+                } else {
+                    userIcon.setImageResource(R.drawable.profpic)
+                }
+            }
+        }
 
         try {
             val sightDate = inputFormat.parse(originalSightDate)
@@ -194,18 +211,19 @@ class SightingPostViewHolder(itemView: View, private val editSightingActivityLau
                         0 -> {
                             // Handle Edit
                             val context = itemView.context
-                            val editIntent = Intent(context, EditSightingActivity::class.java).apply {
-                                putExtra("COMMON_NAME_KEY", sighting.animalName)
-                                putExtra("SCIENTIFIC_NAME_KEY", sighting.scientificName)
-                                putExtra("GROUP_SIZE_KEY", sighting.groupSize)
-                                putExtra("DISTANCE_KEY", sighting.distance)
-                                putExtra("LOCATION_KEY", sighting.location)
-                                putExtra("OBSERVER_TYPE_KEY", sighting.observerType)
-                                putExtra("SIGHTING_DATE_KEY", sighting.sightDate)
-                                putExtra("SIGHTING_TIME_KEY", sighting.sightingTime)
-                                putExtra("IMAGE_URI_KEY", sighting.imageUri.toString())
-                                putExtra("POST_ID", sighting.id)
-                            }
+                            val editIntent =
+                                Intent(context, EditSightingActivity::class.java).apply {
+                                    putExtra("COMMON_NAME_KEY", sighting.animalName)
+                                    putExtra("SCIENTIFIC_NAME_KEY", sighting.scientificName)
+                                    putExtra("GROUP_SIZE_KEY", sighting.groupSize)
+                                    putExtra("DISTANCE_KEY", sighting.distance)
+                                    putExtra("LOCATION_KEY", sighting.location)
+                                    putExtra("OBSERVER_TYPE_KEY", sighting.observerType)
+                                    putExtra("SIGHTING_DATE_KEY", sighting.sightDate)
+                                    putExtra("SIGHTING_TIME_KEY", sighting.sightingTime)
+                                    putExtra("IMAGE_URI_KEY", sighting.imageUri.toString())
+                                    putExtra("POST_ID", sighting.id)
+                                }
 
                             editSightingActivityLauncher.launch(editIntent)
                         }

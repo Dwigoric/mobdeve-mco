@@ -36,6 +36,22 @@ class UsersAPI {
         }
     }
 
+    fun getUserWithUsername(username: String, callback: (HashMap<String, Any>) -> Unit) {
+        if (username.isEmpty()) {
+            Log.e("UsersAPI", "getUserWithUsername called with empty username")
+            callback(HashMap()) // Return an empty map
+            return
+        }
+
+        dbHelper.getDocumentsWhere("users", "username", username) { userData ->
+            if (userData.isNotEmpty()) {
+                callback(userData[0])
+            } else {
+                callback(HashMap())
+            }
+        }
+    }
+
     fun getUserReference(userId: String): DocumentReference? {
         return dbHelper.getDocumentReference("users", userId)
     }
