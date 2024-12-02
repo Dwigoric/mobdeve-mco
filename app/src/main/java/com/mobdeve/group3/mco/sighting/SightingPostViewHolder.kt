@@ -81,14 +81,16 @@ class SightingPostViewHolder(
             txtSightingDate.text = originalSightDate
         }
 
-        val imageUri = sighting.imageUri
-        if (imageUri != null) {
-            imgSighting?.setImageURI(imageUri)
-            imgSighting?.visibility = View.VISIBLE
-            noPhotoText?.visibility = View.GONE // Hide "No photo" text
-        } else {
-            imgSighting?.visibility = View.GONE
-            noPhotoText?.visibility = View.VISIBLE // Show "No photo" text
+        ImagesAPI.getInstance().getSightingImage(sighting.id) { imgBytes ->
+            if (imgBytes != null) {
+                val imgBitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
+                imgSighting?.setImageBitmap(imgBitmap)
+                imgSighting?.visibility = View.VISIBLE
+                noPhotoText?.visibility = View.GONE // Hide "No photo" text
+            } else {
+                imgSighting?.visibility = View.GONE
+                noPhotoText?.visibility = View.VISIBLE // Show "No photo" text
+            }
         }
 
         // Show or hide the modify button based on ownership
