@@ -203,12 +203,6 @@ class ProfileActivity : AppCompatActivity() {
                 }
 
                 R.id.menu_remove_avatar -> {
-                    UsersAPI.getInstance()
-                        .updateUser(auth.currentUser!!.uid, hashMapOf("avatar" to "")) { success ->
-                            if (success) {
-                                avatarImageView.setImageResource(R.drawable.profpic)
-                            }
-                        }
                     ImagesAPI.getInstance().deleteProfileImage(auth.currentUser!!.uid) { success ->
                         if (success) {
                             avatarImageView.setImageResource(R.drawable.profpic)
