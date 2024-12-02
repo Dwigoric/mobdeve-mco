@@ -54,9 +54,9 @@
 
             <ImageView
                 android:id="@+id/imgProfPic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/profile_pic__500_x_500_px_" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_regular_user" />
 
         </androidx.cardview.widget.CardView>
 
@@ -96,8 +96,9 @@
                 style="@style/Body"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/SettingsBioLabel"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtSettingsUsernameLabel" />
 
@@ -106,7 +107,9 @@
                 style="@style/Body"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="@string/UserBio"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/txtSettingsBioLabel"
                 app:layout_constraintTop_toBottomOf="@+id/txtSettingsUsername" />
 

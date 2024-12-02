@@ -10,7 +10,7 @@
 
 
     <!-- Item Post -->
-    <string name="Username">fish.whisperer</string> <!-- to be dynamic -->
+    <string name="Username">…</string> <!-- to be dynamic -->
     <string name="PostTime">Posted recently</string> <!-- to be dynamic -->
     <string name="PostScore">4 pts</string> <!-- to be dynamic %d-->
 
@@ -38,7 +38,7 @@
     <string name="SettingsBioLabel">Bio</string>
     <string name="SettingsContactLink">Links</string>
 
-    <string name="UserBio">BS Computer Science graduate. I have 4 years experience working as a marine biologist researcher.</string>
+    <string name="UserBio">…</string>
     <string name="UserContactLink">thefishwhisperer@gmail.com</string>
 
     <string name="MySightingsHeader">My Sightings</string>
