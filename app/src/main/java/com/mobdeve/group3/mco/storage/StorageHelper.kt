@@ -6,6 +6,7 @@ import com.google.firebase.storage.storage
 
 class StorageHelper {
     private val storageRef = Firebase.storage.reference
+    private val TAG = "StorageHelper"
 
     companion object {
         private var instance: StorageHelper? = null
@@ -25,11 +26,11 @@ class StorageHelper {
         val oneMegabyte: Long = 1024 * 1024
         objectRef.getBytes(oneMegabyte)
             .addOnSuccessListener {
-                Log.d("StorageHelper", "Successfully downloaded object")
+                Log.d(TAG, "Successfully downloaded object")
                 callback(it)
             }
             .addOnFailureListener {
-                Log.e("StorageHelper", "Error downloading object", it)
+                Log.e(TAG, "Error downloading object", it)
                 callback(byteArrayOf())
             }
     }
@@ -38,16 +39,16 @@ class StorageHelper {
         val objectRef = storageRef.child(path.joinToString("/") + "/" + name)
         objectRef.putBytes(data)
             .addOnSuccessListener {
-                Log.d("StorageHelper", "Successfully uploaded object")
+                Log.d(TAG, "Successfully uploaded object")
                 objectRef.downloadUrl
                     .addOnSuccessListener { callback(it.toString()) }
                     .addOnFailureListener {
-                        Log.e("StorageHelper", "Error retrieving download URL", it)
+                        Log.e(TAG, "Error retrieving download URL", it)
                         callback("")
                     }
             }
             .addOnFailureListener {
-                Log.e("StorageHelper", "Error uploading object", it)
+                Log.e(TAG, "Error uploading object", it)
                 callback("")
             }
     }
@@ -56,11 +57,11 @@ class StorageHelper {
         val objectRef = storageRef.child(path.joinToString("/") + "/" + name)
         objectRef.delete()
             .addOnSuccessListener {
-                Log.d("StorageHelper", "Successfully deleted object")
+                Log.d(TAG, "Successfully deleted object")
                 callback(true)
             }
             .addOnFailureListener {
-                Log.e("StorageHelper", "Error deleting object", it)
+                Log.e(TAG, "Error deleting object", it)
                 callback(false)
             }
     }
@@ -69,11 +70,11 @@ class StorageHelper {
         val objectRef = storageRef.child(path.joinToString("/") + "/" + name)
         objectRef.downloadUrl
             .addOnSuccessListener {
-                Log.d("StorageHelper", "Successfully retrieved download URL")
+                Log.d(TAG, "Successfully retrieved download URL")
                 callback(it.toString())
             }
             .addOnFailureListener {
-                Log.e("StorageHelper", "Error retrieving download URL", it)
+                Log.e(TAG, "Error retrieving download URL", it)
                 callback("")
             }
     }
@@ -82,11 +83,11 @@ class StorageHelper {
         val objectRef = storageRef.child(path.joinToString("/") + "/" + name)
         objectRef.metadata
             .addOnSuccessListener {
-                Log.d("StorageHelper", "Successfully retrieved metadata")
+                Log.d(TAG, "Successfully retrieved metadata")
                 callback(it.contentType.toString())
             }
             .addOnFailureListener {
-                Log.e("StorageHelper", "Error retrieving metadata", it)
+                Log.e(TAG, "Error retrieving metadata", it)
                 callback("")
             }
     }
