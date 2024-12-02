@@ -88,15 +88,15 @@ class VotesAPI {
             "votes", hashMapOf(
                 "userId" to auth.currentUser!!.uid,
                 "sightingId" to sightingId
-            ), { votes ->
-                if (votes.isEmpty()) {
-                    callback(false)
-                }
-
-                dbHelper.deleteDocument("votes", votes[0]["id"] as String) { success ->
-                    callback(success)
-                }
+            )
+        ) { votes ->
+            if (votes.isEmpty()) {
+                callback(false)
             }
-        )
+
+            dbHelper.deleteDocument("votes", votes[0]["id"] as String) { success ->
+                callback(success)
+            }
+        }
     }
 }
