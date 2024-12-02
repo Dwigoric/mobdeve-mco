@@ -1,6 +1,7 @@
 package com.mobdeve.group3.mco.profile
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
@@ -118,31 +119,28 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateAvatar(imgBytes: ByteArray) {
-        ImagesAPI.getInstance().putProfileImage(auth.currentUser!!.uid, imgBytes) { remoteUri ->
-            UsersAPI.getInstance()
-                .updateUser(auth.currentUser!!.uid, hashMapOf("avatar" to remoteUri)) { success ->
-                    if (success) {
-                        avatarImageView.setImageURI(Uri.parse(remoteUri))
-                    }
-                }
-        }
+        ImagesAPI.getInstance().putProfileImage(auth.currentUser!!.uid, imgBytes) {}
+
+        val imgBitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
+        avatarImageView.setImageBitmap(imgBitmap)
     }
 
     private fun populateUserDetails() {
         UsersAPI.getInstance().getUser(auth.currentUser!!.uid) { user ->
             val username = user["username"] as String
             val bio = user["bio"] as String
-            val avatarUri =
-                if (user["avatar"] != null || user["avatar"] != "") Uri.parse(user["avatar"] as String) else null
 
             val usernameTextView = findViewById<TextView>(R.id.txtSettingsUsername)
             val bioTextView = findViewById<TextView>(R.id.txtSettingsBio)
-            val avatarImageView = findViewById<ImageView>(R.id.imgProfPic)
 
             usernameTextView.text = username
             bioTextView.text = bio
-            if (avatarUri != null) {
-                avatarImageView.setImageURI(avatarUri)
+        }
+
+        ImagesAPI.getInstance().getProfileImage(auth.currentUser!!.uid) { imgBytes ->
+            if (imgBytes.isNotEmpty()) {
+                val imgBitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
+                avatarImageView.setImageBitmap(imgBitmap)
             } else {
                 avatarImageView.setImageResource(R.drawable.profpic)
             }
