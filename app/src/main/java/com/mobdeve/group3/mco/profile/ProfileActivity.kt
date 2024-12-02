@@ -112,6 +112,8 @@ class ProfileActivity : AppCompatActivity() {
                         imageByteArray = contentResolver.openInputStream(imageUri)?.readBytes()
                     }
                     if (imageByteArray != null) {
+                        ImagesAPI.getInstance()
+                            .putProfileImage(auth.currentUser!!.uid, imageByteArray) {}
                         updateAvatar(imageByteArray)
                     }
                 }
@@ -119,8 +121,6 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateAvatar(imgBytes: ByteArray) {
-        ImagesAPI.getInstance().putProfileImage(auth.currentUser!!.uid, imgBytes) {}
-
         val imgBitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
         avatarImageView.setImageBitmap(imgBitmap)
     }
@@ -139,8 +139,7 @@ class ProfileActivity : AppCompatActivity() {
 
         ImagesAPI.getInstance().getProfileImage(auth.currentUser!!.uid) { imgBytes ->
             if (imgBytes.isNotEmpty()) {
-                val imgBitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
-                avatarImageView.setImageBitmap(imgBitmap)
+                updateAvatar(imgBytes)
             } else {
                 avatarImageView.setImageResource(R.drawable.profpic)
             }
