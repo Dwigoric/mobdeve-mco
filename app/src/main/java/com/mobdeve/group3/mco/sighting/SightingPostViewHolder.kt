@@ -82,7 +82,7 @@ class SightingPostViewHolder(
         }
 
         ImagesAPI.getInstance().getSightingImage(sighting.id) { imgBytes ->
-            if (imgBytes != null) {
+            if (imgBytes.isNotEmpty()) {
                 val imgBitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
                 imgSighting?.setImageBitmap(imgBitmap)
                 imgSighting?.visibility = View.VISIBLE
