@@ -20,6 +20,21 @@ class VotesAPI {
 
     private constructor()
 
+    fun getVote(sightingId: String, callback: (Int) -> Unit) {
+        dbHelper.getDocumentsWhereMultiple(
+            "votes", hashMapOf(
+                "userId" to auth.currentUser!!.uid,
+                "sightingId" to sightingId
+            )
+        ) {
+            if (it.isNotEmpty()) {
+                callback(if (it[0]["isUpvote"] as Boolean) 1 else -1)
+            } else {
+                callback(0)
+            }
+        }
+    }
+
     fun setVote(sightingId: String, isUpvote: Boolean, callback: (String) -> Unit) {
         val existingVote = dbHelper.getDocumentsWhereMultiple(
             "votes", hashMapOf(
