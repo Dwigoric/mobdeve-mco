@@ -30,6 +30,7 @@ class StorageHelper {
             }
             .addOnFailureListener {
                 Log.e("StorageHelper", "Error downloading object", it)
+                callback(byteArrayOf())
             }
     }
 
@@ -38,7 +39,12 @@ class StorageHelper {
         objectRef.putBytes(data)
             .addOnSuccessListener {
                 Log.d("StorageHelper", "Successfully uploaded object")
-                callback(objectRef.downloadUrl.toString())
+                objectRef.downloadUrl
+                    .addOnSuccessListener { callback(it.toString()) }
+                    .addOnFailureListener {
+                        Log.e("StorageHelper", "Error retrieving download URL", it)
+                        callback("")
+                    }
             }
             .addOnFailureListener {
                 Log.e("StorageHelper", "Error uploading object", it)
@@ -68,6 +74,7 @@ class StorageHelper {
             }
             .addOnFailureListener {
                 Log.e("StorageHelper", "Error retrieving download URL", it)
+                callback("")
             }
     }
 
@@ -80,6 +87,7 @@ class StorageHelper {
             }
             .addOnFailureListener {
                 Log.e("StorageHelper", "Error retrieving metadata", it)
+                callback("")
             }
     }
 }
