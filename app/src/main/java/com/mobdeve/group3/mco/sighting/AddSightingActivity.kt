@@ -250,12 +250,6 @@ class AddSightingActivity : AppCompatActivity() {
         cancelButton.setTextColor(Color.WHITE)
     }
 
-    // Function to hide the keyboard
-    private fun hideKeyboard(view: View) {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
     // Function to show the photo options menu
     private fun showPhotoOptionsMenu(view: View) {
         val popupMenu = PopupMenu(this, view)
