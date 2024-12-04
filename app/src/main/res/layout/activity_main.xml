@@ -44,15 +44,6 @@
                 android:background="#00FFFFFF"
                 app:srcCompat="@drawable/baseline_sort_24" />
 
-            <ImageButton
-                android:id="@+id/btnNotifs"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
-                android:layout_weight="0"
-                android:background="#00FFFFFF"
-                app:srcCompat="@drawable/ic_regular_bell" />
-
         </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
