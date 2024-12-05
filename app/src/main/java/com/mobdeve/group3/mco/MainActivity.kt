@@ -31,6 +31,7 @@ import com.mobdeve.group3.mco.profile.ProfileActivity
 import com.mobdeve.group3.mco.sighting.AddSightingActivity
 import com.mobdeve.group3.mco.sighting.Sighting
 import com.mobdeve.group3.mco.sighting.SightingPostAdapter
+import com.mobdeve.group3.mco.storage.ImagesAPI
 import java.util.Date
 
 class MainActivity : AppCompatActivity() {
@@ -113,7 +114,8 @@ class MainActivity : AppCompatActivity() {
                 if (sightingId != null) {
                     // Extract other sighting data from the result
                     val commonName = data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY)
-                    val scientificName = data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY)
+                    val scientificName =
+                        data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY)
                     val groupSize = data?.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0)
                     val distance = data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f)
                     val location = data?.getStringExtra(AddSightingActivity.LOCATION_KEY)
@@ -121,7 +123,8 @@ class MainActivity : AppCompatActivity() {
                     val sightingDate = data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
                     val sightingTime = data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
                     val imageUriString = data?.getStringExtra("IMAGE_URI")
-                    val imageUri = if (!imageUriString.isNullOrEmpty()) Uri.parse(imageUriString) else null
+                    val imageUri =
+                        if (!imageUriString.isNullOrEmpty()) Uri.parse(imageUriString) else null
 
                     // Create an updated Sighting object
                     val updatedSighting = Sighting(
@@ -265,7 +268,8 @@ class MainActivity : AppCompatActivity() {
                         )
 
                         // Check and update the imageUri to null if it's an empty string
-                        val imageUriString = (sightingData["imageUri"] as? String)?.takeIf { it.isNotEmpty() }
+                        val imageUriString =
+                            (sightingData["imageUri"] as? String)?.takeIf { it.isNotEmpty() }
                         val imageUri = imageUriString?.let { Uri.parse(it) }
 
                         // Create the Sighting object
@@ -395,6 +399,15 @@ class MainActivity : AppCompatActivity() {
                 sightingPostAdapter.notifyItemRangeChanged(position, sightingList.size)
 
                 Toast.makeText(this, "Post deleted", Toast.LENGTH_SHORT).show()
+
+                ImagesAPI.getInstance().deleteSightingImage(sightingId) { success ->
+                    if (!success) {
+                        Log.e(
+                            "DeleteSightingImage",
+                            "Failed to delete image from storage: $sightingId"
+                        )
+                    }
+                }
             } else {
                 Toast.makeText(this, "Failed to delete post from database", Toast.LENGTH_SHORT)
                     .show()
