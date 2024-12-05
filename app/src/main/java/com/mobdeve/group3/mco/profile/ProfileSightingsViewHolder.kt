@@ -1,6 +1,7 @@
 package com.mobdeve.group3.mco.profile
 
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -25,9 +26,9 @@ class ProfileSightingsViewHolder(itemView: View) : ViewHolder(itemView) {
         txtSightingDate.text = "Seen on ${sighting.sightDate}"
     }
 
-    private fun setImage(imageId: String?) {
+    private fun setImage(imageId: Uri?) {
         if (imageId != null) {
-            ImagesAPI.getInstance().getSightingImage(imageId) { image ->
+            ImagesAPI.getInstance().getSightingImage(imageId.toString()) { image ->
                 imgSighting.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.size))
             }
         }

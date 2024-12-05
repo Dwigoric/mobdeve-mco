@@ -61,8 +61,9 @@
         android:id="@+id/btnDownvote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:background="#00FFFFFF"
-        app:layout_constraintStart_toEndOf="@+id/btnUpvote"
+        app:layout_constraintStart_toEndOf="@+id/txtUpvote"
         app:layout_constraintTop_toBottomOf="@+id/imgSightingPhoto"
         app:srcCompat="@drawable/ic_regular_report" />
 
@@ -126,12 +127,25 @@
         app:layout_constraintTop_toBottomOf="@+id/txtSightingPlace" />
 
     <TextView
-        android:id="@+id/txtPostScore"
+        android:id="@+id/txtUpvote"
         style="@style/BodyBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/PostScore"
+        app:layout_constraintBottom_toBottomOf="@+id/btnUpvote"
+        app:layout_constraintStart_toEndOf="@+id/btnUpvote"
+        app:layout_constraintTop_toBottomOf="@+id/imgSightingPhoto" />
+
+    <TextView
+        android:id="@+id/txtDownvote"
+        style="@style/BodyBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="@string/PostScore"
         app:layout_constraintBottom_toBottomOf="@+id/btnDownvote"
         app:layout_constraintStart_toEndOf="@+id/btnDownvote"
-        app:layout_constraintTop_toBottomOf="@+id/imgSightingPhoto" />
+        app:layout_constraintTop_toBottomOf="@+id/imgSightingPhoto"
+        app:layout_constraintVertical_bias="0.555" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

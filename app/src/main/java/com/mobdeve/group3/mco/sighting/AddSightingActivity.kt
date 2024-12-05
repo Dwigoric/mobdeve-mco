@@ -156,10 +156,13 @@ class AddSightingActivity : AppCompatActivity() {
                         "observerType" to observerType,
                         "sightTime" to (combinedSightTime ?: Timestamp.now()),
                         "postingDate" to Timestamp.now(),
-                        "imageId" to it,
+                        "imageId" to imageId,
                         "author" to authorRef,
                         "comments" to listOf<DocumentReference>()
                     )
+
+                    Log.d("SightingData", sightingData.toString())
+                    Log.d("ImageId", imageId.toString())
 
                     // Add the sighting to Firestore
                     SightingsAPI.getInstance().addSighting(sightingData) { sightingId ->

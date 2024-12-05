@@ -158,8 +158,10 @@ class ProfileActivity : AppCompatActivity() {
                     val location = sightingData["location"] as? String ?: ""
                     val sightDate =
                         (sightingData["sightDate"] as? Timestamp)?.toDate()?.toString() ?: ""
-                    val imageId =
-                        sightingData["imageId"] as? String
+                    val sightingImgURL = sightingData["imageId"] as? String ?: ""
+                    val sightingImg =
+                        if (sightingImgURL.isNotEmpty()) Uri.parse(sightingImgURL) else null
+                    val imageId = sightingImg
                     val groupSize = sightingData["groupSize"] as? Int ?: 0
                     val distance = sightingData["distance"] as? Float ?: 0.0f
                     val observerType = sightingData["observerType"] as? String ?: ""

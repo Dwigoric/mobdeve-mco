@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
             val sightingId = result.data?.getStringExtra("SIGHTING_ID")
             val userHandler = result.data?.getStringExtra("userHandler") // Fetch username
             val userIcon = result.data?.getStringExtra("userIcon") // Fetch avatar URL
+            val sightingImg = result.data?.getStringExtra("imageId")
 
             // Make sure sightingId is not null
             if (sightingId != null) {
@@ -68,8 +69,8 @@ class MainActivity : AppCompatActivity() {
                     result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_DATE_KEY)
                 val sightingTime =
                     result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_TIME_KEY)
-                val imageId =
-                    result.data?.getStringExtra(AddSightingActivity.Companion.IMAGE_ID_KEY)
+                //val imageId =
+                    //result.data?.getStringExtra(AddSightingActivity.Companion.IMAGE_ID_KEY)
 
                 // Add the sighting data to the list
                 sightingList.add(
@@ -83,13 +84,14 @@ class MainActivity : AppCompatActivity() {
                         scientificName = scientificName ?: "",
                         location = location ?: "",
                         sightDate = sightingDate ?: "",
-                        imageId = imageId,
+                        imageId = if (!sightingImg.isNullOrEmpty()) Uri.parse(sightingImg) else null,
                         groupSize = groupSize ?: 0,
                         distance = distance ?: 0.0f,
                         observerType = observerType ?: "",
                         sightingTime = sightingTime ?: "",
                         isOwnedByCurrentUser = true,
-                        score = 0
+                        upVote = 0,
+                        downVote = 0
                     )
                 )
 
@@ -109,6 +111,7 @@ class MainActivity : AppCompatActivity() {
                 val userHandler = data?.getStringExtra("userHandler")
                 val userIcon = data?.getStringExtra("userIcon")
                 val postingDate = data?.getStringExtra("postingDate")
+                val sightingImg = data?.getStringExtra("imageId")
 
                 if (sightingId != null) {
                     // Extract other sighting data from the result
@@ -133,7 +136,7 @@ class MainActivity : AppCompatActivity() {
                         scientificName = scientificName ?: "",
                         location = location ?: "",
                         sightDate = sightingDate ?: "",
-                        imageId = imageId ?: "",
+                        imageId = if (!sightingImg.isNullOrEmpty()) Uri.parse(sightingImg) else null,
                         groupSize = groupSize ?: 0,
                         distance = distance ?: 0.0f,
                         observerType = observerType ?: "",
@@ -256,7 +259,9 @@ class MainActivity : AppCompatActivity() {
                         val userIconUrl = userData["avatar"] as? String ?: ""
                         val userIcon =
                             if (userIconUrl.isNotEmpty()) Uri.parse(userIconUrl) else null
-
+                        val sightingImgURL = sightingData["imageId"] as? String ?: ""
+                        val sightingImg =
+                            if (sightingImgURL.isNotEmpty()) Uri.parse(sightingImgURL) else null
                         val isOwnedByCurrentUser = authorId == currentUserId
 
                         Log.d(
@@ -276,14 +281,16 @@ class MainActivity : AppCompatActivity() {
                             location = sightingData["location"] as? String ?: "",
                             sightDate = (sightingData["sightTime"] as? Timestamp)?.toDate()
                                 ?.toString() ?: "",
-                            imageId = sightingData["imageId"] as? String,
+                            imageId = sightingImg,
                             groupSize = (sightingData["groupSize"] as? Long)?.toInt() ?: 0,
                             distance = (sightingData["distance"] as? String)?.replace("km", "")
                                 ?.toFloat() ?: 0.0f,
                             observerType = sightingData["observerType"] as? String ?: "",
                             sightingTime = (sightingData["sightTime"] as? Timestamp)?.toDate()
                                 ?.toString() ?: "",
-                            isOwnedByCurrentUser = isOwnedByCurrentUser
+                            isOwnedByCurrentUser = isOwnedByCurrentUser,
+                            upVote = (sightingData["upVote"] as? Long)?.toInt() ?: 0,
+                            downVote = (sightingData["downVote"] as? Long)?.toInt() ?:0
                         )
 
                         tempList.add(sighting)
@@ -347,7 +354,7 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.option_sort_score -> {
                     // Sort based on score
-                    sortPostsByScore()
+                    //sortPostsByScore()
                     true
                 }
 
@@ -364,12 +371,12 @@ class MainActivity : AppCompatActivity() {
         popupMenu.show()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    /**@SuppressLint("NotifyDataSetChanged")
     private fun sortPostsByScore() {
         // Implement sorting logic based on score (Descending order)
         sightingList.sortByDescending { it.score }
         sightingPostAdapter.notifyDataSetChanged()
-    }
+    }*/
 
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostsByRecency() {

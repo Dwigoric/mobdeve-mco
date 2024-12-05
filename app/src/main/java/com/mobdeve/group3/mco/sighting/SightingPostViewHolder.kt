@@ -29,7 +29,8 @@ class SightingPostViewHolder(
     private val userHandle: TextView = itemView.findViewById(R.id.txtUsername)
     private val postingDate: TextView = itemView.findViewById(R.id.txtPostTime)
     private val userIcon: ImageView = itemView.findViewById(R.id.imgProfPic)
-    private val score: TextView = itemView.findViewById(R.id.txtPostScore)
+    private val txtUpvote: TextView = itemView.findViewById(R.id.txtUpvote)
+    private val txtDownvote: TextView = itemView.findViewById(R.id.txtDownvote)
     private val txtSightingName: TextView = itemView.findViewById(R.id.txtSightingName)
     private val txtSightingNameScientific: TextView =
         itemView.findViewById(R.id.txtSightingNameScientific)
@@ -46,7 +47,8 @@ class SightingPostViewHolder(
 
     fun bind(sighting: Sighting) {
         userHandle.text = sighting.userHandler
-        score.text = sighting.score.toString()
+        txtUpvote.text = sighting.upVote.toString()
+        txtDownvote.text = sighting.downVote.toString()
         txtSightingName.text = sighting.animalName
         txtSightingNameScientific.text = sighting.scientificName
         txtSighingPlace.text = sighting.location
@@ -135,36 +137,36 @@ class SightingPostViewHolder(
         // Handle button clicks
         btnUpvote.setOnClickListener {
             if (sighting.hasDownvoted) {
-                sighting.score += 2 // Increment score by 2
+                sighting.upVote += 2 // Increment score by 2
                 sighting.hasDownvoted = false
                 btnDownvote.setImageResource(R.drawable.ic_regular_report) // Reset downvote button
             } else if (!sighting.hasUpvoted) {
-                sighting.score++
+                sighting.upVote++
             } else {
-                sighting.score--
+                sighting.upVote--
             }
             sighting.hasUpvoted = !sighting.hasUpvoted // Toggle upvoted state
             btnUpvote.setImageResource(
                 if (sighting.hasUpvoted) R.drawable.ic_check_filled else R.drawable.ic_regular_check
             ) // Update button image
-            score.text = sighting.score.toString() // Update score text
+            txtUpvote.text = sighting.upVote.toString() // Update score text
         }
 
         btnDownvote.setOnClickListener {
             if (sighting.hasUpvoted) {
-                sighting.score -= 2 // Decrement score by 2
+                sighting.downVote -= 2 // Decrement score by 2
                 sighting.hasUpvoted = false
                 btnUpvote.setImageResource(R.drawable.ic_regular_check) // Reset upvote button
             } else if (!sighting.hasDownvoted) {
-                sighting.score--
+                sighting.downVote--
             } else {
-                sighting.score++
+                sighting.downVote++
             }
             sighting.hasDownvoted = !sighting.hasDownvoted // Toggle downvoted state
             btnDownvote.setImageResource(
                 if (sighting.hasDownvoted) R.drawable.ic_report_filled else R.drawable.ic_regular_report
             ) // Update button image
-            score.text = sighting.score.toString() // Update score text
+            txtDownvote.text = sighting.downVote.toString() // Update score text
         }
 
         // Set OnClickListener for the user icon to redirect to ProfileActivity

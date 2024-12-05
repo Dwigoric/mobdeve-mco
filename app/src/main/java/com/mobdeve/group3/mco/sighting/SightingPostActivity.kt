@@ -37,6 +37,7 @@ class SightingPostActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
                     val sightingId = result.data?.getStringExtra("SIGHTING_ID")
+                    val sightingImg = result.data?.getStringExtra("imageId")
 
                     if (sightingId != null) {
                         val updatedSighting = Sighting(
@@ -54,7 +55,7 @@ class SightingPostActivity : AppCompatActivity() {
                                 ?: "",
                             sightingTime = result.data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
                                 ?: "",
-                            imageId = result.data?.getStringExtra(AddSightingActivity.IMAGE_ID_KEY),
+                            imageId = if (!sightingImg.isNullOrEmpty()) Uri.parse(sightingImg) else null,
                             groupSize = result.data?.getIntExtra(
                                 AddSightingActivity.GROUP_SIZE_KEY,
                                 0
