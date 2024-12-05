@@ -2,6 +2,7 @@ package com.mobdeve.group3.mco.sighting
 
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
@@ -83,17 +84,27 @@ class SightingPostViewHolder(
             txtSightingDate.text = originalSightDate
         }
 
-        ImagesAPI.getInstance().getSightingImage(sighting.id) { imgBytes ->
+        if(sighting.imageId != null)
+        {
+            setImage(sighting.imageId)
+            imgSighting?.visibility = View.VISIBLE
+            noPhotoText?.visibility = View.GONE
+        }
+        else
+        {
+            imgSighting?.visibility = View.GONE
+            noPhotoText?.visibility = View.VISIBLE
+        }
+        /**ImagesAPI.getInstance().getSightingImage(sighting.id) { imgBytes ->
             if (imgBytes.isNotEmpty()) {
-                val imgBitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
-                imgSighting?.setImageBitmap(imgBitmap)
-                imgSighting?.visibility = View.VISIBLE
+                setImage(sighting.imageId)
+                //imgSighting.visibility = View.VISIBLE
                 noPhotoText?.visibility = View.GONE // Hide "No photo" text
             } else {
-                imgSighting?.visibility = View.GONE
+                imgSighting.visibility = View.GONE
                 noPhotoText?.visibility = View.VISIBLE // Show "No photo" text
             }
-        }
+        }*/
 
         // Show or hide the modify button based on ownership
         if (sighting.isOwnedByCurrentUser) {
@@ -259,5 +270,13 @@ class SightingPostViewHolder(
     private fun deletePost(sighting: Sighting, position: Int) {
         val activity = itemView.context as MainActivity
         activity.deletePostAtPosition(position)
+    }
+
+    private fun setImage(imageId: Uri?) {
+        if (imageId != null) {
+            ImagesAPI.getInstance().getSightingImage(imageId.toString()) { image ->
+                imgSighting?.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.size))
+            }
+        }
     }
 }
