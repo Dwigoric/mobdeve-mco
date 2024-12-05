@@ -19,13 +19,13 @@ class UsersAPI {
 
     private constructor()
 
-    fun addUser(userId: String, data: HashMap<String, Any>, callback: (Boolean) -> Unit) {
+    fun addUser(userId: String, data: HashMap<String, Any?>, callback: (Boolean) -> Unit) {
         dbHelper.addDocument("users", userId, data) { success ->
             callback(success)
         }
     }
 
-    fun getUser(userId: String, callback: (HashMap<String, Any>) -> Unit) {
+    fun getUser(userId: String, callback: (HashMap<String, Any?>) -> Unit) {
         if (userId.isEmpty()) {
             Log.e("UsersAPI", "getUser called with empty userId")
             callback(HashMap()) // Return an empty map
@@ -36,7 +36,7 @@ class UsersAPI {
         }
     }
 
-    fun getUserWithUsername(username: String, callback: (HashMap<String, Any>) -> Unit) {
+    fun getUserWithUsername(username: String, callback: (HashMap<String, Any?>) -> Unit) {
         if (username.isEmpty()) {
             Log.e("UsersAPI", "getUserWithUsername called with empty username")
             callback(HashMap()) // Return an empty map
@@ -56,7 +56,7 @@ class UsersAPI {
         return dbHelper.getDocumentReference("users", userId)
     }
 
-    fun updateUser(userId: String, data: HashMap<String, Any>, callback: (Boolean) -> Unit) {
+    fun updateUser(userId: String, data: HashMap<String, Any?>, callback: (Boolean) -> Unit) {
         dbHelper.updateDocument("users", userId, data) { success ->
             callback(success)
         }

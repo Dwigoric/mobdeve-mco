@@ -37,7 +37,7 @@ class SignupActivity : AppCompatActivity() {
                     Log.d(TAG, "createUserWithEmail:success")
 
                     // Create user data
-                    val user = hashMapOf(
+                    val user = hashMapOf<String, Any?>(
                         "email" to findViewById<EditText>(R.id.etEmail2).text.toString() as Any,
                         "username" to findViewById<EditText>(R.id.etUsername).text.toString() as Any,
                         "bio" to "" as Any,

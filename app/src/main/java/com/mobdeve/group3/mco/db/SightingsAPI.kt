@@ -21,20 +21,20 @@ class SightingsAPI {
 
     private constructor()
 
-    fun addSighting(data: HashMap<String, Any>, callback: (String) -> Unit) {
+    fun addSighting(data: HashMap<String, Any?>, callback: (String) -> Unit) {
         dbHelper.addDocument("sightings", data) { sightingId ->
             callback(sightingId)
         }
     }
 
-    fun getSighting(sightingId: String, callback: (HashMap<String, Any>) -> Unit) {
+    fun getSighting(sightingId: String, callback: (HashMap<String, Any?>) -> Unit) {
         dbHelper.getDocument("sightings", sightingId) { sightingData ->
             callback(sightingData)
         }
     }
 
-    fun getSightings(callback: (ArrayList<HashMap<String, Any>>) -> Unit) {
-        val documents = ArrayList<HashMap<String, Any>>()
+    fun getSightings(callback: (ArrayList<HashMap<String, Any?>>) -> Unit) {
+        val documents = ArrayList<HashMap<String, Any?>>()
         dbHelper.getDocuments("sightings") { fetchedDocs ->
             Log.d(
                 "getSightings",
@@ -45,7 +45,7 @@ class SightingsAPI {
         }
     }
 
-    fun getUserSightings(callback: (ArrayList<HashMap<String, Any>>) -> Unit) {
+    fun getUserSightings(callback: (ArrayList<HashMap<String, Any?>>) -> Unit) {
         dbHelper.getDocumentsWhere(
             "sightings",
             "author",
@@ -57,7 +57,7 @@ class SightingsAPI {
 
     fun updateSighting(
         sightingId: String,
-        data: HashMap<String, Any>,
+        data: HashMap<String, Any?>,
         callback: (Boolean) -> Unit
     ) {
         dbHelper.updateDocument("sightings", sightingId, data) { success ->

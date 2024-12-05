@@ -34,7 +34,7 @@ class DbHelper {
     fun addDocument(
         collection: String,
         documentId: String,
-        data: HashMap<String, Any>,
+        data: HashMap<String, Any?>,
         callback: (Boolean) -> Unit
     ) {
         val document = db.collection(collection).document(documentId)
@@ -51,7 +51,7 @@ class DbHelper {
 
     fun addDocument(
         collection: String,
-        data: HashMap<String, Any>,
+        data: HashMap<String, Any?>,
         callback: (String) -> Unit
     ) {
         val document = db.collection(collection).document()
@@ -69,7 +69,7 @@ class DbHelper {
     fun updateDocument(
         collection: String,
         documentId: String,
-        data: HashMap<String, Any>,
+        data: HashMap<String, Any?>,
         callback: (Boolean) -> Unit
     ) {
         db.collection(collection)
@@ -102,16 +102,16 @@ class DbHelper {
     fun getDocument(
         collection: String,
         documentId: String,
-        callback: (HashMap<String, Any>) -> Unit
+        callback: (HashMap<String, Any?>) -> Unit
     ) {
-        val document = HashMap<String, Any>()
+        val document = HashMap<String, Any?>()
         db.collection(collection)
             .document(documentId)
             .get()
             .addOnSuccessListener { result ->
                 val data = result.data
                 data?.set("id", result.id)
-                document.putAll(data as HashMap<String, Any>)
+                document.putAll(data as HashMap<String, Any?>)
                 callback(document)  // Return the document through the callback
             }
             .addOnFailureListener { exception ->
@@ -121,13 +121,13 @@ class DbHelper {
     }
 
 
-    fun getDocuments(collection: String, callback: (ArrayList<HashMap<String, Any>>) -> Unit) {
-        val documents = ArrayList<HashMap<String, Any>>()
+    fun getDocuments(collection: String, callback: (ArrayList<HashMap<String, Any?>>) -> Unit) {
+        val documents = ArrayList<HashMap<String, Any?>>()
         db.collection(collection)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    val data = document.data as HashMap<String, Any>
+                    val data = document.data as HashMap<String, Any?>
                     data["id"] = document.id
                     documents.add(data)
                 }
@@ -142,16 +142,16 @@ class DbHelper {
     fun getDocumentsWhere(
         collection: String,
         field: String,
-        value: Any,
-        callback: (ArrayList<HashMap<String, Any>>) -> Unit
+        value: Any?,
+        callback: (ArrayList<HashMap<String, Any?>>) -> Unit
     ) {
-        val documents = ArrayList<HashMap<String, Any>>()
+        val documents = ArrayList<HashMap<String, Any?>>()
         db.collection(collection)
             .whereEqualTo(field, value)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    val data = document.data as HashMap<String, Any>
+                    val data = document.data as HashMap<String, Any?>
                     data["id"] = document.id
                     documents.add(data)
                 }
@@ -165,10 +165,10 @@ class DbHelper {
 
     fun getDocumentsWhereMultiple(
         collection: String,
-        fields: HashMap<String, Any>,
-        callback: (ArrayList<HashMap<String, Any>>) -> Unit
+        fields: HashMap<String, Any?>,
+        callback: (ArrayList<HashMap<String, Any?>>) -> Unit
     ) {
-        val documents = ArrayList<HashMap<String, Any>>()
+        val documents = ArrayList<HashMap<String, Any?>>()
         var query = db.collection(collection)
         for (field in fields) {
             query = query.whereEqualTo(field.key, field.value) as CollectionReference
@@ -177,7 +177,7 @@ class DbHelper {
         query.get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    val data = document.data as HashMap<String, Any>
+                    val data = document.data as HashMap<String, Any?>
                     data["id"] = document.id
                     documents.add(data)
                 }
