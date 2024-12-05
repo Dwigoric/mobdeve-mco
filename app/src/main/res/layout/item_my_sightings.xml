@@ -19,7 +19,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/thresher_shark" />
+            app:srcCompat="@drawable/times_square_regular" />
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
