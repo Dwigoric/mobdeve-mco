@@ -223,7 +223,7 @@ class SightingPostViewHolder(
                                     putExtra("OBSERVER_TYPE_KEY", sighting.observerType)
                                     putExtra("SIGHTING_DATE_KEY", sighting.sightDate)
                                     putExtra("SIGHTING_TIME_KEY", sighting.sightingTime)
-                                    putExtra("IMAGE_URI_KEY", sighting.imageUri.toString())
+                                    putExtra("IMAGE_ID_KEY", sighting.imageId.toString())
                                     putExtra("POST_ID", sighting.id)
                                 }
 

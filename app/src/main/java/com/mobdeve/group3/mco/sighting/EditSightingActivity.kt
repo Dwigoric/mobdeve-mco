@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -29,6 +30,7 @@ import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.databinding.ActivityEditSightingBinding
 import com.mobdeve.group3.mco.db.SightingsAPI
 import com.mobdeve.group3.mco.db.UsersAPI
+import com.mobdeve.group3.mco.storage.ImagesAPI
 import java.io.File
 import java.io.IOException
 import java.text.ParseException
@@ -41,6 +43,7 @@ class EditSightingActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityEditSightingBinding
     private lateinit var auth: FirebaseAuth
     private var imageUri: Uri? = null
+    private var imageId: String? = null
     private var postId: String = ""
     private lateinit var cameraResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var galleryResultLauncher: ActivityResultLauncher<Intent>
@@ -59,14 +62,21 @@ class EditSightingActivity : AppCompatActivity() {
         postId = intent.getStringExtra("POST_ID") ?: ""
         viewBinding.etCommonName.setText(intent.getStringExtra(AddSightingActivity.COMMON_NAME_KEY))
         viewBinding.etSpecies.setText(intent.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY))
-        viewBinding.etGroupType.setText(intent.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0).toString())
-        viewBinding.etDistance.setText(intent.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f).toString())
+        viewBinding.etGroupType.setText(
+            intent.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0).toString()
+        )
+        viewBinding.etDistance.setText(
+            intent.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f).toString()
+        )
         viewBinding.etLocation.setText(intent.getStringExtra(AddSightingActivity.LOCATION_KEY))
         viewBinding.etObserver.setText(intent.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY))
         val sightingDateString = intent.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
         val formattedDate = if (!sightingDateString.isNullOrEmpty()) {
             try {
-                val originalDate = SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy", Locale.getDefault()).parse(sightingDateString)
+                val originalDate =
+                    SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy", Locale.getDefault()).parse(
+                        sightingDateString
+                    )
                 SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(originalDate)
             } catch (e: ParseException) {
                 sightingDateString
@@ -80,7 +90,10 @@ class EditSightingActivity : AppCompatActivity() {
         val sightingTimeString = intent.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
         val formattedTime = if (!sightingTimeString.isNullOrEmpty()) {
             try {
-                val originalTime = SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy", Locale.getDefault()).parse(sightingTimeString)
+                val originalTime =
+                    SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy", Locale.getDefault()).parse(
+                        sightingTimeString
+                    )
                 SimpleDateFormat("HH:mm", Locale.getDefault()).format(originalTime)
             } catch (e: ParseException) {
                 sightingTimeString
@@ -91,11 +104,13 @@ class EditSightingActivity : AppCompatActivity() {
 
         viewBinding.etSightingTime.setText(formattedTime)
 
-        val existingImageUri = intent.getStringExtra(AddSightingActivity.IMAGE_URI_KEY)
-        if (!existingImageUri.isNullOrEmpty()) {
-            imageUri = Uri.parse(existingImageUri)
-            viewBinding.imgSelectedPhoto.setImageURI(imageUri)
-            viewBinding.imgSelectedPhoto.visibility = View.VISIBLE
+        val existingImage = intent.getStringExtra(AddSightingActivity.IMAGE_ID_KEY)
+        if (!existingImage.isNullOrEmpty()) {
+            ImagesAPI.getInstance().getSightingImage(existingImage) { byteArray ->
+                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                viewBinding.imgSelectedPhoto.setImageBitmap(bitmap)
+                viewBinding.imgSelectedPhoto.visibility = View.VISIBLE
+            }
         }
 
         // Set OnClickListener for date and time pickers here
@@ -119,6 +134,22 @@ class EditSightingActivity : AppCompatActivity() {
     }
 
     private fun updateSighting() {
+        if (imageUri != null) {
+            val imgBytes = contentResolver.openInputStream(imageUri!!)?.readBytes()
+            if (imgBytes == null) {
+                updateSightingWithImage()
+            } else {
+                ImagesAPI.getInstance().putSightingImage(imgBytes) { imageId ->
+                    this.imageId = imageId
+                    updateSightingWithImage()
+                }
+            }
+        } else {
+            updateSightingWithImage()
+        }
+    }
+
+    private fun updateSightingWithImage() {
         val commonName = viewBinding.etCommonName.text.toString()
         val scientificName = viewBinding.etSpecies.text.toString()
         val groupSize = viewBinding.etGroupType.text.toString().toIntOrNull() ?: 0
@@ -138,9 +169,10 @@ class EditSightingActivity : AppCompatActivity() {
         UsersAPI.getInstance().getUser(userId) { userData ->
             val username = userData["username"] as? String ?: "Unknown User"
             val avatarUrl = userData["avatar"] as? String ?: ""
-            val postingDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+            val postingDate =
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
 
-            val updatedSightingData = hashMapOf<String, Any>(
+            val updatedSightingData = hashMapOf<String, Any?>(
                 "commonName" to commonName,
                 "scientificName" to scientificName,
                 "groupSize" to groupSize,
@@ -148,7 +180,7 @@ class EditSightingActivity : AppCompatActivity() {
                 "location" to location,
                 "observerType" to observerType,
                 "sightTime" to (combinedSightTime ?: Timestamp.now()),
-                "imageUri" to (imageUri?.toString() ?: ""),
+                "imageId" to imageId,
                 "userHandler" to username,
                 "userIcon" to avatarUrl,
                 "postingDate" to postingDate
@@ -168,7 +200,7 @@ class EditSightingActivity : AppCompatActivity() {
                         putExtra("OBSERVER_TYPE_KEY", observerType)
                         putExtra("SIGHTING_DATE_KEY", sightingDate)
                         putExtra("SIGHTING_TIME_KEY", sightingTime)
-                        putExtra("IMAGE_URI_KEY", imageUri?.toString())
+                        putExtra("IMAGE_ID_KEY", imageId)
                         putExtra("userHandler", username)
                         putExtra("userIcon", avatarUrl)
                         putExtra("postingDate", postingDate)

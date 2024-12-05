@@ -13,7 +13,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -33,11 +32,14 @@ import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.databinding.ActivityAddSightingBinding
 import com.mobdeve.group3.mco.db.SightingsAPI
 import com.mobdeve.group3.mco.db.UsersAPI
+import com.mobdeve.group3.mco.storage.ImagesAPI
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlin.Any
+import kotlin.String
 
 class AddSightingActivity : AppCompatActivity() {
     companion object {
@@ -49,7 +51,7 @@ class AddSightingActivity : AppCompatActivity() {
         const val OBSERVER_TYPE_KEY = "OBSERVER_TYPE_KEY"
         const val SIGHTING_DATE_KEY = "SIGHTING_DATE_KEY"
         const val SIGHTING_TIME_KEY = "SIGHTING_TIME_KEY"
-        const val IMAGE_URI_KEY = "IMAGE_URI_KEY"
+        const val IMAGE_ID_KEY = "IMAGE_ID_KEY"
     }
 
     private lateinit var auth: FirebaseAuth
@@ -142,40 +144,59 @@ class AddSightingActivity : AppCompatActivity() {
             UsersAPI.getInstance().getUser(userId) { userData ->
                 val username = userData["username"] as? String ?: "Unknown User"
                 val avatarUrl = userData["avatar"] as? String ?: ""
-                // Prepare sighting data
-                val sightingData = hashMapOf<String, Any>(
-                    "commonName" to commonName,
-                    "scientificName" to scientificName,
-                    "groupSize" to groupSize,
-                    "distance" to "${distance}km",
-                    "location" to location,
-                    "observerType" to observerType,
-                    "sightTime" to (combinedSightTime ?: Timestamp.now()),
-                    "postingDate" to Timestamp.now(),
-                    "imageUri" to (imageUri?.toString() ?: ""),
-                    "author" to authorRef,
-                    "comments" to listOf<DocumentReference>()
-                )
 
-                // Add the sighting to Firestore
-                SightingsAPI.getInstance().addSighting(sightingData) { sightingId ->
-                    // Return the sightingId back to the previous activity
-                    val returnIntent = Intent()
-                    returnIntent.putExtra("SIGHTING_ID", sightingId)
-                    returnIntent.putExtra("userHandler", username)
-                    returnIntent.putExtra("userIcon", avatarUrl)
-                    returnIntent.putExtra("COMMON_NAME_KEY", commonName)
-                    returnIntent.putExtra("SCIENTIFIC_NAME_KEY", scientificName)
-                    returnIntent.putExtra("GROUP_SIZE_KEY", groupSize)
-                    returnIntent.putExtra("DISTANCE_KEY", distance)
-                    returnIntent.putExtra("LOCATION_KEY", location)
-                    returnIntent.putExtra("OBSERVER_TYPE_KEY", observerType)
-                    returnIntent.putExtra("SIGHTING_DATE_KEY", sightingDate)
-                    returnIntent.putExtra("SIGHTING_TIME_KEY", sightingTime)
-                    returnIntent.putExtra("IMAGE_URI_KEY", imageUri.toString())
+                fun uploadSighting(imageId: String?) {
+                    // Prepare sighting data
+                    val sightingData = hashMapOf<String, Any?>(
+                        "commonName" to commonName,
+                        "scientificName" to scientificName,
+                        "groupSize" to groupSize,
+                        "distance" to "${distance}km",
+                        "location" to location,
+                        "observerType" to observerType,
+                        "sightTime" to (combinedSightTime ?: Timestamp.now()),
+                        "postingDate" to Timestamp.now(),
+                        "imageId" to it,
+                        "author" to authorRef,
+                        "comments" to listOf<DocumentReference>()
+                    )
 
-                    setResult(RESULT_OK, returnIntent)
-                    finish()
+                    // Add the sighting to Firestore
+                    SightingsAPI.getInstance().addSighting(sightingData) { sightingId ->
+                        // Return the sightingId back to the previous activity
+                        val returnIntent = Intent()
+                        returnIntent.putExtra("SIGHTING_ID", sightingId)
+                        returnIntent.putExtra("userHandler", username)
+                        returnIntent.putExtra("userIcon", avatarUrl)
+                        returnIntent.putExtra("COMMON_NAME_KEY", commonName)
+                        returnIntent.putExtra("SCIENTIFIC_NAME_KEY", scientificName)
+                        returnIntent.putExtra("GROUP_SIZE_KEY", groupSize)
+                        returnIntent.putExtra("DISTANCE_KEY", distance)
+                        returnIntent.putExtra("LOCATION_KEY", location)
+                        returnIntent.putExtra("OBSERVER_TYPE_KEY", observerType)
+                        returnIntent.putExtra("SIGHTING_DATE_KEY", sightingDate)
+                        returnIntent.putExtra("SIGHTING_TIME_KEY", sightingTime)
+                        returnIntent.putExtra("IMAGE_ID_KEY", imageId)
+
+                        setResult(RESULT_OK, returnIntent)
+                        finish()
+                    }
+                }
+
+                if (imageUri == null) {
+                    // If there's no image, upload the sighting without an image
+                    uploadSighting(null)
+                } else {
+                    // Upload image to Firebase Storage
+                    ImagesAPI.getInstance().putSightingImage(
+                        ImagesAPI.getByteArrayFromInputStream(
+                            contentResolver.openInputStream(
+                                imageUri!!
+                            )
+                        )
+                    ) {
+                        uploadSighting(it)
+                    }
                 }
             }
         }

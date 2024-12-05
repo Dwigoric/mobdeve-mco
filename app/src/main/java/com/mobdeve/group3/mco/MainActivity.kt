@@ -68,9 +68,8 @@ class MainActivity : AppCompatActivity() {
                     result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_DATE_KEY)
                 val sightingTime =
                     result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_TIME_KEY)
-                val imageUriString = result.data?.getStringExtra("IMAGE_URI")
-                val imageUri =
-                    if (!imageUriString.isNullOrEmpty()) Uri.parse(imageUriString) else null
+                val imageId =
+                    result.data?.getStringExtra(AddSightingActivity.Companion.IMAGE_ID_KEY)
 
                 // Add the sighting data to the list
                 sightingList.add(
@@ -84,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                         scientificName = scientificName ?: "",
                         location = location ?: "",
                         sightDate = sightingDate ?: "",
-                        imageUri = imageUri,
+                        imageId = imageId,
                         groupSize = groupSize ?: 0,
                         distance = distance ?: 0.0f,
                         observerType = observerType ?: "",
@@ -122,9 +121,7 @@ class MainActivity : AppCompatActivity() {
                     val observerType = data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY)
                     val sightingDate = data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
                     val sightingTime = data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
-                    val imageUriString = data?.getStringExtra("IMAGE_URI")
-                    val imageUri =
-                        if (!imageUriString.isNullOrEmpty()) Uri.parse(imageUriString) else null
+                    val imageId = data?.getStringExtra(AddSightingActivity.IMAGE_ID_KEY)
 
                     // Create an updated Sighting object
                     val updatedSighting = Sighting(
@@ -136,7 +133,7 @@ class MainActivity : AppCompatActivity() {
                         scientificName = scientificName ?: "",
                         location = location ?: "",
                         sightDate = sightingDate ?: "",
-                        imageUri = imageUri,
+                        imageId = imageId ?: "",
                         groupSize = groupSize ?: 0,
                         distance = distance ?: 0.0f,
                         observerType = observerType ?: "",
@@ -267,11 +264,6 @@ class MainActivity : AppCompatActivity() {
                             "Fetched user data: username=$userHandler, avatar=$userIconUrl"
                         )
 
-                        // Check and update the imageUri to null if it's an empty string
-                        val imageUriString =
-                            (sightingData["imageUri"] as? String)?.takeIf { it.isNotEmpty() }
-                        val imageUri = imageUriString?.let { Uri.parse(it) }
-
                         // Create the Sighting object
                         val sighting = Sighting(
                             id = sightingData["id"] as? String ?: "",
@@ -284,7 +276,7 @@ class MainActivity : AppCompatActivity() {
                             location = sightingData["location"] as? String ?: "",
                             sightDate = (sightingData["sightTime"] as? Timestamp)?.toDate()
                                 ?.toString() ?: "",
-                            imageUri = imageUri,
+                            imageId = sightingData["imageId"] as? String,
                             groupSize = (sightingData["groupSize"] as? Long)?.toInt() ?: 0,
                             distance = (sightingData["distance"] as? String)?.replace("km", "")
                                 ?.toFloat() ?: 0.0f,
@@ -299,7 +291,7 @@ class MainActivity : AppCompatActivity() {
                         // Log progress for each sighting
                         Log.d(
                             "loadSightings",
-                            "Sighting added to tempList: id=${sighting.id}, animalName=${sighting.animalName}, image=${sighting.imageUri}"
+                            "Sighting added to tempList: id=${sighting.id}, animalName=${sighting.animalName}, image=${sighting.imageId}"
                         )
 
                         // Update RecyclerView after all sightings are processed

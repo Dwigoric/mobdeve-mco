@@ -13,7 +13,7 @@ data class Sighting(
     val scientificName: String,
     val location: String,
     val sightDate: String,
-    val imageUri: Uri?,
+    var imageId: String?,
     val groupSize: Int,
     val distance: Float,
     val observerType: String,
