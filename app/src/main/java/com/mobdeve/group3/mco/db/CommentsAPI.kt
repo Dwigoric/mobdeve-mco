@@ -32,7 +32,7 @@ class CommentsAPI {
         }
     }
 
-    fun getComments(sightingId: String, callback: (ArrayList<HashMap<String, Any>>) -> Unit) {
+    fun getComments(sightingId: String, callback: (ArrayList<HashMap<String, Any?>>) -> Unit) {
         dbHelper.getDocumentsWhere("comments", "sightingId", sightingId) { comments ->
             callback(comments)
         }

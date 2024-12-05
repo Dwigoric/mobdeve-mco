@@ -23,8 +23,8 @@ class DbHelper {
 
     private constructor()
 
-    fun constructData(vararg data: Pair<String, Any>): HashMap<String, Any> {
-        val map = HashMap<String, Any>()
+    fun constructData(vararg data: Pair<String, Any?>): HashMap<String, Any?> {
+        val map = HashMap<String, Any?>()
         for (pair in data) {
             map[pair.first] = pair.second
         }
