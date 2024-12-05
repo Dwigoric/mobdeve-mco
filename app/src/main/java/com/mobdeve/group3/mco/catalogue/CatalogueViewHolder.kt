@@ -12,6 +12,6 @@ class CatalogueViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bindData(catalogueSpecies: CatalogueSpecies) {
         imgCatalogue.setImageResource(catalogueSpecies.imageId)
-        txtCategoryName.text = catalogueSpecies.name
+        txtCategoryName.text = catalogueSpecies.commonName
     }
 }
