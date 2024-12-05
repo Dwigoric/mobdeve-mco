@@ -19,7 +19,7 @@ import com.mobdeve.group3.mco.landing.LandingActivity
 import com.mobdeve.group3.mco.profile.ProfileActivity
 
 class CatalogueActivity : AppCompatActivity() {
-    private val categories = CategoryGenerator.generateCategories()
+    private val categories = CatalogueGenerator.generateCatalogueSpecies()
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +36,7 @@ class CatalogueActivity : AppCompatActivity() {
         }
 
         this.recyclerView = findViewById(R.id.rcvCatalogueCategories)
-        this.recyclerView.adapter = CatalogueCategoriesAdapter(this.categories)
+        this.recyclerView.adapter = CatalogueAdapter(this.categories)
         this.recyclerView.layoutManager = GridLayoutManager(this, this.computeSpanCount())
 
         val bottomNav: BottomNavigationView = findViewById(R.id.bottom_nav)

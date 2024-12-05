@@ -1,6 +1,6 @@
 package com.mobdeve.group3.mco.catalogue
 
-class Category(
+class CatalogueSpecies(
     id: String,
     name: String,
     imageId: Int

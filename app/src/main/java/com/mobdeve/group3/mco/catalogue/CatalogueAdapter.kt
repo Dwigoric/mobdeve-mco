@@ -5,18 +5,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.group3.mco.R
 
-class CatalogueCategoriesAdapter(private val data: ArrayList<Category>) :
-    RecyclerView.Adapter<CatalogueCategoriesViewHolder>() {
+class CatalogueAdapter(private val data: ArrayList<CatalogueSpecies>) :
+    RecyclerView.Adapter<CatalogueViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): CatalogueCategoriesViewHolder {
+    ): CatalogueViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.item_category_catalogue, parent, false)
-        return CatalogueCategoriesViewHolder(view)
+        return CatalogueViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: CatalogueCategoriesViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CatalogueViewHolder, position: Int) {
         holder.bindData(data[position])
     }
 
