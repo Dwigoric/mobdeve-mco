@@ -1,5 +1,8 @@
 package com.mobdeve.group3.mco.storage
 
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
+
 class ImagesAPI {
     private val storageHelper = StorageHelper.getInstance()
 
@@ -11,6 +14,18 @@ class ImagesAPI {
                 instance = ImagesAPI()
             }
             return instance as ImagesAPI
+        }
+
+        fun getByteArrayFromInputStream(inputStream: InputStream?): ByteArray {
+            val stream = ByteArrayOutputStream()
+            val buffer = ByteArray(1024)
+            var len: Int
+            while (inputStream?.read(buffer).also {
+                    len = if (it != null) it else -1
+                } != -1) {
+                stream.write(buffer, 0, len)
+            }
+            return stream.toByteArray()
         }
     }
 
