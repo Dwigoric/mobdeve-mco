@@ -33,6 +33,13 @@ class ImagesAPI {
         }
     }
 
+    private fun putNewImage(path: String, data: ByteArray, callback: (String) -> Unit) {
+        val objectRef = storageHelper.generateNewObjectRef(arrayOf("images", path))
+        storageHelper.putObject(objectRef, data) { url ->
+            callback(url)
+        }
+    }
+
     private fun deleteImage(path: String, name: String, callback: (Boolean) -> Unit) {
         storageHelper.deleteObject(arrayOf("images", path), name) { success ->
             callback(success)
@@ -69,8 +76,8 @@ class ImagesAPI {
         getDownloadUrl("sightings", sightingId, callback)
     }
 
-    fun putSightingImage(sightingId: String, data: ByteArray, callback: (String) -> Unit) {
-        putImage("sightings", sightingId, data, callback)
+    fun putSightingImage(data: ByteArray, callback: (String) -> Unit) {
+        putNewImage("sightings", data, callback)
     }
 
     fun deleteSightingImage(sightingId: String, callback: (Boolean) -> Unit) {
