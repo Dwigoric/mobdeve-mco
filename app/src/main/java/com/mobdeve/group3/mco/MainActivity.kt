@@ -384,6 +384,12 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
+                R.id.option_sort_recency2 -> {
+                    // Sort based on recency
+                    sortPostsByRecency2()
+                    true
+                }
+
                 else -> false
             }
         }
@@ -405,6 +411,15 @@ class MainActivity : AppCompatActivity() {
         sightingList.sortByDescending { it.postingDate }
         sightingPostAdapter.notifyDataSetChanged()
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun sortPostsByRecency2() {
+        // Implement sorting logic based on recency (Descending order)
+        sightingList.sortByDescending { it.sightDate}
+        sightingPostAdapter.notifyDataSetChanged()
+    }
+
+
 
     fun deletePostAtPosition(position: Int) {
         val sightingToDelete = sightingList[position]

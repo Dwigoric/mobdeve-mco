@@ -5,5 +5,9 @@
         android:title="Sort by Score" />
     <item
         android:id="@+id/option_sort_recency"
-        android:title="Sort by Recency" />
+        android:title="Sort by Newest Upload" />
+
+    <item
+        android:id="@+id/option_sort_recency2"
+        android:title="Sort by Latest Sighting" />
 </menu>
