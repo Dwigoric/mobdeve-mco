@@ -2,8 +2,8 @@ package com.mobdeve.group3.mco.db
 
 import android.util.Log
 import com.google.firebase.Firebase
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 
 class DbHelper {
@@ -169,9 +169,10 @@ class DbHelper {
         callback: (ArrayList<HashMap<String, Any?>>) -> Unit
     ) {
         val documents = ArrayList<HashMap<String, Any?>>()
-        var query = db.collection(collection)
+
+        var query = db.collection(collection) as Query
         for (field in fields) {
-            query = query.whereEqualTo(field.key, field.value) as CollectionReference
+            query = query.whereEqualTo(field.key, field.value)
         }
 
         query.get()
