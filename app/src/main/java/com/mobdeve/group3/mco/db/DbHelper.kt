@@ -99,6 +99,50 @@ class DbHelper {
             }
     }
 
+    fun deleteDocumentsWhere(
+        collection: String,
+        field: String,
+        value: Any?,
+        callback: (Boolean) -> Unit
+    ) {
+        db.collection(collection)
+            .whereEqualTo(field, value)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    document.reference.delete()
+                }
+                callback(true)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error deleting documents", e)
+                callback(false)
+            }
+    }
+
+    fun deleteDocumentsWhereMultiple(
+        collection: String,
+        fields: HashMap<String, Any?>,
+        callback: (Boolean) -> Unit
+    ) {
+        var query = db.collection(collection) as Query
+        for (field in fields) {
+            query = query.whereEqualTo(field.key, field.value)
+        }
+
+        query.get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    document.reference.delete()
+                }
+                callback(true)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error deleting documents", e)
+                callback(false)
+            }
+    }
+
     fun getDocument(
         collection: String,
         documentId: String,
