@@ -57,8 +57,6 @@ class CommentsDialogFragment : DialogFragment() {
                 // Call the CommentsAPI to add the comment
                 CommentsAPI.getInstance().addComment(sighting.id, newCommentContent) { commentId ->
                     Log.d("Comments", "Updated comment with ID: $commentId")
-
-                    // Get the current user's details (user ID and profile image)
                     val currentUser = Firebase.auth.currentUser
                     val userHandler = currentUser?.uid ?: "Unknown"
                     val userIcon = R.drawable.ic_regular_user
@@ -73,7 +71,6 @@ class CommentsDialogFragment : DialogFragment() {
                     )
 
                     sighting.addComment(newComment)
-
                     val updatedCommentsList = sighting.comments
                     commentAdapter.updateComments(updatedCommentsList)
                     commentAdapter.notifyItemInserted(updatedCommentsList.size - 1)
@@ -82,6 +79,7 @@ class CommentsDialogFragment : DialogFragment() {
                 }
             }
         }
+
 
         return view
     }

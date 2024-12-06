@@ -24,7 +24,6 @@ class CommentAdapter(
     override fun getItemCount(): Int = comments.size
 
     fun updateComments(newComments: List<Comment>) {
-        comments.clear()
         comments.addAll(newComments)
         notifyDataSetChanged()
     }
