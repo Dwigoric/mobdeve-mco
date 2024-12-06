@@ -12,11 +12,6 @@
     <!--        android:title="@string/navitem2" />-->
 
     <item
-        android:id="@+id/nav_add"
-        android:icon="@drawable/ic_add_sighting"
-        android:title="@string/navitem3" />
-
-    <item
         android:id="@+id/nav_catalogue"
         android:icon="@drawable/ic_regular_catalogue"
         android:title="@string/navitem4" />
