@@ -15,4 +15,8 @@
     <color name="white">#FFFFFF</color>
 
 
+
+    <color name="lightbgtransparent">#CCFFFFFF</color>
+    <color name="darkbgtransparent">#CC010634</color>
+
 </resources>

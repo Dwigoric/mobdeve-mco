@@ -24,6 +24,13 @@
         <!-- Secondary text color -->
         <item name="android:textColorSecondary">@color/darkgray</item>
 
+
+        <item name="colorPrimaryVariant">@color/lightbgtransparent</item>
+
+
+
+
+
     </style>
 
     <style name="Theme.Shellfie" parent="Base.Theme.Shellfie" />
