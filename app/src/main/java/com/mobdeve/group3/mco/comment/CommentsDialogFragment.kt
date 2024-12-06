@@ -101,7 +101,10 @@ class CommentsDialogFragment : DialogFragment() {
                 )
             }
 
-            commentAdapter.updateComments(commentList)
+            val sortedComments = commentList.sortedBy { it.commentTime }
+
+            // Update the adapter with sorted comments
+            commentAdapter.updateComments(sortedComments)
             commentAdapter.notifyDataSetChanged()
         }
     }
