@@ -3,26 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">>
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/imgCommentUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!-- CardView for the user profile picture -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/contProfPic"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="2dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/profpic" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/imgCommentUsername"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/profpic" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- Username Text -->
     <TextView
         android:id="@+id/txtCommentUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/CommentUsername"
-        app:layout_constraintStart_toEndOf="@+id/imgCommentUsername"
+        app:layout_constraintStart_toEndOf="@+id/contProfPic"
         app:layout_constraintTop_toTopOf="parent"
         style="@style/CaptionBold"/>
 
+    <!-- Time Text -->
     <TextView
         android:id="@+id/txtCommentTime"
         android:layout_width="wrap_content"
@@ -33,13 +45,14 @@
         app:layout_constraintTop_toTopOf="parent"
         style="@style/Caption"/>
 
+    <!-- Comment Content Text -->
     <TextView
         android:id="@+id/txtCommentContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/CommentContent"
-        app:layout_constraintStart_toEndOf="@+id/imgCommentUsername"
+        app:layout_constraintStart_toEndOf="@+id/contProfPic"
         app:layout_constraintTop_toBottomOf="@+id/txtCommentUsername"
         style="@style/Body"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

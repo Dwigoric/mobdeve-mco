@@ -23,7 +23,6 @@ class CommentAdapter(private var comments: MutableList<Comment>) : Adapter<Comme
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateComments(newComments: List<Comment>) {
-        comments.clear()
         comments.addAll(newComments)
         notifyDataSetChanged()
     }

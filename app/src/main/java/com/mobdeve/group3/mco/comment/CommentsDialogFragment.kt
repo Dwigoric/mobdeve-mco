@@ -11,7 +11,10 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.mobdeve.group3.mco.R
+import com.mobdeve.group3.mco.db.CommentsAPI
 import com.mobdeve.group3.mco.sighting.Sighting
 import java.util.Date
 
@@ -38,36 +41,65 @@ class CommentsDialogFragment : DialogFragment() {
         edtCommentInput = view.findViewById(R.id.edtCommentInput)
         btnSubmitComment = view.findViewById(R.id.btnSubmitComment)
 
-        commentAdapter = CommentAdapter(sighting.comments.toMutableList())
+        commentAdapter = CommentAdapter(mutableListOf())
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = commentAdapter
 
+        loadComments()
+
         btnSubmitComment.setOnClickListener {
             val newCommentContent = edtCommentInput.text.toString()
             if (newCommentContent.isNotBlank()) {
-                val newComment = Comment(
-                    userHandler = "rosmar",
-                    userIcon = R.drawable.profpic,
-                    content = newCommentContent,
-                    commentTime = Date().toString(),
-                    postId = sighting.id
-                )
+                // Call the CommentsAPI to add the comment
+                CommentsAPI.getInstance().addComment(sighting.id, newCommentContent) { commentId ->
+                    Log.d("Comments", "Updated comment with ID: $commentId")
 
-                sighting.addComment(newComment)
-                // Log the comment list to check if it's updating
-                Log.d("Comments", "Updated comments list: ${sighting.comments}")
+                    // Get the current user's details (user ID and profile image)
+                    val currentUser = Firebase.auth.currentUser
+                    val userHandler = currentUser?.uid ?: "Unknown"
+                    val userIcon = R.drawable.profpic
 
-                // Update the adapter's data
-                commentAdapter.updateComments(sighting.comments)  // Update all comments
-                commentAdapter.notifyItemInserted(sighting.comments.size - 1)  // Notify about the new item
+                    val newComment = Comment(
+                        userHandler = userHandler,
+                        userIcon = userIcon,
+                        content = newCommentContent,
+                        commentTime = Date().toString(),
+                        postId = sighting.id
+                    )
 
-                edtCommentInput.text.clear()
+                    sighting.addComment(newComment)
+
+                    val updatedCommentsList = sighting.comments
+                    commentAdapter.updateComments(updatedCommentsList)
+                    commentAdapter.notifyItemInserted(updatedCommentsList.size - 1)
+                    edtCommentInput.text.clear()
+                    recyclerView.scrollToPosition(updatedCommentsList.size - 1)
+                }
             }
         }
 
-
         return view
+    }
+
+    private fun loadComments() {
+        CommentsAPI.getInstance().getComments(sighting.id) { comments ->
+            Log.d("Comments", "Fetched comments: $comments") // Debug log
+
+            val commentList = comments.map { commentData ->
+                Comment(
+                    userHandler = commentData["userId"] as? String ?: "Unknown",
+                    userIcon = R.drawable.profpic,
+                    content = commentData["content"] as? String ?: "No Content",
+                    commentTime = commentData["commentTime"] as? String ?: "Unknown time",
+                    postId = sighting.id
+                )
+            }
+
+            commentAdapter.updateComments(commentList)
+
+            commentAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun onStart() {
@@ -85,13 +117,15 @@ class CommentsDialogFragment : DialogFragment() {
         dialogWindow?.attributes = params
     }
 
-
     companion object {
         fun newInstance(sighting: Sighting): CommentsDialogFragment {
             val fragment = CommentsDialogFragment()
             fragment.sighting = sighting
+            Log.d("Comments", "Sighting ID passed: ${sighting.id}")  // Debug log
             return fragment
         }
     }
+
 }
+
 

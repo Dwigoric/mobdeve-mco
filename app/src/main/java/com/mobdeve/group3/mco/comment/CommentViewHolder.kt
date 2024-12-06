@@ -1,10 +1,13 @@
 package com.mobdeve.group3.mco.comment
 
+import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.group3.mco.R
+import com.mobdeve.group3.mco.db.UsersAPI
+import com.mobdeve.group3.mco.storage.ImagesAPI
 
 class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val imgCommentUsername: ImageView = itemView.findViewById(R.id.imgCommentUsername)
@@ -13,9 +16,25 @@ class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val txtCommentContent: TextView = itemView.findViewById(R.id.txtCommentContent)
 
     fun bind(comment: Comment) {
-        imgCommentUsername.setImageResource(comment.userIcon)
-        txtCommentUsername.text = comment.userHandler
+        val userId = comment.userHandler
+
+        UsersAPI.getInstance().getUser(userId) { userData ->
+            val username = userData["username"] as? String ?: "Unknown User"
+
+            txtCommentUsername.text = username
+
+            ImagesAPI.getInstance().getProfileImage(userId) { imgBytes ->
+                if (imgBytes != null) {
+                    val imgBitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
+                    imgCommentUsername.setImageBitmap(imgBitmap)
+                } else {
+                    imgCommentUsername.setImageResource(R.drawable.profpic) // Fallback image
+                }
+            }
+        }
+
         txtCommentTime.text = comment.commentTime
         txtCommentContent.text = comment.content
     }
 }
+
