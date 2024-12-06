@@ -30,8 +30,7 @@ class SightingPostViewHolder(
     private val userHandle: TextView = itemView.findViewById(R.id.txtUsername)
     private val postingDate: TextView = itemView.findViewById(R.id.txtPostTime)
     private val userIcon: ImageView = itemView.findViewById(R.id.imgProfPic)
-    private val txtUpvote: TextView = itemView.findViewById(R.id.txtUpvote)
-    private val txtDownvote: TextView = itemView.findViewById(R.id.txtDownvote)
+    private val score: TextView = itemView.findViewById(R.id.txtPostScore)
     private val txtSightingName: TextView = itemView.findViewById(R.id.txtSightingName)
     private val txtSightingNameScientific: TextView =
         itemView.findViewById(R.id.txtSightingNameScientific)
@@ -48,8 +47,7 @@ class SightingPostViewHolder(
 
     fun bind(sighting: Sighting) {
         userHandle.text = sighting.userHandler
-        txtUpvote.text = sighting.upVote.toString()
-        txtDownvote.text = sighting.downVote.toString()
+        score.text = sighting.score.toString()
         txtSightingName.text = sighting.animalName
         txtSightingNameScientific.text = sighting.scientificName
         txtSighingPlace.text = sighting.location
@@ -95,16 +93,6 @@ class SightingPostViewHolder(
             imgSighting?.visibility = View.GONE
             noPhotoText?.visibility = View.VISIBLE
         }
-        /**ImagesAPI.getInstance().getSightingImage(sighting.id) { imgBytes ->
-            if (imgBytes.isNotEmpty()) {
-                setImage(sighting.imageId)
-                //imgSighting.visibility = View.VISIBLE
-                noPhotoText?.visibility = View.GONE // Hide "No photo" text
-            } else {
-                imgSighting.visibility = View.GONE
-                noPhotoText?.visibility = View.VISIBLE // Show "No photo" text
-            }
-        }*/
 
         // Show or hide the modify button based on ownership
         if (sighting.isOwnedByCurrentUser) {
@@ -148,36 +136,36 @@ class SightingPostViewHolder(
         // Handle button clicks
         btnUpvote.setOnClickListener {
             if (sighting.hasDownvoted) {
-                sighting.upVote += 2 // Increment score by 2
+                sighting.score += 2 // Increment score by 2
                 sighting.hasDownvoted = false
                 btnDownvote.setImageResource(R.drawable.ic_regular_report) // Reset downvote button
             } else if (!sighting.hasUpvoted) {
-                sighting.upVote++
+                sighting.score++
             } else {
-                sighting.upVote--
+                sighting.score--
             }
             sighting.hasUpvoted = !sighting.hasUpvoted // Toggle upvoted state
             btnUpvote.setImageResource(
                 if (sighting.hasUpvoted) R.drawable.ic_check_filled else R.drawable.ic_regular_check
             ) // Update button image
-            txtUpvote.text = sighting.upVote.toString() // Update score text
+            score.text = sighting.score.toString() // Update score text
         }
 
         btnDownvote.setOnClickListener {
             if (sighting.hasUpvoted) {
-                sighting.downVote -= 2 // Decrement score by 2
+                sighting.score -= 2 // Decrement score by 2
                 sighting.hasUpvoted = false
                 btnUpvote.setImageResource(R.drawable.ic_regular_check) // Reset upvote button
             } else if (!sighting.hasDownvoted) {
-                sighting.downVote--
+                sighting.score--
             } else {
-                sighting.downVote++
+                sighting.score++
             }
             sighting.hasDownvoted = !sighting.hasDownvoted // Toggle downvoted state
             btnDownvote.setImageResource(
                 if (sighting.hasDownvoted) R.drawable.ic_report_filled else R.drawable.ic_regular_report
             ) // Update button image
-            txtDownvote.text = sighting.downVote.toString() // Update score text
+            score.text = sighting.score.toString() // Update score text
         }
 
         // Set OnClickListener for the user icon to redirect to ProfileActivity

@@ -55,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#00FFFFFF"
-        app:layout_constraintStart_toEndOf="@+id/txtUpvote"
+        app:layout_constraintStart_toEndOf="@+id/btnUpvote"
         app:layout_constraintTop_toBottomOf="@+id/no_photo_text"
         app:srcCompat="@drawable/ic_regular_report" />
 
@@ -123,20 +123,11 @@
         app:layout_constraintTop_toBottomOf="@+id/txtSightingPlace" />
 
     <TextView
-        android:id="@+id/txtUpvote"
+        android:id="@+id/txtPostScore"
         style="@style/BodyBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/PostScore"
-        app:layout_constraintBottom_toBottomOf="@+id/btnUpvote"
-        app:layout_constraintStart_toEndOf="@+id/btnUpvote"
-        app:layout_constraintTop_toBottomOf="@+id/no_photo_text" />
-
-    <TextView
-        android:id="@+id/txtDownvote"
-        style="@style/BodyBold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:text="@string/PostScore"
         app:layout_constraintBottom_toBottomOf="@+id/btnDownvote"
         app:layout_constraintStart_toEndOf="@+id/btnDownvote"

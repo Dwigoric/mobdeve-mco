@@ -90,8 +90,7 @@ class MainActivity : AppCompatActivity() {
                         observerType = observerType ?: "",
                         sightingTime = sightingTime ?: "",
                         isOwnedByCurrentUser = true,
-                        upVote = 0,
-                        downVote = 0
+                        score = 0
                     )
                 )
 
@@ -289,8 +288,7 @@ class MainActivity : AppCompatActivity() {
                             sightingTime = (sightingData["sightTime"] as? Timestamp)?.toDate()
                                 ?.toString() ?: "",
                             isOwnedByCurrentUser = isOwnedByCurrentUser,
-                            upVote = (sightingData["upVote"] as? Long)?.toInt() ?: 0,
-                            downVote = (sightingData["downVote"] as? Long)?.toInt() ?:0
+                            score = (sightingData["score"] as? Long)?.toInt() ?: 0
                         )
 
                         tempList.add(sighting)
