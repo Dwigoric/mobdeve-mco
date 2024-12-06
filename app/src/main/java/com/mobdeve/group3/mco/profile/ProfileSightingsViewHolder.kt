@@ -16,14 +16,12 @@ class ProfileSightingsViewHolder(itemView: View) : ViewHolder(itemView) {
     private val txtSightingNameScientific: TextView =
         itemView.findViewById(R.id.txtSightingNameScientific)
     private val txtSighingPlace: TextView = itemView.findViewById(R.id.txtSightingPlace)
-    private val txtSightingDate: TextView = itemView.findViewById(R.id.txtSightingDate)
 
     fun bindData(sighting: Sighting) {
         setImage(sighting.imageId)
         txtSightingName.text = sighting.animalName
         txtSightingNameScientific.text = sighting.scientificName
         txtSighingPlace.text = sighting.location
-        txtSightingDate.text = "Seen on ${sighting.sightDate}"
     }
 
     private fun setImage(imageId: Uri?) {

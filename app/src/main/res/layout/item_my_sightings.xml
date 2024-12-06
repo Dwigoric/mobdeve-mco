@@ -51,20 +51,6 @@
             android:layout_height="wrap_content"
             android:text="@string/SightingPlace" />
 
-        <TextView
-            android:id="@+id/txtSightingDate"
-            style="@style/Body"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/SightingDate" />
-
-        <TextView
-            android:id="@+id/txtSeaMoreDetails"
-            style="@style/Caption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ViewMoreDetails" />
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
