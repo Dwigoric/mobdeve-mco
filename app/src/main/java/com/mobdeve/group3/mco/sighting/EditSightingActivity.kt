@@ -71,7 +71,7 @@ class EditSightingActivity : AppCompatActivity() {
         val formattedDate = if (!sightingDateString.isNullOrEmpty()) {
             try {
                 val originalDate =
-                    SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy", Locale.getDefault()).parse(
+                    SimpleDateFormat("EEE MMM dd HH:mm zzzz yyyy", Locale.getDefault()).parse(
                         sightingDateString
                     )
                 SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(originalDate)
@@ -88,7 +88,7 @@ class EditSightingActivity : AppCompatActivity() {
         val formattedTime = if (!sightingTimeString.isNullOrEmpty()) {
             try {
                 val originalTime =
-                    SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy", Locale.getDefault()).parse(
+                    SimpleDateFormat("EEE MMM dd HH:mm zzzz yyyy", Locale.getDefault()).parse(
                         sightingTimeString
                     )
                 SimpleDateFormat("HH:mm", Locale.getDefault()).format(originalTime)
