@@ -96,4 +96,16 @@ class SightingsAPI {
             }
         }
     }
+
+    fun getImageUriForSighting(sightingId: String, callback: (String?) -> Unit) {
+        dbHelper.getDocument("sightings", sightingId) { sightingData ->
+            if (sightingData.isNotEmpty()) {
+                val imageUri = sightingData["imageId"] as? String
+                callback(imageUri)
+            } else {
+                callback(null)
+            }
+        }
+    }
+
 }

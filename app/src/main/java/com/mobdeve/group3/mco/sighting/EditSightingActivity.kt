@@ -17,6 +17,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
@@ -45,6 +46,7 @@ class EditSightingActivity : AppCompatActivity() {
     private var imageUri: Uri? = null
     private var imageId: String? = null
     private var postId: String = ""
+
     private lateinit var cameraResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var galleryResultLauncher: ActivityResultLauncher<Intent>
     private var sightingDate: String = ""
@@ -127,6 +129,25 @@ class EditSightingActivity : AppCompatActivity() {
             updateSighting()
         }
 
+        cameraResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                viewBinding.imgSelectedPhoto.setImageURI(imageUri)
+                viewBinding.imgSelectedPhoto.visibility = View.VISIBLE
+            }
+        }
+
+        galleryResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                imageUri = result.data?.data
+                viewBinding.imgSelectedPhoto.setImageURI(imageUri)
+                viewBinding.imgSelectedPhoto.visibility = View.VISIBLE
+            }
+        }
+
         // Handle photo options (similar to AddSightingActivity)
         viewBinding.btnAddPhoto.setOnClickListener {
             showPhotoOptionsMenu(it)
@@ -166,51 +187,57 @@ class EditSightingActivity : AppCompatActivity() {
 
         // Fetch user details (username and avatar URL)
         val userId = auth.currentUser?.uid ?: return
+
         UsersAPI.getInstance().getUser(userId) { userData ->
             val username = userData["username"] as? String ?: "Unknown User"
             val avatarUrl = userData["avatar"] as? String ?: ""
-            val postingDate =
-                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
 
-            val updatedSightingData = hashMapOf<String, Any?>(
-                "commonName" to commonName,
-                "scientificName" to scientificName,
-                "groupSize" to groupSize,
-                "distance" to "${distance}km",
-                "location" to location,
-                "observerType" to observerType,
-                "sightTime" to (combinedSightTime ?: Timestamp.now()),
-                "imageId" to imageId,
-                "userHandler" to username,
-                "userIcon" to avatarUrl,
-                "postingDate" to postingDate
-            )
-            Log.d("EditSighting", "SightingID: $postId ")
+            // Fetch sighting details
+            SightingsAPI.getInstance().getSighting(postId) { sightingData ->
+                val postingDate = sightingData["postingDate"] as? Timestamp ?: Timestamp.now()
 
-            // Update the sighting using the API
-            SightingsAPI.getInstance().updateSighting(postId, updatedSightingData) { success ->
-                if (success) {
-                    val returnIntent = Intent().apply {
-                        putExtra("SIGHTING_ID", postId)
-                        putExtra("COMMON_NAME_KEY", commonName)
-                        putExtra("SCIENTIFIC_NAME_KEY", scientificName)
-                        putExtra("GROUP_SIZE_KEY", groupSize)
-                        putExtra("DISTANCE_KEY", distance)
-                        putExtra("LOCATION_KEY", location)
-                        putExtra("OBSERVER_TYPE_KEY", observerType)
-                        putExtra("SIGHTING_DATE_KEY", sightingDate)
-                        putExtra("SIGHTING_TIME_KEY", sightingTime)
-                        putExtra("IMAGE_ID_KEY", imageId)
-                        putExtra("userHandler", username)
-                        putExtra("userIcon", avatarUrl)
-                        putExtra("postingDate", postingDate)
+                // Prepare updated sighting data
+                val updatedSightingData = hashMapOf<String, Any?>(
+                    "commonName" to commonName,
+                    "scientificName" to scientificName,
+                    "groupSize" to groupSize,
+                    "distance" to "${distance}km",
+                    "location" to location,
+                    "observerType" to observerType,
+                    "sightTime" to (combinedSightTime ?: Timestamp.now()),
+                    "imageId" to imageId,
+                    "userHandler" to username,
+                    "userIcon" to avatarUrl,
+                    "postingDate" to postingDate
+                )
+
+                // Update the sighting using the API
+                SightingsAPI.getInstance().updateSighting(postId, updatedSightingData) { success ->
+                    if (success) {
+                        val returnIntent = Intent().apply {
+                            putExtra("SIGHTING_ID", postId)
+                            putExtra("COMMON_NAME_KEY", commonName)
+                            putExtra("SCIENTIFIC_NAME_KEY", scientificName)
+                            putExtra("GROUP_SIZE_KEY", groupSize)
+                            putExtra("DISTANCE_KEY", distance)
+                            putExtra("LOCATION_KEY", location)
+                            putExtra("OBSERVER_TYPE_KEY", observerType)
+                            putExtra("SIGHTING_DATE_KEY", sightingDate)
+                            putExtra("SIGHTING_TIME_KEY", sightingTime)
+                            putExtra("IMAGE_ID_KEY", imageId)  // Make sure imageId is included
+                            putExtra("userHandler", username)
+                            putExtra("userIcon", avatarUrl)
+                            putExtra("postingDate", postingDate)
+                        }
+
+                        setResult(RESULT_OK, returnIntent)
+                        Toast.makeText(this, "Sighting updated successfully", Toast.LENGTH_SHORT).show()
+
+                        // Only finish once everything is done
+                        finish()
+                    } else {
+                        Toast.makeText(this, "Failed to update sighting", Toast.LENGTH_SHORT).show()
                     }
-
-                    setResult(RESULT_OK, returnIntent)
-                    Toast.makeText(this, "Sighting updated successfully", Toast.LENGTH_SHORT).show()
-                    finish()
-                } else {
-                    Toast.makeText(this, "Failed to update sighting", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -257,12 +284,6 @@ class EditSightingActivity : AppCompatActivity() {
         timePickerDialogButton.setTextColor(Color.WHITE)
         val cancelButton = timePickerDialog.getButton(TimePickerDialog.BUTTON_NEGATIVE)
         cancelButton.setTextColor(Color.WHITE)
-    }
-
-    // Function to hide the keyboard
-    private fun hideKeyboard(view: View) {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     // Function to show the photo options menu

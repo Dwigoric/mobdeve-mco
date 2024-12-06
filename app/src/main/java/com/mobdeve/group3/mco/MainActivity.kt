@@ -44,63 +44,49 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode != RESULT_OK) return@registerForActivityResult
 
-            // Extract sighting ID and user data
-            val sightingId = result.data?.getStringExtra("SIGHTING_ID")
-            val userHandler = result.data?.getStringExtra("userHandler") // Fetch username
-            val userIcon = result.data?.getStringExtra("userIcon") // Fetch avatar URL
+            val sightingId = result.data?.getStringExtra("SIGHTING_ID") ?: return@registerForActivityResult
             val sightingImg = result.data?.getStringExtra("imageId")
 
-            // Make sure sightingId is not null
-            if (sightingId != null) {
-                // Extract other sighting data from the result if needed
-                val commonName =
-                    result.data?.getStringExtra(AddSightingActivity.Companion.COMMON_NAME_KEY)
-                val scientificName =
-                    result.data?.getStringExtra(AddSightingActivity.Companion.SCIENTIFIC_NAME_KEY)
-                val groupSize =
-                    result.data?.getIntExtra(AddSightingActivity.Companion.GROUP_SIZE_KEY, 0)
-                val distance =
-                    result.data?.getFloatExtra(AddSightingActivity.Companion.DISTANCE_KEY, 0.0f)
-                val location =
-                    result.data?.getStringExtra(AddSightingActivity.Companion.LOCATION_KEY)
-                val observerType =
-                    result.data?.getStringExtra(AddSightingActivity.Companion.OBSERVER_TYPE_KEY)
-                val sightingDate =
-                    result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_DATE_KEY)
-                val sightingTime =
-                    result.data?.getStringExtra(AddSightingActivity.Companion.SIGHTING_TIME_KEY)
-                //val imageId =
-                    //result.data?.getStringExtra(AddSightingActivity.Companion.IMAGE_ID_KEY)
+            val newSighting = Sighting(
+                id = sightingId,
+                userHandler = result.data?.getStringExtra("userHandler") ?: "Unknown",
+                userIcon = result.data?.getStringExtra("userIcon")?.let { Uri.parse(it) },
+                postingDate = Date().toString(),
+                animalName = result.data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY) ?: "",
+                scientificName = result.data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY) ?: "",
+                location = result.data?.getStringExtra(AddSightingActivity.LOCATION_KEY) ?: "",
+                sightDate = result.data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY) ?: "",
+                imageId = sightingImg?.let { Uri.parse(it) },
+                groupSize = result.data?.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0) ?: 0,
+                distance = result.data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f) ?: 0.0f,
+                observerType = result.data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY) ?: "",
+                sightingTime = result.data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY) ?: "",
+                isOwnedByCurrentUser = true,
+                score = 0
+            )
 
-                // Add the sighting data to the list
-                sightingList.add(
-                    0,
-                    Sighting(
-                        id = sightingId,
-                        userHandler = userHandler ?: "Unknown",
-                        userIcon = if (!userIcon.isNullOrEmpty()) Uri.parse(userIcon) else null,
-                        postingDate = Date().toString(),
-                        animalName = commonName ?: "",
-                        scientificName = scientificName ?: "",
-                        location = location ?: "",
-                        sightDate = sightingDate ?: "",
-                        imageId = if (!sightingImg.isNullOrEmpty()) Uri.parse(sightingImg) else null,
-                        groupSize = groupSize ?: 0,
-                        distance = distance ?: 0.0f,
-                        observerType = observerType ?: "",
-                        sightingTime = sightingTime ?: "",
-                        isOwnedByCurrentUser = true,
-                        score = 0
-                    )
-                )
+            // Add to the top of the list
+            sightingList.add(0, newSighting)
+            sightingPostAdapter.notifyItemInserted(0)
 
-                // Notify the adapter that the data has changed
-                sightingPostAdapter.notifyItemInserted(0)
+            // Scroll to the new item
+            recyclerView.scrollToPosition(0)
 
-                // Optionally, scroll to the new item
-                recyclerView.scrollToPosition(0)
+            // Dynamically update image if URI was delayed
+            if (sightingImg.isNullOrEmpty()) {
+                // Listen for the image upload completion
+                SightingsAPI.getInstance().getImageUriForSighting(sightingId) { imageUri ->
+                    if (imageUri != null) {
+                        val index = sightingList.indexOfFirst { it.id == sightingId }
+                        if (index >= 0) {
+                            sightingList[index].imageId = Uri.parse(imageUri)
+                            sightingPostAdapter.notifyItemChanged(index)
+                        }
+                    }
+                }
             }
         }
+
 
     private val editSightingActivityLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -110,44 +96,49 @@ class MainActivity : AppCompatActivity() {
                 val userHandler = data?.getStringExtra("userHandler")
                 val userIcon = data?.getStringExtra("userIcon")
                 val postingDate = data?.getStringExtra("postingDate")
-                val sightingImg = data?.getStringExtra("imageId")
+                val sightingImg = data?.getStringExtra("IMAGE_ID_KEY")
 
                 if (sightingId != null) {
-                    // Extract other sighting data from the result
-                    val commonName = data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY)
-                    val scientificName =
-                        data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY)
-                    val groupSize = data?.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0)
-                    val distance = data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f)
-                    val location = data?.getStringExtra(AddSightingActivity.LOCATION_KEY)
-                    val observerType = data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY)
-                    val sightingDate = data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
-                    val sightingTime = data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
-                    val imageId = data?.getStringExtra(AddSightingActivity.IMAGE_ID_KEY)
-
-                    // Create an updated Sighting object
+                    // Create the updated sighting object with the new data from the result
                     val updatedSighting = Sighting(
                         id = sightingId,
                         userHandler = userHandler ?: "Unknown",
                         userIcon = if (!userIcon.isNullOrEmpty()) Uri.parse(userIcon) else null,
                         postingDate = postingDate ?: "",
-                        animalName = commonName ?: "",
-                        scientificName = scientificName ?: "",
-                        location = location ?: "",
-                        sightDate = sightingDate ?: "",
+                        animalName = data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY) ?: "",
+                        scientificName = data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY) ?: "",
+                        location = data?.getStringExtra(AddSightingActivity.LOCATION_KEY) ?: "",
+                        sightDate = data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY) ?: "",
                         imageId = if (!sightingImg.isNullOrEmpty()) Uri.parse(sightingImg) else null,
-                        groupSize = groupSize ?: 0,
-                        distance = distance ?: 0.0f,
-                        observerType = observerType ?: "",
-                        sightingTime = sightingTime ?: "",
+                        groupSize = data?.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0) ?: 0,
+                        distance = data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f) ?: 0.0f,
+                        observerType = data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY) ?: "",
+                        sightingTime = data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY) ?: "",
                         isOwnedByCurrentUser = true
                     )
 
-                    // Find the position of the sighting to update
+                    // Find the position of the updated sighting in the list
                     val position = sightingList.indexOfFirst { it.id == sightingId }
                     if (position != -1) {
+                        // Update the sighting in the list with the new data
                         sightingList[position] = updatedSighting
+
+                        // Notify the adapter that the item has changed
                         sightingPostAdapter.notifyItemChanged(position)
+
+                        // Dynamically update image if URI was delayed
+                        if (!sightingImg.isNullOrEmpty()) {
+                            // If the image was changed, we should update the image in the list
+                            SightingsAPI.getInstance().getImageUriForSighting(sightingId) { imageUri ->
+                                if (imageUri != null) {
+                                    val index = sightingList.indexOfFirst { it.id == sightingId }
+                                    if (index >= 0) {
+                                        sightingList[index].imageId = Uri.parse(imageUri)
+                                        sightingPostAdapter.notifyItemChanged(index)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

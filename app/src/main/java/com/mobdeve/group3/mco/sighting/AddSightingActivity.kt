@@ -128,6 +128,7 @@ class AddSightingActivity : AppCompatActivity() {
 
         viewBinding.btnPost.setOnClickListener {
             val userId = auth.currentUser?.uid ?: return@setOnClickListener
+            val postingDate = Timestamp.now()  // Current timestamp (can be adjusted if needed)
 
             // Use UsersAPI to fetch the user reference
             val authorRef = UsersAPI.getInstance().getUserReference(userId)
@@ -155,10 +156,11 @@ class AddSightingActivity : AppCompatActivity() {
                         "location" to location,
                         "observerType" to observerType,
                         "sightTime" to (combinedSightTime ?: Timestamp.now()),
-                        "postingDate" to Timestamp.now(),
+                        "postingDate" to postingDate,
                         "imageId" to imageId,
                         "author" to authorRef,
-                        "comments" to listOf<DocumentReference>()
+                        "comments" to listOf<DocumentReference>(),
+                        "score" to 0
                     )
 
                     Log.d("SightingData", sightingData.toString())
@@ -180,6 +182,7 @@ class AddSightingActivity : AppCompatActivity() {
                         returnIntent.putExtra("SIGHTING_DATE_KEY", sightingDate)
                         returnIntent.putExtra("SIGHTING_TIME_KEY", sightingTime)
                         returnIntent.putExtra("IMAGE_ID_KEY", imageId)
+                        returnIntent.putExtra("postingDate", postingDate.toDate().toString()) // Simple string format
 
                         setResult(RESULT_OK, returnIntent)
                         finish()
@@ -187,18 +190,12 @@ class AddSightingActivity : AppCompatActivity() {
                 }
 
                 if (imageUri == null) {
-                    // If there's no image, upload the sighting without an image
-                    uploadSighting(null)
+                    uploadSighting(null) // No image to upload
                 } else {
-                    // Upload image to Firebase Storage
                     ImagesAPI.getInstance().putSightingImage(
-                        ImagesAPI.getByteArrayFromInputStream(
-                            contentResolver.openInputStream(
-                                imageUri!!
-                            )
-                        )
-                    ) {
-                        uploadSighting(it)
+                        ImagesAPI.getByteArrayFromInputStream(contentResolver.openInputStream(imageUri!!))
+                    ) { uploadedImageId ->
+                        uploadSighting(uploadedImageId)
                     }
                 }
             }
