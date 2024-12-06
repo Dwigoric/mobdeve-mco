@@ -70,4 +70,30 @@ class SightingsAPI {
             callback(success)
         }
     }
+
+    fun increaseScore(sightingId: String, amount: Int = 1, callback: (Boolean) -> Unit) {
+        dbHelper.getDocument("sightings", sightingId) { sightingData ->
+            val score = sightingData["score"] as Long
+            dbHelper.updateDocument(
+                "sightings",
+                sightingId,
+                hashMapOf("score" to score + amount)
+            ) { success ->
+                callback(success)
+            }
+        }
+    }
+
+    fun decreaseScore(sightingId: String, amount: Int = 1, callback: (Boolean) -> Unit) {
+        dbHelper.getDocument("sightings", sightingId) { sightingData ->
+            val score = sightingData["score"] as Long
+            dbHelper.updateDocument(
+                "sightings",
+                sightingId,
+                hashMapOf("score" to score - amount)
+            ) { success ->
+                callback(success)
+            }
+        }
+    }
 }
