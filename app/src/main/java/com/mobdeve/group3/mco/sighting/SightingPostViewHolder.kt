@@ -17,7 +17,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.group3.mco.MainActivity
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.comment.CommentsDialogFragment
+import com.mobdeve.group3.mco.db.SightingsAPI
 import com.mobdeve.group3.mco.db.UsersAPI
+import com.mobdeve.group3.mco.db.VotesAPI
 import com.mobdeve.group3.mco.profile.ProfileActivity
 import com.mobdeve.group3.mco.storage.ImagesAPI
 import java.text.SimpleDateFormat
@@ -69,6 +71,16 @@ class SightingPostViewHolder(
             }
         }
 
+        VotesAPI.getInstance().getVote(sighting.id) { vote ->
+            if (vote == 1) {
+                sighting.hasUpvoted = true
+                btnUpvote.setImageResource(R.drawable.ic_check_filled)
+            } else if (vote == -1) {
+                sighting.hasDownvoted = true
+                btnDownvote.setImageResource(R.drawable.ic_report_filled)
+            }
+        }
+
         try {
             val sightDate = inputFormat.parse(originalSightDate)
             val formattedSightDate = outputFormat.format(sightDate)
@@ -82,14 +94,11 @@ class SightingPostViewHolder(
             txtSightingDate.text = originalSightDate
         }
 
-        if(sighting.imageId != null)
-        {
+        if (sighting.imageId != null) {
             setImage(sighting.imageId)
             imgSighting?.visibility = View.VISIBLE
             noPhotoText?.visibility = View.GONE
-        }
-        else
-        {
+        } else {
             imgSighting?.visibility = View.GONE
             noPhotoText?.visibility = View.VISIBLE
         }
@@ -139,10 +148,16 @@ class SightingPostViewHolder(
                 sighting.score += 2 // Increment score by 2
                 sighting.hasDownvoted = false
                 btnDownvote.setImageResource(R.drawable.ic_regular_report) // Reset downvote button
+                VotesAPI.getInstance().setVote(sighting.id, true) {}
+                SightingsAPI.getInstance().increaseScore(sighting.id, 2) {}
             } else if (!sighting.hasUpvoted) {
                 sighting.score++
+                VotesAPI.getInstance().setVote(sighting.id, true) {}
+                SightingsAPI.getInstance().increaseScore(sighting.id) {}
             } else {
                 sighting.score--
+                VotesAPI.getInstance().removeVote(sighting.id) {}
+                SightingsAPI.getInstance().decreaseScore(sighting.id) {}
             }
             sighting.hasUpvoted = !sighting.hasUpvoted // Toggle upvoted state
             btnUpvote.setImageResource(
@@ -156,10 +171,16 @@ class SightingPostViewHolder(
                 sighting.score -= 2 // Decrement score by 2
                 sighting.hasUpvoted = false
                 btnUpvote.setImageResource(R.drawable.ic_regular_check) // Reset upvote button
+                VotesAPI.getInstance().setVote(sighting.id, false) {}
+                SightingsAPI.getInstance().decreaseScore(sighting.id, 2) {}
             } else if (!sighting.hasDownvoted) {
                 sighting.score--
+                VotesAPI.getInstance().setVote(sighting.id, false) {}
+                SightingsAPI.getInstance().decreaseScore(sighting.id) {}
             } else {
                 sighting.score++
+                VotesAPI.getInstance().removeVote(sighting.id) {}
+                SightingsAPI.getInstance().increaseScore(sighting.id) {}
             }
             sighting.hasDownvoted = !sighting.hasDownvoted // Toggle downvoted state
             btnDownvote.setImageResource(
