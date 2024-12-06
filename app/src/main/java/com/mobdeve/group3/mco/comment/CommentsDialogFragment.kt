@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.db.CommentsAPI
 import com.mobdeve.group3.mco.sighting.Sighting
@@ -117,15 +119,53 @@ class CommentsDialogFragment : DialogFragment() {
     }
 
     fun deleteComment(comment: Comment) {
-        CommentsAPI.getInstance().deleteComment(comment.id, comment.postId) { success ->
-            if (success) {
-                Toast.makeText(context, "Comment deleted", Toast.LENGTH_SHORT).show()
-                updateCommentListAfterDeletion(comment)
+        val currentUser = Firebase.auth.currentUser
+        val currentUserId = currentUser?.uid ?: return
+
+        val sightingRef = FirebaseFirestore.getInstance().collection("sightings").document(sighting.id)
+
+        sightingRef.get().addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
+                // Fetch the author reference from the sighting document
+                val authorRef = documentSnapshot.get("author") as? DocumentReference
+                if (authorRef != null) {
+                    // Get the authorId from the author reference document
+                    authorRef.get().addOnSuccessListener { authorDocument ->
+                        val authorId = authorDocument.id  // Now you have the correct authorId
+
+                        // Check if the current user is the author of the comment or the owner of the sighting post
+                        if (currentUserId == comment.userHandler || currentUserId == authorId) {
+                            // Proceed to delete the comment
+                            CommentsAPI.getInstance().deleteComment(comment.id, comment.postId) { success ->
+                                if (success) {
+                                    Toast.makeText(context, "Comment deleted", Toast.LENGTH_SHORT).show()
+                                    updateCommentListAfterDeletion(comment)
+                                } else {
+                                    Toast.makeText(context, "Failed to delete comment", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        } else {
+                            Toast.makeText(context, "You don't have permission to delete this comment", Toast.LENGTH_SHORT).show()
+                        }
+                    }.addOnFailureListener { exception ->
+                        Log.e("deleteComment", "Error fetching author document: ", exception)
+                        Toast.makeText(context, "Failed to fetch author details", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Log.e("deleteComment", "No author reference in sighting document")
+                    Toast.makeText(context, "Sighting does not have an author", Toast.LENGTH_SHORT).show()
+                }
             } else {
-                Toast.makeText(context, "Failed to delete comment", Toast.LENGTH_SHORT).show()
+                Log.e("deleteComment", "Sighting document not found")
+                Toast.makeText(context, "Failed to fetch sighting details", Toast.LENGTH_SHORT).show()
             }
+        }.addOnFailureListener { exception ->
+            Log.e("deleteComment", "Error fetching sighting document: ", exception)
+            Toast.makeText(context, "Failed to fetch sighting details", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 
     fun updateCommentListAfterDeletion(comment: Comment) {
         val position = commentAdapter.comments.indexOf(comment)

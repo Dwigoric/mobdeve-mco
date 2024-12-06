@@ -57,7 +57,7 @@ class SightingPostViewHolder(
         val originalSightDate = sighting.sightDate
         val originalPostDate = sighting.postingDate
         val inputFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'Z yyyy", Locale.ENGLISH)
-        val outputFormat = SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss", Locale.ENGLISH)
+        val outputFormat = SimpleDateFormat("EEE MMM dd yyyy HH:mm", Locale.ENGLISH)
 
         UsersAPI.getInstance().getUserWithUsername(sighting.userHandler) { user ->
             val userId = user["id"] as String
