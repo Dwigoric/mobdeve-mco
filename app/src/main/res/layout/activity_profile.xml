@@ -63,46 +63,18 @@
             app:layout_constraintTop_toBottomOf="@+id/contProfPicSettings">
 
             <TextView
-                android:id="@+id/txtSettingsUsernameLabel"
-                style="@style/Body"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:paddingRight="0dp"
-                android:text="@string/SettingsUsernameLabel"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
                 android:id="@+id/txtSettingsUsername"
                 style="@style/Body"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/Username"
-                app:layout_constraintStart_toEndOf="@+id/txtSettingsUsernameLabel"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/txtSettingsBioLabel"
-                style="@style/Body"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/SettingsBioLabel"
+                android:textAlignment="center"
+                android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtSettingsUsernameLabel" />
-
-            <TextView
-                android:id="@+id/txtSettingsBio"
-                style="@style/Body"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/UserBio"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/txtSettingsBioLabel"
-                app:layout_constraintTop_toBottomOf="@+id/txtSettingsUsername" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

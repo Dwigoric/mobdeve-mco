@@ -128,13 +128,8 @@ class ProfileActivity : AppCompatActivity() {
     private fun populateUserDetails() {
         UsersAPI.getInstance().getUser(auth.currentUser!!.uid) { user ->
             val username = user["username"] as String
-            val bio = user["bio"] as String
-
             val usernameTextView = findViewById<TextView>(R.id.txtSettingsUsername)
-            val bioTextView = findViewById<TextView>(R.id.txtSettingsBio)
-
             usernameTextView.text = username
-            bioTextView.text = bio
         }
 
         ImagesAPI.getInstance().getProfileImage(auth.currentUser!!.uid) { imgBytes ->
