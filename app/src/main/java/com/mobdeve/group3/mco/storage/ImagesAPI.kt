@@ -1,5 +1,6 @@
 package com.mobdeve.group3.mco.storage
 
+import android.graphics.Bitmap
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
@@ -25,6 +26,12 @@ class ImagesAPI {
                 } != -1) {
                 stream.write(buffer, 0, len)
             }
+            return stream.toByteArray()
+        }
+
+        fun getByteArrayFromBitmap(bitmap: Bitmap): ByteArray {
+            val stream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.WEBP, 100, stream)
             return stream.toByteArray()
         }
     }
