@@ -32,7 +32,7 @@ class Comment(
     private fun formatDate(dateString: String): String {
         try {
             // Parse the input date string into a Date object
-            val inputFormat = SimpleDateFormat("EEE MMM dd HH:mm zzz yyyy", Locale.US)
+            val inputFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US)
             val date = inputFormat.parse(dateString)
 
             // Format the date into the desired format (dd MMM yyyy HH:mm)
