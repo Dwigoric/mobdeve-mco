@@ -20,7 +20,6 @@ import com.mobdeve.group3.mco.comment.CommentsDialogFragment
 import com.mobdeve.group3.mco.db.SightingsAPI
 import com.mobdeve.group3.mco.db.UsersAPI
 import com.mobdeve.group3.mco.db.VotesAPI
-import com.mobdeve.group3.mco.profile.ProfileActivity
 import com.mobdeve.group3.mco.storage.ImagesAPI
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -66,7 +65,7 @@ class SightingPostViewHolder(
                     val imgBitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
                     userIcon.setImageBitmap(imgBitmap)
                 } else {
-                    userIcon.setImageResource(R.drawable.profpic)
+                    userIcon.setImageResource(R.drawable.ic_regular_user)
                 }
             }
         }
@@ -191,9 +190,9 @@ class SightingPostViewHolder(
 
         // Set OnClickListener for the user icon to redirect to ProfileActivity
         /**userIcon.setOnClickListener {
-            val context = itemView.context
-            val profileIntent = Intent(context, ProfileActivity::class.java)
-            context.startActivity(profileIntent)
+        val context = itemView.context
+        val profileIntent = Intent(context, ProfileActivity::class.java)
+        context.startActivity(profileIntent)
         }*/
 
         btnComment.setOnClickListener {

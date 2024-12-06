@@ -4,10 +4,7 @@ import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.db.UsersAPI
 import com.mobdeve.group3.mco.storage.ImagesAPI
@@ -30,7 +27,7 @@ class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                     val imgBitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
                     imgCommentUsername.setImageBitmap(imgBitmap)
                 } else {
-                    imgCommentUsername.setImageResource(R.drawable.profpic) // Fallback image
+                    imgCommentUsername.setImageResource(R.drawable.ic_regular_user) // Fallback image
                 }
             }
         }

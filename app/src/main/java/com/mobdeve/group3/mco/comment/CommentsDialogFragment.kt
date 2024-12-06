@@ -61,7 +61,7 @@ class CommentsDialogFragment : DialogFragment() {
                     // Get the current user's details (user ID and profile image)
                     val currentUser = Firebase.auth.currentUser
                     val userHandler = currentUser?.uid ?: "Unknown"
-                    val userIcon = R.drawable.profpic
+                    val userIcon = R.drawable.ic_regular_user
 
                     val newComment = Comment(
                         id = commentId,
@@ -94,7 +94,7 @@ class CommentsDialogFragment : DialogFragment() {
                 Comment(
                     id = commentData["id"] as String,
                     userHandler = commentData["userId"] as? String ?: "Unknown",
-                    userIcon = R.drawable.profpic,
+                    userIcon = R.drawable.ic_regular_user,
                     content = commentData["content"] as? String ?: "No Content",
                     commentTime = commentData["commentTime"] as? String ?: "Unknown time",
                     postId = sighting.id
@@ -122,7 +122,8 @@ class CommentsDialogFragment : DialogFragment() {
         val currentUser = Firebase.auth.currentUser
         val currentUserId = currentUser?.uid ?: return
 
-        val sightingRef = FirebaseFirestore.getInstance().collection("sightings").document(sighting.id)
+        val sightingRef =
+            FirebaseFirestore.getInstance().collection("sightings").document(sighting.id)
 
         sightingRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
@@ -136,35 +137,53 @@ class CommentsDialogFragment : DialogFragment() {
                         // Check if the current user is the author of the comment or the owner of the sighting post
                         if (currentUserId == comment.userHandler || currentUserId == authorId) {
                             // Proceed to delete the comment
-                            CommentsAPI.getInstance().deleteComment(comment.id, comment.postId) { success ->
-                                if (success) {
-                                    Toast.makeText(context, "Comment deleted", Toast.LENGTH_SHORT).show()
-                                    updateCommentListAfterDeletion(comment)
-                                } else {
-                                    Toast.makeText(context, "Failed to delete comment", Toast.LENGTH_SHORT).show()
+                            CommentsAPI.getInstance()
+                                .deleteComment(comment.id, comment.postId) { success ->
+                                    if (success) {
+                                        Toast.makeText(
+                                            context,
+                                            "Comment deleted",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        updateCommentListAfterDeletion(comment)
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            "Failed to delete comment",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
-                            }
                         } else {
-                            Toast.makeText(context, "You don't have permission to delete this comment", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "You don't have permission to delete this comment",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }.addOnFailureListener { exception ->
                         Log.e("deleteComment", "Error fetching author document: ", exception)
-                        Toast.makeText(context, "Failed to fetch author details", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Failed to fetch author details",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 } else {
                     Log.e("deleteComment", "No author reference in sighting document")
-                    Toast.makeText(context, "Sighting does not have an author", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Sighting does not have an author", Toast.LENGTH_SHORT)
+                        .show()
                 }
             } else {
                 Log.e("deleteComment", "Sighting document not found")
-                Toast.makeText(context, "Failed to fetch sighting details", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Failed to fetch sighting details", Toast.LENGTH_SHORT)
+                    .show()
             }
         }.addOnFailureListener { exception ->
             Log.e("deleteComment", "Error fetching sighting document: ", exception)
             Toast.makeText(context, "Failed to fetch sighting details", Toast.LENGTH_SHORT).show()
         }
     }
-
 
 
     fun updateCommentListAfterDeletion(comment: Comment) {
