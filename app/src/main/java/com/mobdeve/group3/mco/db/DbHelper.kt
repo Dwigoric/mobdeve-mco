@@ -40,7 +40,7 @@ class DbHelper {
         val document = db.collection(collection).document(documentId)
         document.set(data)
             .addOnSuccessListener {
-                Log.d(TAG, "DocumentSnapshot added with ID: ${document.id}")
+                Log.d(TAG, "DocumentSnapshot added: $collection/${document.id}")
                 callback(true)
             }
             .addOnFailureListener { e ->
@@ -57,7 +57,7 @@ class DbHelper {
         val document = db.collection(collection).document()
         document.set(data)
             .addOnSuccessListener {
-                Log.d(TAG, "DocumentSnapshot added with ID: ${document.id}")
+                Log.d(TAG, "DocumentSnapshot added: $collection/${document.id}")
                 callback(document.id)
             }
             .addOnFailureListener { e ->
@@ -76,7 +76,7 @@ class DbHelper {
             .document(documentId)
             .update(data)
             .addOnSuccessListener {
-                Log.d(TAG, "DocumentSnapshot successfully updated!")
+                Log.d(TAG, "DocumentSnapshot successfully updated: $collection/$documentId")
                 callback(true)
             }
             .addOnFailureListener { e ->
@@ -90,7 +90,7 @@ class DbHelper {
             .document(documentId)
             .delete()
             .addOnSuccessListener {
-                Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                Log.d(TAG, "DocumentSnapshot successfully deleted: $collection/$documentId")
                 callback(true)
             }
             .addOnFailureListener { e ->
