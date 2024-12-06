@@ -26,6 +26,7 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentReference
 import com.mobdeve.group3.mco.catalogue.CatalogueActivity
 import com.mobdeve.group3.mco.db.SightingsAPI
+import com.mobdeve.group3.mco.db.VotesAPI
 import com.mobdeve.group3.mco.landing.LandingActivity
 import com.mobdeve.group3.mco.profile.ProfileActivity
 import com.mobdeve.group3.mco.sighting.AddSightingActivity
@@ -44,7 +45,8 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode != RESULT_OK) return@registerForActivityResult
 
-            val sightingId = result.data?.getStringExtra("SIGHTING_ID") ?: return@registerForActivityResult
+            val sightingId =
+                result.data?.getStringExtra("SIGHTING_ID") ?: return@registerForActivityResult
             val sightingImg = result.data?.getStringExtra("imageId")
 
             val newSighting = Sighting(
@@ -53,14 +55,19 @@ class MainActivity : AppCompatActivity() {
                 userIcon = result.data?.getStringExtra("userIcon")?.let { Uri.parse(it) },
                 postingDate = Date().toString(),
                 animalName = result.data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY) ?: "",
-                scientificName = result.data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY) ?: "",
+                scientificName = result.data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY)
+                    ?: "",
                 location = result.data?.getStringExtra(AddSightingActivity.LOCATION_KEY) ?: "",
-                sightDate = result.data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY) ?: "",
+                sightDate = result.data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
+                    ?: "",
                 imageId = sightingImg?.let { Uri.parse(it) },
                 groupSize = result.data?.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0) ?: 0,
-                distance = result.data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f) ?: 0.0f,
-                observerType = result.data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY) ?: "",
-                sightingTime = result.data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY) ?: "",
+                distance = result.data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f)
+                    ?: 0.0f,
+                observerType = result.data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY)
+                    ?: "",
+                sightingTime = result.data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
+                    ?: "",
                 isOwnedByCurrentUser = true,
                 score = 0
             )
@@ -105,15 +112,21 @@ class MainActivity : AppCompatActivity() {
                         userHandler = userHandler ?: "Unknown",
                         userIcon = if (!userIcon.isNullOrEmpty()) Uri.parse(userIcon) else null,
                         postingDate = postingDate ?: "",
-                        animalName = data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY) ?: "",
-                        scientificName = data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY) ?: "",
+                        animalName = data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY)
+                            ?: "",
+                        scientificName = data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY)
+                            ?: "",
                         location = data?.getStringExtra(AddSightingActivity.LOCATION_KEY) ?: "",
-                        sightDate = data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY) ?: "",
+                        sightDate = data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
+                            ?: "",
                         imageId = if (!sightingImg.isNullOrEmpty()) Uri.parse(sightingImg) else null,
                         groupSize = data?.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0) ?: 0,
-                        distance = data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f) ?: 0.0f,
-                        observerType = data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY) ?: "",
-                        sightingTime = data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY) ?: "",
+                        distance = data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f)
+                            ?: 0.0f,
+                        observerType = data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY)
+                            ?: "",
+                        sightingTime = data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
+                            ?: "",
                         isOwnedByCurrentUser = true
                     )
 
@@ -129,15 +142,17 @@ class MainActivity : AppCompatActivity() {
                         // Dynamically update image if URI was delayed
                         if (!sightingImg.isNullOrEmpty()) {
                             // If the image was changed, we should update the image in the list
-                            SightingsAPI.getInstance().getImageUriForSighting(sightingId) { imageUri ->
-                                if (imageUri != null) {
-                                    val index = sightingList.indexOfFirst { it.id == sightingId }
-                                    if (index >= 0) {
-                                        sightingList[index].imageId = Uri.parse(imageUri)
-                                        sightingPostAdapter.notifyItemChanged(index)
+                            SightingsAPI.getInstance()
+                                .getImageUriForSighting(sightingId) { imageUri ->
+                                    if (imageUri != null) {
+                                        val index =
+                                            sightingList.indexOfFirst { it.id == sightingId }
+                                        if (index >= 0) {
+                                            sightingList[index].imageId = Uri.parse(imageUri)
+                                            sightingPostAdapter.notifyItemChanged(index)
+                                        }
                                     }
                                 }
-                            }
                         }
                     }
                 }
@@ -362,9 +377,9 @@ class MainActivity : AppCompatActivity() {
 
     /**@SuppressLint("NotifyDataSetChanged")
     private fun sortPostsByScore() {
-        // Implement sorting logic based on score (Descending order)
-        sightingList.sortByDescending { it.score }
-        sightingPostAdapter.notifyDataSetChanged()
+    // Implement sorting logic based on score (Descending order)
+    sightingList.sortByDescending { it.score }
+    sightingPostAdapter.notifyDataSetChanged()
     }*/
 
     @SuppressLint("NotifyDataSetChanged")
@@ -379,16 +394,11 @@ class MainActivity : AppCompatActivity() {
         val sightingId =
             sightingToDelete.id
 
-        SightingsAPI.getInstance().deleteSighting(sightingId) { success ->
-            if (success) {
-                // If deletion from Firestore is successful, update the UI
-                sightingList.removeAt(position)
-                sightingPostAdapter.notifyItemRemoved(position)
-                sightingPostAdapter.notifyItemRangeChanged(position, sightingList.size)
-
-                Toast.makeText(this, "Post deleted", Toast.LENGTH_SHORT).show()
-
-                ImagesAPI.getInstance().deleteSightingImage(sightingId) { success ->
+        VotesAPI.getInstance().removeVotesFromSighting(sightingId) {}
+        SightingsAPI.getInstance().getSighting(sightingId) { sightingData ->
+            val imageId = sightingData["imageId"] as? String
+            if (imageId != null) {
+                ImagesAPI.getInstance().deleteSightingImage(imageId) { success ->
                     if (!success) {
                         Log.e(
                             "DeleteSightingImage",
@@ -396,9 +406,24 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
-            } else {
-                Toast.makeText(this, "Failed to delete post from database", Toast.LENGTH_SHORT)
-                    .show()
+            }
+
+            SightingsAPI.getInstance().deleteSighting(sightingId) { success ->
+                if (success) {
+                    // If deletion from Firestore is successful, update the UI
+                    sightingList.removeAt(position)
+                    sightingPostAdapter.notifyItemRemoved(position)
+                    sightingPostAdapter.notifyItemRangeChanged(position, sightingList.size)
+
+                    Toast.makeText(this, "Post deleted", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Failed to delete post from database",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
             }
         }
     }
