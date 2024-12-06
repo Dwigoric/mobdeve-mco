@@ -6,10 +6,10 @@
         android:icon="@drawable/ic_regular_home"
         android:title="@string/navitem1" />
 
-    <item
-        android:id="@+id/nav_search"
-        android:icon="@drawable/ic_regular_map"
-        android:title="@string/navitem2" />
+    <!--    <item-->
+    <!--        android:id="@+id/nav_search"-->
+    <!--        android:icon="@drawable/ic_regular_map"-->
+    <!--        android:title="@string/navitem2" />-->
 
     <item
         android:id="@+id/nav_add"
