@@ -4,13 +4,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class Comment(
+    id: String,
     userHandler: String,
     userIcon: Int,
     commentTime: String,
     content: String,
     postId: String
 ) {
-    val id = UUID.randomUUID().toString()
+    var id = id
+        private set
 
     var userHandler = userHandler
         private set

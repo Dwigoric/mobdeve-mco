@@ -62,6 +62,7 @@ class CommentsDialogFragment : DialogFragment() {
                     val userIcon = R.drawable.profpic
 
                     val newComment = Comment(
+                        id = commentId,
                         userHandler = userHandler,
                         userIcon = userIcon,
                         content = newCommentContent,
@@ -89,6 +90,7 @@ class CommentsDialogFragment : DialogFragment() {
 
             val commentList = comments.map { commentData ->
                 Comment(
+                    id = commentData["id"] as String,
                     userHandler = commentData["userId"] as? String ?: "Unknown",
                     userIcon = R.drawable.profpic,
                     content = commentData["content"] as? String ?: "No Content",
