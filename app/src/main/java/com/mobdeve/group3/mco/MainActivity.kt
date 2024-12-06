@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.Toast
@@ -365,9 +367,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showSortPopup(view: View) {
+
         val popupMenu = PopupMenu(this, view)
         menuInflater.inflate(R.menu.sort_options_menu, popupMenu.menu)
-
         popupMenu.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.option_sort_score -> {
@@ -391,6 +393,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostsByScore() {
+
     // Implement sorting logic based on score (Descending order)
     sightingList.sortByDescending { it.score }
     sightingPostAdapter.notifyDataSetChanged()

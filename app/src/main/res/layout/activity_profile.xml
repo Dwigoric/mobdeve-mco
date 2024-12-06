@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,6 +10,7 @@
         android:id="@+id/scrollablecontent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,9 +26,10 @@
 
             <ImageView
                 android:id="@+id/imglogo"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="0dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/logo" />
@@ -47,6 +50,7 @@
                 android:id="@+id/imgProfPic"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleType="centerCrop"
                 app:srcCompat="@drawable/ic_regular_user" />
 
         </androidx.cardview.widget.CardView>
@@ -67,10 +71,11 @@
                 style="@style/Body"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
                 android:layout_weight="1"
                 android:text="@string/Username"
                 android:textAlignment="center"
-                android:textSize="24sp"
+                android:textSize="28sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -86,6 +91,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
             android:text="@string/MySightingsHeader"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/contSettings" />
 
@@ -100,6 +106,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtMySightings" />
+
+        <TextView
+            android:id="@+id/txtEditProfHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Press and hold profile pic to change."
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/contSettings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contProfPicSettings" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

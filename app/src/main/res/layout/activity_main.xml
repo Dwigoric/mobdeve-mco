@@ -11,7 +11,7 @@
         android:id="@+id/scrollablecontent"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,9 +27,10 @@
 
             <ImageView
                 android:id="@+id/imglogo"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_gravity="top|left"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="0dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/logo" />
@@ -39,10 +40,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginEnd="32dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="0"
                 android:background="#00FFFFFF"
-                app:srcCompat="@drawable/baseline_sort_24" />
+                app:srcCompat="@drawable/baseline_sort_24"
+                app:tint="?attr/colorOnPrimary" />
 
         </FrameLayout>
 
@@ -63,9 +65,15 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="24dp"
             android:clickable="true"
+            android:foregroundTint="#FFFFFF"
+            android:foregroundTintMode="add"
+            android:src="@drawable/ic_add_sighting"
+            android:tint="#FFFFFF"
             app:backgroundTint="@color/brand"
+            app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/white"
             tools:srcCompat="@drawable/ic_add_sighting" />
 
 

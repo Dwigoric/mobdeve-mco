@@ -8,7 +8,7 @@
     <ImageView
         android:id="@+id/imgBanner"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Conservation Status"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtCatalogueScientificName" />
@@ -55,6 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Physical Characteristics"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtConservationStatus" />
@@ -76,6 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Habitat and Range"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtAppearance" />
@@ -97,6 +100,7 @@
             android:layout_height="wrap_content"
             android:text="Rhincodon typus"
             android:textAlignment="center"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtCatalogueCommonName" />
@@ -108,6 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Role in the Ecosystem"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtHabitat" />

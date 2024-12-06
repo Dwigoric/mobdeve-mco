@@ -21,7 +21,16 @@
 
         <item name="colorPrimaryVariant">@color/darkbgtransparent</item>
 
+        <item name="android:itemTextAppearance"> @style/ChangeTextColor</item>
+        <item name="android:itemBackground"> @color/light</item>
+
     </style>
+
+
+    <style name="ChangeTextColor" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor"> @color/darkbg</item>
+    </style>
+
 
     <style name="CommentsDialogTheme" parent="Theme.AppCompat.Dialog">
         <item name="android:windowBackground">@drawable/dialog_background</item>
