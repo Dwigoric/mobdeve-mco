@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
@@ -295,10 +296,18 @@ class AddSightingActivity : AppCompatActivity() {
 
         datePickerDialog.show()
 
+        // Get the current night mode
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val textColor = if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+            Color.WHITE
+        } else {
+            Color.BLACK
+        }
+
         val datePickerDialogButton = datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
-        datePickerDialogButton.setTextColor(Color.WHITE)
+        datePickerDialogButton.setTextColor(textColor)
         val cancelButton = datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
-        cancelButton.setTextColor(Color.WHITE)
+        cancelButton.setTextColor(textColor)
 
     }
 
@@ -317,10 +326,20 @@ class AddSightingActivity : AppCompatActivity() {
 
         timePickerDialog.show()
 
+        // Get the current night mode
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val textColor = if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+            Color.WHITE
+        } else {
+            Color.BLACK
+        }
+
+        // Set the button text color for the positive and negative buttons
         val timePickerDialogButton = timePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE)
-        timePickerDialogButton.setTextColor(Color.WHITE)
+        timePickerDialogButton.setTextColor(textColor)
+
         val cancelButton = timePickerDialog.getButton(TimePickerDialog.BUTTON_NEGATIVE)
-        cancelButton.setTextColor(Color.WHITE)
+        cancelButton.setTextColor(textColor)
     }
 
     // Function to show the photo options menu

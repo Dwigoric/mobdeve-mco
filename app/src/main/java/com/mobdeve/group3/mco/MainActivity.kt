@@ -2,6 +2,8 @@ package com.mobdeve.group3.mco
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -181,8 +183,19 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        val btnSort = findViewById<ImageButton>(R.id.btnSort)
+
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val iconColor = if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+            Color.WHITE
+        } else {
+            Color.BLACK
+        }
+
+        btnSort.setColorFilter(iconColor)
+
         // Set up sort button click listener
-        findViewById<ImageButton>(R.id.btnSort).setOnClickListener {
+        btnSort.setOnClickListener {
             showSortPopup(it)
         }
 
