@@ -182,7 +182,10 @@ class AddSightingActivity : AppCompatActivity() {
                         returnIntent.putExtra("SIGHTING_DATE_KEY", sightingDate)
                         returnIntent.putExtra("SIGHTING_TIME_KEY", sightingTime)
                         returnIntent.putExtra("IMAGE_ID_KEY", imageId)
-                        returnIntent.putExtra("postingDate", postingDate.toDate().toString()) // Simple string format
+                        returnIntent.putExtra(
+                            "postingDate",
+                            postingDate.toDate().toString()
+                        ) // Simple string format
 
                         setResult(RESULT_OK, returnIntent)
                         finish()
@@ -193,7 +196,11 @@ class AddSightingActivity : AppCompatActivity() {
                     uploadSighting(null) // No image to upload
                 } else {
                     ImagesAPI.getInstance().putSightingImage(
-                        ImagesAPI.getByteArrayFromInputStream(contentResolver.openInputStream(imageUri!!))
+                        ImagesAPI.getByteArrayFromInputStream(
+                            contentResolver.openInputStream(
+                                imageUri!!
+                            )
+                        )
                     ) { uploadedImageId ->
                         uploadSighting(uploadedImageId)
                     }
