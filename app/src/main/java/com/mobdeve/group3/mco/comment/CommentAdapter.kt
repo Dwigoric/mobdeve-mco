@@ -6,7 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.mobdeve.group3.mco.R
 
-class CommentAdapter(private var comments: MutableList<Comment>) : Adapter<CommentViewHolder>() {
+class CommentAdapter(
+    var comments: MutableList<Comment>,
+    private val onDeleteClick: (Comment) -> Unit  // Callback function
+) :Adapter<CommentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)
@@ -14,19 +17,17 @@ class CommentAdapter(private var comments: MutableList<Comment>) : Adapter<Comme
     }
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
-        holder.bind(comments[position])
+        val comment = comments[position]
+        holder.bind(comment, onDeleteClick)  // Pass the callback to the ViewHolder
     }
 
-    override fun getItemCount(): Int {
-        return comments.size
-    }
+    override fun getItemCount(): Int = comments.size
 
-    @SuppressLint("NotifyDataSetChanged")
     fun updateComments(newComments: List<Comment>) {
+        comments.clear()
         comments.addAll(newComments)
         notifyDataSetChanged()
     }
-
 }
 
 

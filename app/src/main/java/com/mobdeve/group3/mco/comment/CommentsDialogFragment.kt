@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,11 +28,6 @@ class CommentsDialogFragment : DialogFragment() {
     private lateinit var btnSubmitComment: Button
     private lateinit var sighting: Sighting
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setStyle(STYLE_NORMAL, R.style.BottomDialogTheme)
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,7 +38,11 @@ class CommentsDialogFragment : DialogFragment() {
         edtCommentInput = view.findViewById(R.id.edtCommentInput)
         btnSubmitComment = view.findViewById(R.id.btnSubmitComment)
 
-        commentAdapter = CommentAdapter(mutableListOf())
+        // Pass the onDeleteClick lambda to the adapter
+        commentAdapter = CommentAdapter(mutableListOf()) { comment ->
+            showDeleteConfirmationDialog(comment)
+        }
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = commentAdapter
@@ -97,8 +98,38 @@ class CommentsDialogFragment : DialogFragment() {
             }
 
             commentAdapter.updateComments(commentList)
-
             commentAdapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun showDeleteConfirmationDialog(comment: Comment) {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Delete Comment")
+            .setMessage("Are you sure you want to delete this comment?")
+            .setPositiveButton("Yes") { _, _ ->
+                deleteComment(comment)
+            }
+            .setNegativeButton("No", null)
+            .create()
+        dialog.show()
+    }
+
+    fun deleteComment(comment: Comment) {
+        CommentsAPI.getInstance().deleteComment(comment.id, comment.postId) { success ->
+            if (success) {
+                Toast.makeText(context, "Comment deleted", Toast.LENGTH_SHORT).show()
+                updateCommentListAfterDeletion(comment)
+            } else {
+                Toast.makeText(context, "Failed to delete comment", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun updateCommentListAfterDeletion(comment: Comment) {
+        val position = commentAdapter.comments.indexOf(comment)
+        if (position != -1) {
+            commentAdapter.comments.removeAt(position)
+            commentAdapter.notifyItemRemoved(position)
         }
     }
 
@@ -125,7 +156,6 @@ class CommentsDialogFragment : DialogFragment() {
             return fragment
         }
     }
-
 }
 
 

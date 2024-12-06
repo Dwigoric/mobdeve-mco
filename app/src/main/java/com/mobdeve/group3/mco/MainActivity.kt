@@ -358,7 +358,7 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.option_sort_score -> {
                     // Sort based on score
-                    //sortPostsByScore()
+                    sortPostsByScore()
                     true
                 }
 
@@ -375,12 +375,12 @@ class MainActivity : AppCompatActivity() {
         popupMenu.show()
     }
 
-    /**@SuppressLint("NotifyDataSetChanged")
+    @SuppressLint("NotifyDataSetChanged")
     private fun sortPostsByScore() {
     // Implement sorting logic based on score (Descending order)
     sightingList.sortByDescending { it.score }
     sightingPostAdapter.notifyDataSetChanged()
-    }*/
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostsByRecency() {

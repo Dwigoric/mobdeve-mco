@@ -63,15 +63,46 @@ class CommentsAPI {
         }
     }
 
-
-
     fun getComments(sightingId: String, callback: (ArrayList<HashMap<String, Any?>>) -> Unit) {
         dbHelper.getDocumentsWhere("comments", "sightingId", sightingId) { comments ->
             callback(comments)
         }
     }
 
-    fun deleteComment(commentId: String, callback: (Boolean) -> Unit) {
+    fun deleteComment(commentId: String, sightingId: String, callback: (Boolean) -> Unit) {
+        dbHelper.deleteDocument("comments", commentId) { success ->
+            if (success) {
+                dbHelper.getDocument("sightings", sightingId) { sightingData ->
+                    val comments = sightingData["comments"] as? ArrayList<DocumentReference> ?: ArrayList()
+
+                    // Find and remove the comment reference with the matching commentId
+                    val commentRefToRemove = comments.find { it.id == commentId }
+                    if (commentRefToRemove != null) {
+                        comments.remove(commentRefToRemove)
+
+                        dbHelper.updateDocument(
+                            "sightings",
+                            sightingId,
+                            hashMapOf("comments" to comments)
+                        ) { updateSuccess ->
+                            if (updateSuccess) {
+                                callback(true)
+                            } else {
+                                callback(false)
+                            }
+                        }
+                    } else {
+                        callback(false)
+                    }
+                }
+            } else {
+                callback(false)
+            }
+        }
+    }
+
+
+    fun deleteComment2(commentId: String, callback: (Boolean) -> Unit) {
         dbHelper.deleteDocument("comments", commentId) { success ->
             callback(success)
         }
