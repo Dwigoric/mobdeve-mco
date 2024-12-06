@@ -126,7 +126,7 @@ class AddSightingActivity : AppCompatActivity() {
 
         viewBinding.btnPost.setOnClickListener {
             val userId = auth.currentUser?.uid ?: return@setOnClickListener
-            val postingDate = Timestamp.now()  // Current timestamp (can be adjusted if needed)
+            val postingDate = Timestamp.now()
 
             // Use UsersAPI to fetch the user reference
             val authorRef = UsersAPI.getInstance().getUserReference(userId)

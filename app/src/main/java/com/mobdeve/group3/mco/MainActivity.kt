@@ -33,7 +33,9 @@ import com.mobdeve.group3.mco.sighting.AddSightingActivity
 import com.mobdeve.group3.mco.sighting.Sighting
 import com.mobdeve.group3.mco.sighting.SightingPostAdapter
 import com.mobdeve.group3.mco.storage.ImagesAPI
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -102,7 +104,6 @@ class MainActivity : AppCompatActivity() {
                 val sightingId = data?.getStringExtra("SIGHTING_ID")
                 val userHandler = data?.getStringExtra("userHandler")
                 val userIcon = data?.getStringExtra("userIcon")
-                val postingDate = data?.getStringExtra("postingDate")
                 val sightingImg = data?.getStringExtra("IMAGE_ID_KEY")
 
                 if (sightingId != null) {
@@ -111,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                         id = sightingId,
                         userHandler = userHandler ?: "Unknown",
                         userIcon = if (!userIcon.isNullOrEmpty()) Uri.parse(userIcon) else null,
-                        postingDate = postingDate ?: "",
+                        postingDate = "Posting on " + SimpleDateFormat("EEE MMM dd yyyy HH:mm", Locale.ENGLISH).format(Date()),
                         animalName = data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY)
                             ?: "",
                         scientificName = data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY)
@@ -271,7 +272,7 @@ class MainActivity : AppCompatActivity() {
 
                         Log.d(
                             "loadSightings",
-                            "Fetched user data: username=$userHandler, avatar=$userIconUrl"
+                            "Fetched user data: username=$userHandler, avatar=$userIconUrl, imageId=$sightingImg"
                         )
 
                         // Create the Sighting object

@@ -190,11 +190,11 @@ class SightingPostViewHolder(
         }
 
         // Set OnClickListener for the user icon to redirect to ProfileActivity
-        userIcon.setOnClickListener {
+        /**userIcon.setOnClickListener {
             val context = itemView.context
             val profileIntent = Intent(context, ProfileActivity::class.java)
             context.startActivity(profileIntent)
-        }
+        }*/
 
         btnComment.setOnClickListener {
             val dialog = CommentsDialogFragment.newInstance(sighting)

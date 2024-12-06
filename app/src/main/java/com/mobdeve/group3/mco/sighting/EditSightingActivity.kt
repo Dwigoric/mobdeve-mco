@@ -9,9 +9,11 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -154,34 +156,52 @@ class EditSightingActivity : AppCompatActivity() {
     }
 
     private fun updateSighting() {
+        Log.d("UpdateSighting", "imageUri: $imageUri")
+
         if (imageUri != null) {
+            // Handling the case when an image is selected from URI (like gallery or camera)
             val imgBytes = contentResolver.openInputStream(imageUri!!)?.readBytes()
             if (imgBytes == null) {
                 updateSightingWithImage()
             } else {
                 ImagesAPI.getInstance().deleteSightingImage(
-                    intent.getStringExtra(
-                        AddSightingActivity.IMAGE_ID_KEY
-                    )!!
+                    intent.getStringExtra(AddSightingActivity.IMAGE_ID_KEY)!!
                 ) {}
                 ImagesAPI.getInstance().putSightingImage(imgBytes) { imageId ->
                     this.imageId = imageId
                     updateSightingWithImage()
                 }
             }
-        } else if (viewBinding.imgSelectedPhoto.drawable != null) {
-            ImagesAPI.getInstance()
-                .deleteSightingImage(intent.getStringExtra(AddSightingActivity.IMAGE_ID_KEY)!!) {}
-            ImagesAPI.getInstance().putSightingImage(
-                ImagesAPI.getByteArrayFromBitmap(viewBinding.imgSelectedPhoto.drawable.toBitmap())
-            ) { imageId ->
-                this.imageId = imageId
+        } else if (viewBinding.imgSelectedPhoto.drawable != null && viewBinding.imgSelectedPhoto.visibility == View.VISIBLE) {
+            Log.d("UpdateSighting", "Drawable is not null: ${viewBinding.imgSelectedPhoto.drawable}")
+
+            // Ensure the drawable is a BitmapDrawable and contains a non-null bitmap
+            val drawable = viewBinding.imgSelectedPhoto.drawable
+            if (drawable is BitmapDrawable) {
+                val bitmap = drawable.bitmap
+                if (bitmap != null) {
+                    ImagesAPI.getInstance().deleteSightingImage(intent.getStringExtra(AddSightingActivity.IMAGE_ID_KEY)!!) {}
+                    ImagesAPI.getInstance().putSightingImage(
+                        ImagesAPI.getByteArrayFromBitmap(bitmap)
+                    ) { imageId ->
+                        this.imageId = imageId
+                        updateSightingWithImage()
+                    }
+                } else {
+                    // Handle the case where the bitmap is null (if necessary, show an error or provide a fallback)
+                    Log.d("UpdateSighting", "Bitmap is null, unable to proceed with image upload.")
+                    updateSightingWithImage()
+                }
+            } else {
+                // Handle the case where the drawable is not a BitmapDrawable
+                Log.d("UpdateSighting", "Drawable is not a BitmapDrawable, unable to proceed with image upload.")
                 updateSightingWithImage()
             }
         } else {
             updateSightingWithImage()
         }
     }
+
 
     private fun updateSightingWithImage() {
         val commonName = viewBinding.etCommonName.text.toString()
