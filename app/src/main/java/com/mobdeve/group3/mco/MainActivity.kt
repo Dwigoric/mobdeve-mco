@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -196,13 +197,6 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
-                R.id.nav_add -> {
-                    val addSightingIntent =
-                        Intent(applicationContext, AddSightingActivity::class.java)
-                    addSightingActivityLauncher.launch(addSightingIntent)
-                    true
-                }
-
                 R.id.nav_catalogue -> {
                     val catalogueIntent = Intent(applicationContext, CatalogueActivity::class.java)
                     catalogueIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -221,6 +215,12 @@ class MainActivity : AppCompatActivity() {
 
                 else -> false
             }
+        }
+
+        // FloatingActionButton listener
+        findViewById<FloatingActionButton>(R.id.nav_add).setOnClickListener {
+            val addSightingIntent = Intent(applicationContext, AddSightingActivity::class.java)
+            addSightingActivityLauncher.launch(addSightingIntent)
         }
 
         // Set a long press listener on the Profile tab for the popup menu
