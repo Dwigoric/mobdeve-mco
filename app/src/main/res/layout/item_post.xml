@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="32dp">
@@ -11,6 +10,10 @@
         style="@style/BodyBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/txtPostTime"
         app:layout_constraintStart_toEndOf="@+id/contProfPic"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,13 +22,18 @@
         style="@style/Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/imgSightingPhoto"
         app:layout_constraintStart_toEndOf="@+id/contProfPic"
-        app:layout_constraintTop_toBottomOf="@+id/txtUsername" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/contProfPic"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         app:cardCornerRadius="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -34,8 +42,7 @@
             android:id="@+id/imgProfPic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            />
+            android:scaleType="centerCrop" />
     </androidx.cardview.widget.CardView>
 
 
@@ -43,6 +50,7 @@
         android:id="@+id/imgSightingPhoto"
         android:layout_width="0dp"
         android:layout_height="300dp"
+        android:layout_marginTop="8dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,6 +61,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#00FFFFFF"
+        android:paddingStart="3dp"
+        android:paddingTop="3dp"
+        android:paddingEnd="1dp"
+        android:paddingBottom="3dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgSightingPhoto"
         app:srcCompat="@drawable/ic_regular_check" />
@@ -62,6 +74,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#00FFFFFF"
+        android:paddingStart="1dp"
+        android:paddingTop="3dp"
+        android:paddingEnd="3dp"
+        android:paddingBottom="3dp"
         app:layout_constraintStart_toEndOf="@+id/btnUpvote"
         app:layout_constraintTop_toBottomOf="@+id/imgSightingPhoto"
         app:srcCompat="@drawable/ic_regular_report" />
@@ -71,6 +87,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#00FFFFFF"
+        android:padding="3dp"
         app:layout_constraintEnd_toStartOf="@+id/btnModify"
         app:layout_constraintTop_toBottomOf="@+id/imgSightingPhoto"
         app:srcCompat="@drawable/ic_regular_comment" />
@@ -80,6 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#00FFFFFF"
+        android:padding="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgSightingPhoto"
         app:srcCompat="@drawable/ic_regular_more" />
@@ -89,6 +107,7 @@
         style="@style/Header3Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnDownvote" />
 
@@ -97,6 +116,7 @@
         style="@style/BodyItalic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtSightingName" />
 
@@ -105,6 +125,7 @@
         style="@style/Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="@string/ViewMoreDetails"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtSightingNameScientific" />
@@ -114,6 +135,7 @@
         style="@style/Body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnModify" />
 
@@ -122,6 +144,7 @@
         style="@style/Body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtSightingPlace" />
 
