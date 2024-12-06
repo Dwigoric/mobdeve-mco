@@ -13,6 +13,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -29,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentReference
 import com.mobdeve.group3.mco.R
+import com.mobdeve.group3.mco.catalogue.CatalogueGenerator
 import com.mobdeve.group3.mco.databinding.ActivityAddSightingBinding
 import com.mobdeve.group3.mco.db.SightingsAPI
 import com.mobdeve.group3.mco.db.UsersAPI
@@ -70,6 +73,7 @@ class AddSightingActivity : AppCompatActivity() {
     private lateinit var galleryResultLauncher: ActivityResultLauncher<Intent>
 
     private val REQUEST_CAMERA = 1
+    private val categories = CatalogueGenerator.generateCatalogueSpecies()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,9 +83,40 @@ class AddSightingActivity : AppCompatActivity() {
         imageView = viewBinding.imgSelectedPhoto
         auth = Firebase.auth
 
+        // Extract common names for dropdown
+        val commonNames = categories.map { it.commonName }
+        Log.d("Debug", "Categories: $categories") // Check if categories are populated
+        Log.d("Debug", "Common Names: $commonNames") // Log the extracted common names
+
+        // Set up AutoCompleteTextView with adapter
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, commonNames)
+        viewBinding.etCommonName.setAdapter(adapter)
+        Log.d("Debug", "Adapter Count: ${adapter.count}") // Check the number of items in the adapter
+
+        // Show dropdown when the field is clicked
+        viewBinding.etCommonName.setOnTouchListener { _, _ ->
+            viewBinding.etCommonName.showDropDown()
+            false
+        }
+
+        // Show dropdown as the user types
+        viewBinding.etCommonName.addTextChangedListener {
+            if (!it.isNullOrEmpty()) {
+                viewBinding.etCommonName.showDropDown()
+            }
+        }
+
+        // Set listener for item selection
+        viewBinding.etCommonName.setOnItemClickListener { parent, _, position, _ ->
+            commonName = parent.getItemAtPosition(position) as String
+            val selectedSpecies = categories.find { it.commonName == commonName }
+            scientificName = selectedSpecies?.scientificName ?: ""
+            viewBinding.etSpecies.setText(scientificName) // Auto-fill scientific name
+        }
+
         // Set listeners for input fields
-        viewBinding.etCommonName.addTextChangedListener { commonName = it.toString() }
-        viewBinding.etSpecies.addTextChangedListener { scientificName = it.toString() }
+        //viewBinding.etCommonName.addTextChangedListener { commonName = it.toString() }
+        //viewBinding.etSpecies.addTextChangedListener { scientificName = it.toString() }
 
         viewBinding.etGroupType.addTextChangedListener { text ->
             if (!text.isNullOrEmpty()) {

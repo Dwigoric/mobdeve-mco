@@ -8,6 +8,8 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.mobdeve.group3.mco.R
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class SeaMoreDialogFragment : DialogFragment() {
     override fun onCreateView(
@@ -27,8 +29,11 @@ class SeaMoreDialogFragment : DialogFragment() {
         val location = arguments?.getString("location")
         val distance = arguments?.getString("distance")
         val observerType = arguments?.getString("observerType")
-        val sightingDate = arguments?.getString("sightingDate")
-        val sightingTime = arguments?.getString("sightingTime")
+        val sightingDateRaw  = arguments?.getString("sightingDate")
+        val sightingTimeRaw = arguments?.getString("sightingTime")
+
+        val formattedDate = formatDate(sightingDateRaw)
+        val formattedTime = formatTime(sightingTimeRaw)
 
         view.findViewById<TextView>(R.id.txtSpeciesValue).text = species
         view.findViewById<TextView>(R.id.txtCommonNameValue).text = commonName
@@ -36,10 +41,9 @@ class SeaMoreDialogFragment : DialogFragment() {
         view.findViewById<TextView>(R.id.txtLocationValue).text = location
         view.findViewById<TextView>(R.id.txtDistanceValue).text = distance
         view.findViewById<TextView>(R.id.txtObserverTypeValue).text = observerType
-        view.findViewById<TextView>(R.id.txtSDateValue).text = sightingDate
-        view.findViewById<TextView>(R.id.txtSTimeValue).text = sightingTime
+        view.findViewById<TextView>(R.id.txtSDateValue).text = formattedDate
+        view.findViewById<TextView>(R.id.txtSTimeValue).text = formattedTime
 
-        // Close button functionality
         val btnClose: ImageButton = view.findViewById(R.id.btnClose)
         btnClose.setOnClickListener {
             dismiss()
@@ -56,6 +60,28 @@ class SeaMoreDialogFragment : DialogFragment() {
         params?.width = ViewGroup.LayoutParams.MATCH_PARENT
         params?.height = ViewGroup.LayoutParams.WRAP_CONTENT
         dialogWindow?.attributes = params
+    }
+
+    private fun formatDate(dateString: String?): String {
+        return try {
+            val originalFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH)
+            val targetFormat = SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH)
+            val date = originalFormat.parse(dateString ?: "")
+            targetFormat.format(date ?: "")
+        } catch (e: Exception) {
+            dateString ?: ""
+        }
+    }
+
+    private fun formatTime(dateString: String?): String {
+        return try {
+            val originalFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH)
+            val targetFormat = SimpleDateFormat("hh:mm a", Locale.ENGLISH)
+            val date = originalFormat.parse(dateString ?: "")
+            targetFormat.format(date ?: "")
+        } catch (e: Exception) {
+            dateString ?: ""
+        }
     }
 }
 

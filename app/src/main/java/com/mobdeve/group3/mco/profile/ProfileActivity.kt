@@ -136,7 +136,7 @@ class ProfileActivity : AppCompatActivity() {
             if (imgBytes.isNotEmpty()) {
                 updateAvatar(imgBytes)
             } else {
-                avatarImageView.setImageResource(R.drawable.profpic)
+                avatarImageView.setImageResource(R.drawable.ic_regular_user)
             }
         }
     }
