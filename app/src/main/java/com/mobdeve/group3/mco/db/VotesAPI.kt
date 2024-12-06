@@ -36,7 +36,7 @@ class VotesAPI {
     }
 
     fun setVote(sightingId: String, isUpvote: Boolean, callback: (String) -> Unit) {
-        val existingVote = dbHelper.getDocumentsWhereMultiple(
+        dbHelper.getDocumentsWhereMultiple(
             "votes", hashMapOf(
                 "userId" to auth.currentUser!!.uid,
                 "sightingId" to sightingId
