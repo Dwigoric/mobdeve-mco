@@ -45,9 +45,11 @@ class VotesAPI {
             if (existingVote.isNotEmpty()) {
                 val vote = existingVote[0]
                 vote["isUpvote"] = isUpvote
-                dbHelper.updateDocument("votes", vote["id"] as String, vote) { success ->
+                val voteId = vote["id"] as String
+                vote.remove("id")
+                dbHelper.updateDocument("votes", voteId, vote) { success ->
                     if (success) {
-                        callback(vote["id"] as String)
+                        callback(voteId)
                     } else {
                         callback("")
                     }
