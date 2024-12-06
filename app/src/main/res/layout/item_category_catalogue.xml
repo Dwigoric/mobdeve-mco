@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
-                android:scaleType="center"
+                android:scaleType="centerCrop"
                 app:srcCompat="@drawable/fish" />
 
             <ImageView
