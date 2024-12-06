@@ -6,10 +6,10 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -21,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.widget.addTextChangedListener
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
@@ -33,8 +33,6 @@ import com.mobdeve.group3.mco.databinding.ActivityAddSightingBinding
 import com.mobdeve.group3.mco.db.SightingsAPI
 import com.mobdeve.group3.mco.db.UsersAPI
 import com.mobdeve.group3.mco.storage.ImagesAPI
-import java.io.File
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -192,9 +190,7 @@ class AddSightingActivity : AppCompatActivity() {
                     }
                 }
 
-                if (imageUri == null) {
-                    uploadSighting(null) // No image to upload
-                } else {
+                if (imageUri != null) {
                     ImagesAPI.getInstance().putSightingImage(
                         ImagesAPI.getByteArrayFromInputStream(
                             contentResolver.openInputStream(
@@ -204,6 +200,16 @@ class AddSightingActivity : AppCompatActivity() {
                     ) { uploadedImageId ->
                         uploadSighting(uploadedImageId)
                     }
+                } else if (imageView.drawable != null) {
+                    ImagesAPI.getInstance().putSightingImage(
+                        ImagesAPI.getByteArrayFromBitmap(
+                            imageView.drawable.toBitmap()
+                        )
+                    ) { uploadedImageId ->
+                        uploadSighting(uploadedImageId)
+                    }
+                } else {
+                    uploadSighting(null)
                 }
             }
         }
@@ -213,8 +219,12 @@ class AddSightingActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == RESULT_OK) {
-                imageView.setImageURI(imageUri)
-                imageView.visibility = View.VISIBLE
+                val imageBitmap = result.data?.getParcelableExtra<Bitmap>("data")
+
+                if (imageBitmap != null) {
+                    imageView.setImageBitmap(imageBitmap)
+                    imageView.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -317,17 +327,7 @@ class AddSightingActivity : AppCompatActivity() {
     private fun openCamera() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (cameraIntent.resolveActivity(packageManager) != null) {
-            var photoFile: File? = null
-            try {
-                photoFile = createImageFile()
-            } catch (ex: IOException) {
-                Log.e("AddSightingActivity", "Error occurred while creating the file", ex)
-            }
-            if (photoFile != null) {
-                imageUri = FileProvider.getUriForFile(this, "com.mobdeve.fileprovider", photoFile)
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-                cameraResultLauncher.launch(cameraIntent)
-            }
+            cameraResultLauncher.launch(cameraIntent)
         }
     }
 
@@ -356,13 +356,5 @@ class AddSightingActivity : AppCompatActivity() {
                 ).show()
             }
         }
-    }
-
-    // Function to create a file for the photo to be saved
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        val imageFileName = "JPEG_" + System.currentTimeMillis() + ".jpg"
-        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(imageFileName, ".jpg", storageDir)
     }
 }
