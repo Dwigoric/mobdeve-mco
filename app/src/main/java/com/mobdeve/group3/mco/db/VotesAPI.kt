@@ -101,4 +101,10 @@ class VotesAPI {
             }
         }
     }
+
+    fun removeVotesFromSighting(sightingId: String, callback: (Boolean) -> Unit) {
+        dbHelper.deleteDocumentsWhere("votes", "sightingId", sightingId) { success ->
+            callback(success)
+        }
+    }
 }
