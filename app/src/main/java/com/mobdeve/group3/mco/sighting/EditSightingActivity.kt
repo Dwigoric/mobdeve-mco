@@ -6,15 +6,13 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
+import androidx.core.graphics.drawable.toBitmap
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -32,12 +30,9 @@ import com.mobdeve.group3.mco.databinding.ActivityEditSightingBinding
 import com.mobdeve.group3.mco.db.SightingsAPI
 import com.mobdeve.group3.mco.db.UsersAPI
 import com.mobdeve.group3.mco.storage.ImagesAPI
-import java.io.File
-import java.io.IOException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 class EditSightingActivity : AppCompatActivity() {
@@ -133,8 +128,12 @@ class EditSightingActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == RESULT_OK) {
-                viewBinding.imgSelectedPhoto.setImageURI(imageUri)
-                viewBinding.imgSelectedPhoto.visibility = View.VISIBLE
+                val imageBitmap = result.data?.getParcelableExtra<Bitmap>("data")
+
+                if (imageBitmap != null) {
+                    viewBinding.imgSelectedPhoto.setImageBitmap(imageBitmap)
+                    viewBinding.imgSelectedPhoto.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -160,10 +159,24 @@ class EditSightingActivity : AppCompatActivity() {
             if (imgBytes == null) {
                 updateSightingWithImage()
             } else {
+                ImagesAPI.getInstance().deleteSightingImage(
+                    intent.getStringExtra(
+                        AddSightingActivity.IMAGE_ID_KEY
+                    )!!
+                ) {}
                 ImagesAPI.getInstance().putSightingImage(imgBytes) { imageId ->
                     this.imageId = imageId
                     updateSightingWithImage()
                 }
+            }
+        } else if (viewBinding.imgSelectedPhoto.drawable != null) {
+            ImagesAPI.getInstance()
+                .deleteSightingImage(intent.getStringExtra(AddSightingActivity.IMAGE_ID_KEY)!!) {}
+            ImagesAPI.getInstance().putSightingImage(
+                ImagesAPI.getByteArrayFromBitmap(viewBinding.imgSelectedPhoto.drawable.toBitmap())
+            ) { imageId ->
+                this.imageId = imageId
+                updateSightingWithImage()
             }
         } else {
             updateSightingWithImage()
@@ -231,7 +244,8 @@ class EditSightingActivity : AppCompatActivity() {
                         }
 
                         setResult(RESULT_OK, returnIntent)
-                        Toast.makeText(this, "Sighting updated successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Sighting updated successfully", Toast.LENGTH_SHORT)
+                            .show()
 
                         // Only finish once everything is done
                         finish()
@@ -325,17 +339,7 @@ class EditSightingActivity : AppCompatActivity() {
     private fun openCamera() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (cameraIntent.resolveActivity(packageManager) != null) {
-            var photoFile: File? = null
-            try {
-                photoFile = createImageFile()
-            } catch (ex: IOException) {
-                Log.e("AddSightingActivity", "Error occurred while creating the file", ex)
-            }
-            if (photoFile != null) {
-                imageUri = FileProvider.getUriForFile(this, "com.mobdeve.fileprovider", photoFile)
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-                cameraResultLauncher.launch(cameraIntent)
-            }
+            cameraResultLauncher.launch(cameraIntent)
         }
     }
 
@@ -364,14 +368,6 @@ class EditSightingActivity : AppCompatActivity() {
                 ).show()
             }
         }
-    }
-
-    // Function to create a file for the photo to be saved
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        val imageFileName = "JPEG_" + System.currentTimeMillis() + ".jpg"
-        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(imageFileName, ".jpg", storageDir)
     }
 }
 
