@@ -25,7 +25,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -99,7 +98,9 @@ class EditSightingActivity : AppCompatActivity() {
         viewBinding.etCommonName.setOnItemClickListener { parent, _, position, _ ->
             val selectedCommonName = parent.getItemAtPosition(position) as String
             val selectedSpecies = categories.find { it.commonName == selectedCommonName }
-            viewBinding.etSpecies.setText(selectedSpecies?.scientificName ?: "") // Auto-fill scientific name
+            viewBinding.etSpecies.setText(
+                selectedSpecies?.scientificName ?: ""
+            ) // Auto-fill scientific name
         }
 
 
@@ -165,6 +166,11 @@ class EditSightingActivity : AppCompatActivity() {
 
         // Handle "Update" Button
         viewBinding.btnSavePost.setOnClickListener {
+            // Disable the button to prevent multiple clicks
+            viewBinding.btnSavePost.isEnabled = false
+            // Indicate that the button is loading
+            viewBinding.btnSavePost.text = getString(R.string.EditingSighting)
+
             updateSighting()
         }
 
@@ -215,14 +221,18 @@ class EditSightingActivity : AppCompatActivity() {
                 }
             }
         } else if (viewBinding.imgSelectedPhoto.drawable != null && viewBinding.imgSelectedPhoto.visibility == View.VISIBLE) {
-            Log.d("UpdateSighting", "Drawable is not null: ${viewBinding.imgSelectedPhoto.drawable}")
+            Log.d(
+                "UpdateSighting",
+                "Drawable is not null: ${viewBinding.imgSelectedPhoto.drawable}"
+            )
 
             // Ensure the drawable is a BitmapDrawable and contains a non-null bitmap
             val drawable = viewBinding.imgSelectedPhoto.drawable
             if (drawable is BitmapDrawable) {
                 val bitmap = drawable.bitmap
                 if (bitmap != null) {
-                    ImagesAPI.getInstance().deleteSightingImage(intent.getStringExtra(AddSightingActivity.IMAGE_ID_KEY)!!) {}
+                    ImagesAPI.getInstance()
+                        .deleteSightingImage(intent.getStringExtra(AddSightingActivity.IMAGE_ID_KEY)!!) {}
                     ImagesAPI.getInstance().putSightingImage(
                         ImagesAPI.getByteArrayFromBitmap(bitmap)
                     ) { imageId ->
@@ -236,7 +246,10 @@ class EditSightingActivity : AppCompatActivity() {
                 }
             } else {
                 // Handle the case where the drawable is not a BitmapDrawable
-                Log.d("UpdateSighting", "Drawable is not a BitmapDrawable, unable to proceed with image upload.")
+                Log.d(
+                    "UpdateSighting",
+                    "Drawable is not a BitmapDrawable, unable to proceed with image upload."
+                )
                 updateSightingWithImage()
             }
         } else {

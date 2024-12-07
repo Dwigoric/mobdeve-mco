@@ -32,6 +32,9 @@
     <!-- Catalogue -->
     <string name="Category1">Fish</string>
 
+    <!-- Sighting -->
+    <string name="AddingSighting">Uploading your sighting…</string>
+    <string name="EditingSighting">Editing your sighting…</string>
 
     <!-- Profile / Settings -->
     <string name="SettingsUsernameLabel">Username</string>

@@ -14,7 +14,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
@@ -92,7 +91,10 @@ class AddSightingActivity : AppCompatActivity() {
         // Set up AutoCompleteTextView with adapter
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, commonNames)
         viewBinding.etCommonName.setAdapter(adapter)
-        Log.d("Debug", "Adapter Count: ${adapter.count}") // Check the number of items in the adapter
+        Log.d(
+            "Debug",
+            "Adapter Count: ${adapter.count}"
+        ) // Check the number of items in the adapter
 
         // Show dropdown when the field is clicked
         viewBinding.etCommonName.setOnTouchListener { _, _ ->
@@ -161,6 +163,11 @@ class AddSightingActivity : AppCompatActivity() {
         }
 
         viewBinding.btnPost.setOnClickListener {
+            // Disable the button to prevent multiple clicks
+            viewBinding.btnPost.isEnabled = false
+            // Indicate that the data is being processed
+            viewBinding.btnPost.text = getString(R.string.AddingSighting)
+
             val userId = auth.currentUser?.uid ?: return@setOnClickListener
             val postingDate = Timestamp.now()
 
