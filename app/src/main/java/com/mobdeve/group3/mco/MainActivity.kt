@@ -9,8 +9,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.Toast
@@ -117,7 +115,10 @@ class MainActivity : AppCompatActivity() {
                         id = sightingId,
                         userHandler = userHandler ?: "Unknown",
                         userIcon = if (!userIcon.isNullOrEmpty()) Uri.parse(userIcon) else null,
-                        postingDate = "Posting on " + SimpleDateFormat("EEE MMM dd yyyy HH:mm", Locale.ENGLISH).format(Date()),
+                        postingDate = "Posting on " + SimpleDateFormat(
+                            "EEE MMM dd yyyy HH:mm",
+                            Locale.ENGLISH
+                        ).format(Date()),
                         animalName = data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY)
                             ?: "",
                         scientificName = data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY)
@@ -399,10 +400,9 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostsByScore() {
-
-    // Implement sorting logic based on score (Descending order)
-    sightingList.sortByDescending { it.score }
-    sightingPostAdapter.notifyDataSetChanged()
+        // Implement sorting logic based on score (Descending order)
+        sightingList.sortByDescending { it.score }
+        sightingPostAdapter.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -415,11 +415,9 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostsByRecency2() {
         // Implement sorting logic based on recency (Descending order)
-        sightingList.sortByDescending { it.sightDate}
+        sightingList.sortByDescending { it.sightDate }
         sightingPostAdapter.notifyDataSetChanged()
     }
-
-
 
     fun deletePostAtPosition(position: Int) {
         val sightingToDelete = sightingList[position]
