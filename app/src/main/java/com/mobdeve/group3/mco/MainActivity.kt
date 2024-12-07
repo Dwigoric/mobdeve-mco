@@ -119,20 +119,19 @@ class MainActivity : AppCompatActivity() {
                             "EEE MMM dd yyyy HH:mm",
                             Locale.ENGLISH
                         ).format(Date()),
-                        animalName = data?.getStringExtra(AddSightingActivity.COMMON_NAME_KEY)
+                        animalName = data.getStringExtra(AddSightingActivity.COMMON_NAME_KEY)
                             ?: "",
-                        scientificName = data?.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY)
+                        scientificName = data.getStringExtra(AddSightingActivity.SCIENTIFIC_NAME_KEY)
                             ?: "",
-                        location = data?.getStringExtra(AddSightingActivity.LOCATION_KEY) ?: "",
-                        sightDate = data?.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
+                        location = data.getStringExtra(AddSightingActivity.LOCATION_KEY) ?: "",
+                        sightDate = data.getStringExtra(AddSightingActivity.SIGHTING_DATE_KEY)
                             ?: "",
                         imageId = if (!sightingImg.isNullOrEmpty()) Uri.parse(sightingImg) else null,
-                        groupSize = data?.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0) ?: 0,
-                        distance = data?.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f)
-                            ?: 0.0f,
-                        observerType = data?.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY)
+                        groupSize = data.getIntExtra(AddSightingActivity.GROUP_SIZE_KEY, 0),
+                        distance = data.getFloatExtra(AddSightingActivity.DISTANCE_KEY, 0.0f),
+                        observerType = data.getStringExtra(AddSightingActivity.OBSERVER_TYPE_KEY)
                             ?: "",
-                        sightingTime = data?.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
+                        sightingTime = data.getStringExtra(AddSightingActivity.SIGHTING_TIME_KEY)
                             ?: "",
                         isOwnedByCurrentUser = true
                     )
@@ -172,13 +171,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         auth = Firebase.auth
-
-        if (auth.currentUser == null) {
-            val launchIntent = Intent(applicationContext, LandingActivity::class.java)
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(launchIntent)
-            finish()
-        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -244,6 +236,17 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(profileMenuItem.itemId).setOnLongClickListener {
             showLogoutPopup(it) // Show the popup menu
             true
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (auth.currentUser == null) {
+            currentFocus?.clearFocus()
+            val launchIntent = Intent(applicationContext, LandingActivity::class.java)
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(launchIntent)
+            finish()
         }
     }
 
@@ -325,6 +328,7 @@ class MainActivity : AppCompatActivity() {
                         // Update RecyclerView after all sightings are processed
                         if (tempList.size == sightingsData.size) {
                             sightingList.addAll(tempList.sortedByDescending { it.postingDate })
+                            @SuppressLint("NotifyDataSetChanged")
                             sightingPostAdapter.notifyDataSetChanged()
                             Log.d(
                                 "loadSightings",

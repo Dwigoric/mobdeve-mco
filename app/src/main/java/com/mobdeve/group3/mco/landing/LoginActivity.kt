@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import com.mobdeve.group3.mco.MainActivity
 import com.mobdeve.group3.mco.R
 
 class LoginActivity : AppCompatActivity() {
@@ -37,9 +36,7 @@ class LoginActivity : AppCompatActivity() {
                     Log.d(TAG, "signInWithEmail:success")
 
                     // Navigate to MainActivity after login
-                    val intent = Intent(this, MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+                    currentFocus?.clearFocus()
                     finish()
                 } else {
                     // Login failed

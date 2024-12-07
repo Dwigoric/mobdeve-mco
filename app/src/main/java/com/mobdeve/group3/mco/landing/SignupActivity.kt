@@ -1,6 +1,5 @@
 package com.mobdeve.group3.mco.landing
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -10,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import com.mobdeve.group3.mco.MainActivity
 import com.mobdeve.group3.mco.R
 import com.mobdeve.group3.mco.db.UsersAPI
 
@@ -54,10 +52,8 @@ class SignupActivity : AppCompatActivity() {
                     }
 
                     // Navigate to MainActivity after registration
-                    val intent = Intent(this, MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    finish() // Optionally close SignupActivity
+                    currentFocus?.clearFocus()
+                    finish()
                 } else {
                     // Registration failed
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
