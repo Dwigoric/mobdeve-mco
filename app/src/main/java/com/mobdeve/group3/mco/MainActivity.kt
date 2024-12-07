@@ -326,9 +326,9 @@ class MainActivity : AppCompatActivity() {
                         )
 
                         // Update RecyclerView after all sightings are processed
+                        @SuppressLint("NotifyDataSetChanged")
                         if (tempList.size == sightingsData.size) {
                             sightingList.addAll(tempList.sortedByDescending { it.postingDate })
-                            @SuppressLint("NotifyDataSetChanged")
                             sightingPostAdapter.notifyDataSetChanged()
                             Log.d(
                                 "loadSightings",
